@@ -37,7 +37,6 @@ export function getFilePathOrFullPath(
   return filePath;
 }
 
-
 /**
  * Get the workspace folder (project folder) or undefined if not found.
  * @returns The workspace folder path or undefined.

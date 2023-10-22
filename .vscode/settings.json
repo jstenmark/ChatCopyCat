@@ -8,10 +8,5 @@
   },
   // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
   "typescript.tsc.autoDetect": "off",
-  "python.analysis.extraPaths": [
-    "/home/johannes/.vscode/extensions/continue.continue-0.0.412-linux-x64"
-  ],
-  "python.autoComplete.extraPaths": [
-    "/home/johannes/.vscode/extensions/continue.continue-0.0.412-linux-x64"
-  ]
+
 }
