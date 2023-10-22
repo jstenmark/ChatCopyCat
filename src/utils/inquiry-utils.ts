@@ -26,9 +26,7 @@ async function generateInputOrSelectOptions(
   return [];
 }
 
-export async function generateAdditionalInformationExamples(): Promise<
-  string[]
-> {
+export async function generateAdditionalInformationExamples(): Promise<string[] | undefined> {
   const examples = [
     "This is part of a larger project.",
     'Im getting a "TypeError" when running the code.',
@@ -49,7 +47,7 @@ export async function generateAdditionalInformationExamples(): Promise<
   );
 }
 
-export async function generateQuestionTypes(): Promise<string[]> {
+export async function generateQuestionTypes(): Promise<string[] | undefined>  {
   const types = [
     "Optimization",
     "Syntax",

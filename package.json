@@ -2,7 +2,7 @@
   "name": "chatcopyat",
   "displayName": "ChatCopyCat",
   "description": "A Visual Studio Code extension for copying code to improve chat assistant coding workflows",
-  "repository": "https://github.com/jstenmark/chatcopyat",
+  "repository": "https://github.com/jstenmark/ChatCopyCat",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.83.0"
@@ -13,20 +13,36 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:chatcopycat.copy"
+    "onCommand:ChatCopyCat.copy"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "ChatCopyCat",
+      "properties": {
+        "ChatCopyCat.enableQuestionType": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable prompting of predefined question types"
+        },
+        "ChatCopyCat.enableAdditionalInfo": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable prompting of predefined additional information"
+        }
+      }
+    },
     "commands": [
       {
-        "command": "chatcopycat.copy",
+        "command": "ChatCopyCat.copy",
         "title": "ChatCopyCat: Copy"
       }
     ],
     "keybindings": [
       {
         "key": "ctrl+shift+c",
-        "command": "chatcopycat.copy",
+        "command": "ChatCopyCat.copy",
         "when": "editorHasSelection"
       }
     ]

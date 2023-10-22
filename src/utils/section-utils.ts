@@ -4,8 +4,8 @@ export enum SectionType { // eslint-disable-line @typescript-eslint/naming-conve
   MULTIPLE_FUNCTIONS_AND_CLASSES = "Selection (Multiple Functions and Classes)", // eslint-disable-line @typescript-eslint/naming-convention
   MULTIPLE_FUNCTIONS = "Selection (Multiple Functions)", // eslint-disable-line @typescript-eslint/naming-convention
   MULTIPLE_CLASSES = "Selection (Multiple Classes)", // eslint-disable-line @typescript-eslint/naming-convention
-  FULL_FILE = "File Content", // eslint-disable-line @typescript-eslint/naming-convention
   CODE_SNIPPET = "Selection (Code Snippet)", // eslint-disable-line @typescript-eslint/naming-convention
+  FULL_FILE = "File Content", // eslint-disable-line @typescript-eslint/naming-convention
 }
 
 export function detectSectionType(

@@ -1,10 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 
-import { tabifyCode } from "./tabify-code";
-import {
-  generateCodeInquiryTemplate
-} from "./inquiry/inquiry-template";
+import { generateCodeInquiryTemplate } from "./inquiry/inquiry-template";
 import { handleFileLanguageId } from "./handlers";
 import { getFilePathOrFullPath } from "./utils/file-utils";
 import {
@@ -24,20 +21,23 @@ async function copy() {
     const filePath =
       getFilePathOrFullPath(fileName, editor, workspace) || fileExtension;
 
-    let selectedText = "";
-    if (!editor.selection.isEmpty) {
-      selectedText = editor.document.getText(editor.selection);
+    // TODO: Fix non selection copy selection type
+    let documentOrSelectedContent = "";
+    if (editor.selection.isEmpty) {
+      documentOrSelectedContent = editor.document.getText();
+    } else {
+      documentOrSelectedContent = editor.document.getText(editor.selection);
     }
-    const codeSnippetLanguage = getCodeSnippetLanguageInfo(editor);
 
-    selectedText = handleFileLanguageId(fileExtension, selectedText);
+    const codeSnippetLanguage = getCodeSnippetLanguageInfo(editor);
 
     const selectedType = await generateQuestionTypes();
     const additionalInfo = await generateAdditionalInformationExamples();
 
-    const miniCode = tabifyCode(selectedText);
+    const content = handleFileLanguageId(fileExtension, documentOrSelectedContent);
+
     const template = generateCodeInquiryTemplate(
-      miniCode,
+      content,
       filePath,
       codeSnippetLanguage,
       editor,
@@ -46,13 +46,26 @@ async function copy() {
     );
     const success = vscode.env.clipboard.writeText(template);
     if (!success) {
-      vscode.window.showErrorMessage("Failed to copy text to clipboard.");
+      vscode.window.showErrorMessage(
+        "ChatCopyCat: Failed to copy text to clipboard."
+      );
     }
   }
 }
 
+function getSelectedText(editor: any): string {
+  return editor.document.getText(editor.selection);
+}
+
+function copyToClipboard(text: string): void {
+  vscode.env.clipboard.writeText(text);
+}
+
+function showErrorMessage(message: string): void {
+  vscode.window.showErrorMessage(message);
+}
 export function activate(context: vscode.ExtensionContext) {
-  let command = vscode.commands.registerCommand("chatcopycat.copy", copy);
+  let command = vscode.commands.registerCommand("ChatCopyCat.copy", copy);
 
   context.subscriptions.push(command);
 }
