@@ -42,8 +42,7 @@
     "keybindings": [
       {
         "key": "ctrl+shift+c",
-        "command": "ChatCopyCat.copy",
-        "when": "editorHasSelection"
+        "command": "ChatCopyCat.copy"
       }
     ]
   },
