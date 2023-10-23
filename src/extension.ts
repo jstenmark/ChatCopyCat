@@ -31,14 +31,26 @@ async function copy() {
     const content = handleFileLanguageId(fileExtension, documentOrSelectedContent);
 
     const template = generateCodeInquiryTemplate(content, filePath, codeSnippetLanguage, editor, selectedType, additionalInfo);
-    const success = copyToClipboard(template);
+    const success: boolean = copyToClipboard(template);
     if (!success) {
       showErrorMessage('ChatCopyCat: Failed to copy text to clipboard.');
     }
   }
 }
-function copyToClipboard(text: string): void {
-  vscode.env.clipboard.writeText(text);
+
+/**
+ * Copies the provided text to the clipboard.
+ * @param text - The text to be copied to the clipboard.
+ * @returns True if the text was successfully copied to the clipboard, false otherwise.
+ */
+function copyToClipboard(text: string): boolean {
+  try {
+    vscode.env.clipboard.writeText(text);
+    return true;
+  } catch (error) {
+    console.error('Failed to copy text to clipboard:', error);
+    return false;
+  }
 }
 
 function showErrorMessage(message: string): void {
@@ -50,4 +62,5 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(command);
 }
-export function deactivate() {}
+export function deactivate(){
+}
