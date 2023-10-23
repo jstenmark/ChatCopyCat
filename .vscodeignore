@@ -3,8 +3,9 @@
 src/**
 .gitignore
 .yarnrc
-vsc-extension-quickstart.md
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map
 **/*.ts
+.vscode/PythonImportHelper-v2-Completion.json
+yarn-error.log

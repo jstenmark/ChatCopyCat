@@ -4,3 +4,4 @@ node_modules
 .vscode-test/
 *.vsix
 .vscode/PythonImportHelper-v2-Completion.json
+yarn-error.log
