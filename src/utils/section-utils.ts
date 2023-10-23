@@ -1,17 +1,14 @@
-import * as vscode from "vscode";
+import * as vscode from 'vscode';
 
 export enum SectionType { // eslint-disable-line @typescript-eslint/naming-convention
-  MULTIPLE_FUNCTIONS_AND_CLASSES = "Selection (Multiple Functions and Classes)", // eslint-disable-line @typescript-eslint/naming-convention
-  MULTIPLE_FUNCTIONS = "Selection (Multiple Functions)", // eslint-disable-line @typescript-eslint/naming-convention
-  MULTIPLE_CLASSES = "Selection (Multiple Classes)", // eslint-disable-line @typescript-eslint/naming-convention
-  CODE_SNIPPET = "Selection (Code Snippet)", // eslint-disable-line @typescript-eslint/naming-convention
-  FULL_FILE = "File Content", // eslint-disable-line @typescript-eslint/naming-convention
+  MULTIPLE_FUNCTIONS_AND_CLASSES = 'Selection (Multiple Functions and Classes)', // eslint-disable-line @typescript-eslint/naming-convention
+  MULTIPLE_FUNCTIONS = 'Selection (Multiple Functions)', // eslint-disable-line @typescript-eslint/naming-convention
+  MULTIPLE_CLASSES = 'Selection (Multiple Classes)', // eslint-disable-line @typescript-eslint/naming-convention
+  CODE_SNIPPET = 'Selection (Code Snippet)', // eslint-disable-line @typescript-eslint/naming-convention
+  FULL_FILE = 'File Content', // eslint-disable-line @typescript-eslint/naming-convention
 }
 
-export function detectSectionType(
-  selectedText: string = "",
-  editor: any
-): SectionType {
+export function detectSectionType(selectedText: string = '', editor: any): SectionType {
   const functionRegex = /function\s+[a-zA-Z_]\w*\s*\(|\([\w\s,]*\)\s*=>/g;
   const classRegex = /class\s+[a-zA-Z_]\w*\s*\{/;
   const functionMatches = selectedText.match(functionRegex) || [];
@@ -50,8 +47,7 @@ function isFullFileSelected(editor: any): boolean {
     selection.start.line === 0 && // Start of the document
     selection.start.character === 0 &&
     selection.end.line === document.lineCount - 1 && // End of the document
-    selection.end.character ===
-      document.lineAt(document.lineCount - 1).text.length;
+    selection.end.character === document.lineAt(document.lineCount - 1).text.length;
 
   return isFullSelection;
 }

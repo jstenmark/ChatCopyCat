@@ -1,15 +1,19 @@
-import { tabifyCode } from "./utils/tabify-code";
+import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCode } from './utils/formatting-utils';
 
 export function handleTypeScriptFile(content: string) {
-  const tabifiedContent = tabifyCode(content, 2, true, true);
+  let newContent = semiSafeRemoveNewlinesJsTs(content);
+  newContent = semiSafeRemoveTrailingSpacesJsTs(newContent);
+  newContent = tabifyCode(content, 2, false, false);
 
-  return tabifiedContent;
+  return newContent;
 }
 
 export function handleJavaScriptFile(content: string) {
-  const tabifiedContent = tabifyCode(content, 2, true, true);
+  let newContent = semiSafeRemoveNewlinesJsTs(content);
+  newContent = semiSafeRemoveTrailingSpacesJsTs(newContent);
+  newContent = tabifyCode(content, 2, false, false);
 
-  return tabifiedContent;
+  return newContent;
 }
 
 export function handlePythonFile(content: string) {
@@ -21,16 +25,13 @@ export function defaultHandler(content: string) {
   return content;
 }
 
-export function handleFileLanguageId(
-  language: string,
-  content: string
-): string {
+export function handleFileLanguageId(language: string, content: string): string {
   switch (language.toLowerCase()) {
-    case "typescript":
+    case 'typescript':
       return handleTypeScriptFile(content);
-    case "javascript":
+    case 'javascript':
       return handleJavaScriptFile(content);
-    case "python":
+    case 'python':
       return handlePythonFile(content);
     default:
       return defaultHandler(content);

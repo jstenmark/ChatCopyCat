@@ -1,28 +1,22 @@
-import * as vscode from "vscode";
-import * as path from "path";
+import * as vscode from 'vscode';
+import * as path from 'path';
 
-import { generateCodeInquiryTemplate } from "./inquiry/inquiry-template";
-import { handleFileLanguageId } from "./handlers";
-import { getFilePathOrFullPath } from "./utils/file-utils";
-import {
-  generateQuestionTypes,
-  generateAdditionalInformationExamples,
-} from "./utils/inquiry-utils";
-import { getCodeSnippetLanguageInfo } from "./utils/lang-info";
+import { generateCodeInquiryTemplate } from './inquiry/inquiry-template';
+import { handleFileLanguageId } from './handlers';
+import { getFilePathOrFullPath } from './utils/file-utils';
+import { generateQuestionTypes, generateAdditionalInformationExamples } from './inquiry/inquiry-utils';
+import { getCodeSnippetLanguageInfo } from './utils/lang-info';
 
 async function copy() {
   const editor = vscode.window.activeTextEditor;
   const workspace = vscode.workspace;
   if (editor) {
     const fileName = editor.document.fileName;
-    const fileExtension = fileName
-      ? path.extname(fileName).slice(1).toLowerCase() || "txt"
-      : "txt";
-    const filePath =
-      getFilePathOrFullPath(fileName, editor, workspace) || fileExtension;
+    const fileExtension = fileName ? path.extname(fileName).slice(1).toLowerCase() || 'txt' : 'txt';
+    const filePath = getFilePathOrFullPath(fileName, editor, workspace) || fileExtension;
 
     // TODO: Fix non selection copy selection type
-    let documentOrSelectedContent = "";
+    let documentOrSelectedContent = '';
     if (editor.selection.isEmpty) {
       documentOrSelectedContent = editor.document.getText();
     } else {
@@ -36,27 +30,13 @@ async function copy() {
 
     const content = handleFileLanguageId(fileExtension, documentOrSelectedContent);
 
-    const template = generateCodeInquiryTemplate(
-      content,
-      filePath,
-      codeSnippetLanguage,
-      editor,
-      selectedType,
-      additionalInfo
-    );
-    const success = vscode.env.clipboard.writeText(template);
+    const template = generateCodeInquiryTemplate(content, filePath, codeSnippetLanguage, editor, selectedType, additionalInfo);
+    const success = copyToClipboard(template);
     if (!success) {
-      vscode.window.showErrorMessage(
-        "ChatCopyCat: Failed to copy text to clipboard."
-      );
+      showErrorMessage('ChatCopyCat: Failed to copy text to clipboard.');
     }
   }
 }
-
-function getSelectedText(editor: any): string {
-  return editor.document.getText(editor.selection);
-}
-
 function copyToClipboard(text: string): void {
   vscode.env.clipboard.writeText(text);
 }
@@ -64,10 +44,10 @@ function copyToClipboard(text: string): void {
 function showErrorMessage(message: string): void {
   vscode.window.showErrorMessage(message);
 }
+
 export function activate(context: vscode.ExtensionContext) {
-  let command = vscode.commands.registerCommand("ChatCopyCat.copy", copy);
+  let command = vscode.commands.registerCommand('ChatCopyCat.copy', copy);
 
   context.subscriptions.push(command);
 }
-
 export function deactivate() {}

@@ -27,3 +27,16 @@ You can configure the extension by editing the settings in your Visual Studio Co
 ## License
 
 This extension is licensed under the [MIT License](LICENSE.md).
+
+## Errors
+
+https://github.com/microsoft/vscode/issues/130367#issuecomment-1723157064
+
+vsce package --yarn --entry extension/out/extension.cjs
+vsce package --yarn --entry ./out/extension.cjs
+
+https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/3112
+
+https://github.com/eemeli/prettier-plugin-properties
+https://github.com/un-ts/toml-tools/tree/master/packages/prettier-plugin-toml
+https://github.com/Stedi/prettier-plugin-jsonata
