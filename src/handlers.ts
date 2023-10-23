@@ -3,7 +3,7 @@ import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCod
 export function handleTypeScriptFile(content: string) {
   let newContent = semiSafeRemoveNewlinesJsTs(content)
   newContent = semiSafeRemoveTrailingSpacesJsTs(newContent)
-  newContent = tabifyCode(content, 2, false, false)
+  newContent = tabifyCode(newContent, 2, false, false)
 
   return newContent
 }
@@ -11,7 +11,7 @@ export function handleTypeScriptFile(content: string) {
 export function handleJavaScriptFile(content: string) {
   let newContent = semiSafeRemoveNewlinesJsTs(content)
   newContent = semiSafeRemoveTrailingSpacesJsTs(newContent)
-  newContent = tabifyCode(content, 2, false, false)
+  newContent = tabifyCode(newContent, 2, false, false)
 
   return newContent
 }
