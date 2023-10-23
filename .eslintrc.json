@@ -2,16 +2,22 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
+    "ecmaVersion": 2022,
+    "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "@typescipt-eslint/interface-name-prefix": [1],
-    "@typescript-eslint/naming-convention": "warn",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "interface",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "^I[A-Z]",
+          "match": true
+        }
+      }
+    ],
     "@typescript-eslint/semi": ["error", "never"],
     "curly": "warn",
     "eqeqeq": "warn",
@@ -20,5 +26,5 @@
     "no-underscore-dangle": "error"
   },
   "ignorePatterns": ["out", "dist", "**/*.d.ts"],
-  "extends": ["plugin:prettier/recommended", "prettier", "eslint-config-prettier", "eslint:recommended", "plugin:@typescript-eslint/recommended"]
+  "extends": ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "eslint-config-prettier", "eslint:recommended"]
 }

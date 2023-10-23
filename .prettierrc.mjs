@@ -1,4 +1,3 @@
-/** @type {import("prettier").Config} */
 const config = {
   trailingComma: "all",
   tabWidth: 2,

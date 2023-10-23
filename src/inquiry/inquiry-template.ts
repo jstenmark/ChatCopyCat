@@ -1,24 +1,24 @@
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'
 
-import { detectSectionType, SectionType } from '../utils/section-utils';
-
+import { detectSectionType, SectionType } from '../utils/section-utils'
 // TODO: Fix working config
-const config = vscode.workspace.getConfiguration('ChatCopyCat');
-const enableQuestionType = config.get<boolean>('enableQuestionType');
-const enableAdditionalInfo = config.get<string>('enableAdditionalInfo');
+const config = vscode.workspace.getConfiguration('ChatCopyCat')
+const enableQuestionType = config.get<boolean>('enableQuestionType')
+const enableAdditionalInfo = config.get<string>('enableAdditionalInfo')
 
 export function generateMetadataSection(filePath: string, questionTypes: string[] | undefined, additionalInfo: string[] | undefined): string {
-  let metadata = `**Metadata:**\n- **File:** ${filePath}\n`;
+  let metadata = `**Metadata:**\n- **File:** ${filePath}\n`
 
-  if (questionTypes !== undefined && questionTypes.length > 0 && enableQuestionType) {
-    metadata += `- **Question Type:** ${questionTypes.join(', ')}\n`;
+  if (questionTypes && questionTypes.length > 0 && enableQuestionType) {
+    const questionNames = questionTypes.join(', ')
+    metadata += `- **Question Type:** ${questionNames}\n`
   }
 
-  if (additionalInfo !== undefined && additionalInfo.length > 0 && enableAdditionalInfo) {
-    metadata += `- **Additional Information:** ${additionalInfo.join(', ')}\n`;
+  if (additionalInfo && additionalInfo.length > 0 && enableAdditionalInfo) {
+    const additionalInfoContent = additionalInfo.join(', ')
+    metadata += `- **Additional Information:** ${additionalInfoContent}\n`
   }
-
-  return metadata;
+  return metadata
 }
 
 export function generateCodeSnippetSection(sectionType: SectionType, codeSnippetLanguage: string, selectionText: string = ''): string {
@@ -27,25 +27,25 @@ export function generateCodeSnippetSection(sectionType: SectionType, codeSnippet
 \`\`\`${codeSnippetLanguage}
 ${selectionText}
 \`\`\`
-`;
+`
 }
 
-const template = (metaDataSection: any, codeSnippetSection: any) => `
+const template = (metaDataSection: string, codeSnippetSection: string) => `
 ## Code Inquiry Template
 ${metaDataSection}
 ---
 ${codeSnippetSection}
-`;
+`
 
 export function generateCodeInquiryTemplate(
   text: string,
   filePath: string,
   codeSnippetLanguage: string,
-  editor: any,
-  questionType: string[] | undefined,
-  additionalInfo: string[] | undefined,
-): any {
-  const metadataSection = generateMetadataSection(filePath, questionType, additionalInfo);
-  const codeSnippetSection = generateCodeSnippetSection(detectSectionType(text, editor), codeSnippetLanguage, text);
-  return template(metadataSection, codeSnippetSection);
+  editor: vscode.TextEditor,
+  questionType: string[],
+  additionalInfo: string[],
+): string {
+  const metadataSection = generateMetadataSection(filePath, questionType, additionalInfo)
+  const codeSnippetSection = generateCodeSnippetSection(detectSectionType(text, editor), codeSnippetLanguage, text)
+  return template(metadataSection, codeSnippetSection)
 }

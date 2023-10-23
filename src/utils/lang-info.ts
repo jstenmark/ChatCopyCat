@@ -1,5 +1,6 @@
-const defaultCodeSnippetLanguage = '[Specify the programming language]';
+const defaultCodeSnippetLanguage = '[Specify the programming language]'
+import * as vscode from 'vscode'
 
-export function getCodeSnippetLanguageInfo(editor: any): string {
-  return editor?.document.languageId || defaultCodeSnippetLanguage;
+export function getCodeSnippetLanguageInfo(editor: vscode.TextEditor): string {
+  return editor?.document.languageId || defaultCodeSnippetLanguage
 }

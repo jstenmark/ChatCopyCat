@@ -1,39 +1,39 @@
-import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCode } from './utils/formatting-utils';
+import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCode } from './utils/formatting-utils'
 
 export function handleTypeScriptFile(content: string) {
-  let newContent = semiSafeRemoveNewlinesJsTs(content);
-  newContent = semiSafeRemoveTrailingSpacesJsTs(newContent);
-  newContent = tabifyCode(content, 2, false, false);
+  let newContent = semiSafeRemoveNewlinesJsTs(content)
+  newContent = semiSafeRemoveTrailingSpacesJsTs(newContent)
+  newContent = tabifyCode(content, 2, false, false)
 
-  return newContent;
+  return newContent
 }
 
 export function handleJavaScriptFile(content: string) {
-  let newContent = semiSafeRemoveNewlinesJsTs(content);
-  newContent = semiSafeRemoveTrailingSpacesJsTs(newContent);
-  newContent = tabifyCode(content, 2, false, false);
+  let newContent = semiSafeRemoveNewlinesJsTs(content)
+  newContent = semiSafeRemoveTrailingSpacesJsTs(newContent)
+  newContent = tabifyCode(content, 2, false, false)
 
-  return newContent;
+  return newContent
 }
 
 export function handlePythonFile(content: string) {
-  const tabifiedContent = tabifyCode(content, 2, true, true);
+  const tabifiedContent = tabifyCode(content, 2, true, true)
 
-  return tabifiedContent;
+  return tabifiedContent
 }
 export function defaultHandler(content: string) {
-  return content;
+  return content
 }
 
 export function handleFileLanguageId(language: string, content: string): string {
   switch (language.toLowerCase()) {
     case 'typescript':
-      return handleTypeScriptFile(content);
+      return handleTypeScriptFile(content)
     case 'javascript':
-      return handleJavaScriptFile(content);
+      return handleJavaScriptFile(content)
     case 'python':
-      return handlePythonFile(content);
+      return handlePythonFile(content)
     default:
-      return defaultHandler(content);
+      return defaultHandler(content)
   }
 }

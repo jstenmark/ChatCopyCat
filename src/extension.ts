@@ -1,39 +1,40 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
+import * as vscode from 'vscode'
+import * as path from 'path'
 
-import { generateCodeInquiryTemplate } from './inquiry/inquiry-template';
-import { handleFileLanguageId } from './handlers';
-import { getFilePathOrFullPath } from './utils/file-utils';
-import { generateQuestionTypes, generateAdditionalInformationExamples } from './inquiry/inquiry-utils';
-import { getCodeSnippetLanguageInfo } from './utils/lang-info';
+import { generateCodeInquiryTemplate } from './inquiry/inquiry-template'
+import { handleFileLanguageId } from './handlers'
+import { getFilePathOrFullPath } from './utils/file-utils'
+import { generateQuestionTypes, generateAdditionalInformationExamples } from './inquiry/inquiry-utils'
+import { getCodeSnippetLanguageInfo } from './utils/lang-info'
 
 async function copy() {
-  const editor = vscode.window.activeTextEditor;
-  const workspace = vscode.workspace;
+  const editor = vscode.window.activeTextEditor
+  const workspace = vscode.workspace
   if (editor) {
-    const fileName = editor.document.fileName;
-    const fileExtension = fileName ? path.extname(fileName).slice(1).toLowerCase() || 'txt' : 'txt';
-    const filePath = getFilePathOrFullPath(fileName, editor, workspace) || fileExtension;
+    const fileName = editor.document.fileName
+    const fileExtension = fileName ? path.extname(fileName).slice(1).toLowerCase() || 'txt' : 'txt'
+    const filePath = getFilePathOrFullPath(fileName, editor, workspace.getWorkspaceFolder.bind(workspace)) || fileExtension
 
     // TODO: Fix non selection copy selection type
-    let documentOrSelectedContent = '';
+    let documentOrSelectedContent = ''
     if (editor.selection.isEmpty) {
-      documentOrSelectedContent = editor.document.getText();
+      documentOrSelectedContent = editor.document.getText()
     } else {
-      documentOrSelectedContent = editor.document.getText(editor.selection);
+      documentOrSelectedContent = editor.document.getText(editor.selection)
     }
 
-    const codeSnippetLanguage = getCodeSnippetLanguageInfo(editor);
+    const codeSnippetLanguage = getCodeSnippetLanguageInfo(editor)
 
-    const selectedType = await generateQuestionTypes();
-    const additionalInfo = await generateAdditionalInformationExamples();
+    const selectedType = (await generateQuestionTypes()) as string[]
+    const additionalInfo = (await generateAdditionalInformationExamples()) as string[]
 
-    const content = handleFileLanguageId(fileExtension, documentOrSelectedContent);
+    const content = handleFileLanguageId(fileExtension, documentOrSelectedContent)
+    // Assume you have a function to convert string to IQuestionType
 
-    const template = generateCodeInquiryTemplate(content, filePath, codeSnippetLanguage, editor, selectedType, additionalInfo);
-    const success: boolean = copyToClipboard(template);
+    const template = generateCodeInquiryTemplate(content, filePath, codeSnippetLanguage, editor, selectedType, additionalInfo)
+    const success: boolean = copyToClipboard(template)
     if (!success) {
-      showErrorMessage('ChatCopyCat: Failed to copy text to clipboard.');
+      showErrorMessage('ChatCopyCat: Failed to copy text to clipboard.')
     }
   }
 }
@@ -45,22 +46,21 @@ async function copy() {
  */
 function copyToClipboard(text: string): boolean {
   try {
-    vscode.env.clipboard.writeText(text);
-    return true;
+    vscode.env.clipboard.writeText(text)
+    return true
   } catch (error) {
-    console.error('Failed to copy text to clipboard:', error);
-    return false;
+    showErrorMessage('Failed to copy text to clipboard:' + error)
+    return false
   }
 }
 
 function showErrorMessage(message: string): void {
-  vscode.window.showErrorMessage(message);
+  vscode.window.showErrorMessage(message)
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  let command = vscode.commands.registerCommand('ChatCopyCat.copy', copy);
+  const command = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
 
-  context.subscriptions.push(command);
+  context.subscriptions.push(command)
 }
-export function deactivate(){
-}
+export function deactivate() {}

@@ -1,22 +1,32 @@
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'
+
+export interface IQuestionType {
+  name: string
+  description: string
+}
+
+export interface IAdditionalInfo {
+  content: string
+  type: string
+}
 
 async function generateInputOrSelectOptions(title: string, items: string[], customItemLabel: string): Promise<string[]> {
-  const customItem = `${customItemLabel} (Input Custom)`;
-  const options = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))];
+  const customItem = `${customItemLabel} (Input Custom)`
+  const options = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))]
   const selectedOption = await vscode.window.showQuickPick(options, {
     placeHolder: `Select or Input ${title}`,
-  });
+  })
   if (selectedOption) {
     if (selectedOption.label === customItem) {
       const customInput = await vscode.window.showInputBox({
         placeHolder: `Enter Custom ${title}`,
-      });
-      return customInput ? [customInput] : [];
+      })
+      return customInput ? [customInput] : []
     } else {
-      return [selectedOption.label];
+      return [selectedOption.label]
     }
   }
-  return [];
+  return []
 }
 
 export async function generateAdditionalInformationExamples(): Promise<string[] | undefined> {
@@ -31,15 +41,15 @@ export async function generateAdditionalInformationExamples(): Promise<string[] 
     'Im using the latest version of Node.js.',
     'Im new to programming and trying to learn JavaScript.',
     'This code was working fine until I made some changes yesterday.',
-  ];
+  ]
 
-  return generateInputOrSelectOptions('Additional Information', examples, 'Custom');
+  return generateInputOrSelectOptions('Additional Information', examples, 'Custom')
 }
 
 export async function generateQuestionTypes(): Promise<string[] | undefined> {
-  const types = ['Optimization', 'Syntax', 'Logic', 'Debugging', 'Error Handling', 'Code Structure', 'Performance', 'Testing', 'Security', 'Documentation'];
+  const types = ['Optimization', 'Syntax', 'Logic', 'Debugging', 'Error Handling', 'Code Structure', 'Performance', 'Testing', 'Security', 'Documentation']
 
-  return generateInputOrSelectOptions('Question Type', types, 'Custom');
+  return generateInputOrSelectOptions('Question Type', types, 'Custom')
 }
 
 export function generateCodeRelatedQuestions(): string[] {
@@ -54,5 +64,5 @@ export function generateCodeRelatedQuestions(): string[] {
     'How can I improve the security of my PHP application?',
     'Im getting a CORS error in my React app. How can I fix it?',
     'Can someone review my SQL query and suggest improvements?',
-  ];
+  ]
 }
