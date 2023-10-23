@@ -11,14 +11,20 @@ Tread softly into the alley of chatters with ChatCopyCat. Here, every interactio
 
 ## Keybindings
 
-You can use keybindings to quickly access the "Copy Code with Metadata" command:
+>Got your fur in a twist with excitement? Here’s how to promptly paw-ceed.
+>Your kitty starter pack:
 
 - **Windows/Linux**: Press `Ctrl+Shift+C`
 - **Mac**: Press `Cmd+Shift+C`
 
 ## Configuration
 
-You can configure the extension by editing the settings in your Visual Studio Code settings.json file. Customize question types and additional information to suit your project's needs.
+| Property                        | Type    | Default | Description                                              |
+|---------------------------------|---------|---------|----------------------------------------------------------|
+| `ChatCopyCat.enableQuestionType`| Boolean | `true`  | Enable prompting of predefined question types           |
+| `ChatCopyCat.enableAdditionalInfo`| Boolean | `true`  | Enable prompting of predefined additional information  |
+
+
 
 ## Supported Languages
 
@@ -28,15 +34,3 @@ You can configure the extension by editing the settings in your Visual Studio Co
 
 This extension is licensed under the [MIT License](LICENSE.md).
 
-## Errors
-
-https://github.com/microsoft/vscode/issues/130367#issuecomment-1723157064
-
-vsce package --yarn --entry extension/out/extension.cjs
-vsce package --yarn --entry ./out/extension.cjs
-
-https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/3112
-
-https://github.com/eemeli/prettier-plugin-properties
-https://github.com/un-ts/toml-tools/tree/master/packages/prettier-plugin-toml
-https://github.com/Stedi/prettier-plugin-jsonata
