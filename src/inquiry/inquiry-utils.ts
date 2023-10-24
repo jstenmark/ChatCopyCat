@@ -6,6 +6,7 @@ async function generateInputOrSelectOptions(title: string, items: string[], cust
   const selectedOption = await vscode.window.showQuickPick(options, {
     placeHolder: `Select or Input ${title}`,
   })
+
   if (selectedOption) {
     if (selectedOption.label === customItem) {
       const customInput = await vscode.window.showInputBox({

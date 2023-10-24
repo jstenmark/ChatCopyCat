@@ -37,13 +37,18 @@
       {
         "command": "ChatCopyCat.copy",
         "title": "ChatCopyCat: Copy",
-        "when": "editorHasSelection"
-      }
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.copyDefinitions",
+        "title": "Copy All Definitions"
+    }
     ],
     "keybindings": [
       {
         "key": "ctrl+shift+c",
-        "command": "ChatCopyCat.copy"
+        "command": "ChatCopyCat.copy",
+        "when": "editorTextFocus"
       }
     ]
   },

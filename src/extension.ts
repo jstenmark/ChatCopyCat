@@ -5,7 +5,8 @@ import { generateCodeInquiryTemplate } from './inquiry/inquiry-template'
 import { handleFileLanguageId } from './handlers'
 import { getFilePathOrFullPath } from './utils/file-utils'
 import { generateQuestionTypes, generateAdditionalInformationExamples } from './inquiry/inquiry-utils'
-import { getCodeSnippetLanguageInfo } from './utils/lang-info'
+import { getCodeSnippetLanguageInfo } from './utils/lang-utils'
+import { copyToClipboard, showErrorMessage, outputChannel, log } from './utils/vsc-utils'
 
 async function copy() {
   const editor = vscode.window.activeTextEditor
@@ -29,7 +30,6 @@ async function copy() {
     const additionalInfo = (await generateAdditionalInformationExamples()) as string[]
 
     const content = handleFileLanguageId(fileExtension, documentOrSelectedContent)
-    // Assume you have a function to convert string to IQuestionType
 
     const template = generateCodeInquiryTemplate(content, filePath, codeSnippetLanguage, editor, selectedType, additionalInfo)
     const success: boolean = copyToClipboard(template)
@@ -39,28 +39,22 @@ async function copy() {
   }
 }
 
-/**
- * Copies the provided text to the clipboard.
- * @param text - The text to be copied to the clipboard.
- * @returns True if the text was successfully copied to the clipboard, false otherwise.
- */
-function copyToClipboard(text: string): boolean {
-  try {
-    vscode.env.clipboard.writeText(text)
-    return true
-  } catch (error) {
-    showErrorMessage('Failed to copy text to clipboard:' + error)
-    return false
+const copyCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
+export function activate(context: vscode.ExtensionContext) {
+  context.subscriptions.push(outputChannel)
+
+  context.subscriptions.push(copyCommand)
+  outputChannel.show(true)
+  log('Hello, world!')
+  log('Hello, world!')
+  log('Hello, world!')
+  log('Hello, world!')
+}
+export function deactivate() {
+  if (copyCommand) {
+    copyCommand.dispose()
+  }
+  if (copyCommand) {
+    outputChannel.dispose()
   }
 }
-
-function showErrorMessage(message: string): void {
-  vscode.window.showErrorMessage(message)
-}
-
-export function activate(context: vscode.ExtensionContext) {
-  const command = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
-
-  context.subscriptions.push(command)
-}
-export function deactivate() {}
