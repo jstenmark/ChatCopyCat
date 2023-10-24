@@ -9,6 +9,7 @@
   },
   "plugins": ["@typescript-eslint", "prettier", "regexp"],
   "rules": {
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -48,7 +49,6 @@
       }
     ]
   },
-
   "ignorePatterns": ["out", "dist", "**/*.d.ts"],
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended", "plugin:regexp/recommended"]
 }
