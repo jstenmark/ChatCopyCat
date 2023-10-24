@@ -1,15 +1,5 @@
 import * as vscode from 'vscode'
 
-export interface IQuestionType {
-  name: string
-  description: string
-}
-
-export interface IAdditionalInfo {
-  content: string
-  type: string
-}
-
 async function generateInputOrSelectOptions(title: string, items: string[], customItemLabel: string): Promise<string[]> {
   const customItem = `${customItemLabel} (Input Custom)`
   const options = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))]

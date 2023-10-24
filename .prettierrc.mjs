@@ -10,7 +10,6 @@ const config = {
   htmlWhitespaceSensitivity: "strict",
   endOfLine: "lf",
   openingBraceNewLine: "false",
-  braceStyle: "1tbs",
   documentSelectors: [
     "**/*.{js,jsx,ts,tsx,vue,html,css,scss,less,json,md,mdx,graphql,yaml,yml,php}"
   ]

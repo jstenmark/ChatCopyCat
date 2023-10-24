@@ -1,23 +1,24 @@
-import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCode } from './utils/formatting-utils'
+import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCode, getTabSpaces } from './utils/formatting-utils'
 
 export function handleTypeScriptFile(content: string) {
   let newContent = semiSafeRemoveNewlinesJsTs(content)
+
+  newContent = tabifyCode(newContent, getTabSpaces(2), false, false)
   newContent = semiSafeRemoveTrailingSpacesJsTs(newContent)
-  newContent = tabifyCode(newContent, 2, false, false)
 
   return newContent
 }
 
 export function handleJavaScriptFile(content: string) {
   let newContent = semiSafeRemoveNewlinesJsTs(content)
+  newContent = tabifyCode(newContent, getTabSpaces(2), false, false)
   newContent = semiSafeRemoveTrailingSpacesJsTs(newContent)
-  newContent = tabifyCode(newContent, 2, false, false)
 
   return newContent
 }
 
 export function handlePythonFile(content: string) {
-  const tabifiedContent = tabifyCode(content, 2, true, true)
+  const tabifiedContent = tabifyCode(content, getTabSpaces(4), true, true)
 
   return tabifiedContent
 }

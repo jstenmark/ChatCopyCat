@@ -1,4 +1,7 @@
 // https://prettier.io/docs/en/plugins#printers
+import * as vscode from 'vscode' // Add this import at the top of your file
+
+export const getTabSpaces = (defaultTabSize: number = 2) => vscode.workspace.getConfiguration('editor').get<number>('tabSize') || defaultTabSize
 
 export function semiSafeRemoveNewlinesJsTs(code: string): string {
   let inSingleQuoteString = false
@@ -108,25 +111,24 @@ export function semiSafeRemoveTrailingSpacesJsTs(code: string): string {
   return newCode + lineBuffer
 }
 
-export function removeNewlines(input: string): string {
-  return input.replace(/\n\n/g, '\n')
-}
-export function removeTrailingSpacesFromLines(lines: string[]): string[] {
-  return lines.map(line => (typeof line === 'string' ? line.replace(/\s+$/, '') : line))
-}
+const removeNewlines = (input: string): string => input.replace(/\n\n/g, '\n')
 
-export function tabifyCode(inputString: string, tabSpaces: number = 2, applyRemoveNewlines: boolean = true, applyRemoveTrailingSpaces: boolean = true): string {
+const removeTrailingSpacesFromLines = (lines: string[]): string[] => lines.map(line => line.replace(/\s+$/, ''))
+
+export function tabifyCode(inputString: string, tabSpaces: number, applyRemoveNewlines: boolean = true, applyRemoveTrailingSpaces: boolean = true): string {
   let lines: string[] = inputString.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n')
 
   if (applyRemoveTrailingSpaces) {
     lines = removeTrailingSpacesFromLines(lines)
   }
 
+  // TODO: log indent maybe
   const processedLines = lines.map(line => {
     const leadingSpacesOrTabs = line.match(/^[ \t]*/)
     const indent = leadingSpacesOrTabs ? leadingSpacesOrTabs[0].replace('\t', ' '.repeat(tabSpaces)).length : 0
     const lineContent = line.substring(indent)
     const numTabs = Math.floor(indent / tabSpaces)
+
     const spacesLeft = indent - numTabs * tabSpaces
     return `${'\t'.repeat(numTabs)}${' '.repeat(spacesLeft)}${lineContent}`
   })

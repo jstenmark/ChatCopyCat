@@ -3,9 +3,11 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2022,
-    "sourceType": "module"
+    "sourceType": "module",
+    "tsconfigRootDir": ".", // Pointing to the directory where ESLint is being run
+    "project": "./tsconfig.json" // Your TypeScript config file
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "prettier", "regexp"],
   "rules": {
     "@typescript-eslint/naming-convention": [
       "error",
@@ -23,8 +25,30 @@
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
     "semi": "off",
-    "no-underscore-dangle": "error"
+    "no-underscore-dangle": "error",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "all",
+        "tabWidth": 2,
+        "semi": false,
+        "singleQuote": true,
+        "printWidth": 160,
+        "bracketSpacing": true,
+        "bracketSameLine": true,
+        "arrowParens": "avoid",
+        "htmlWhitespaceSensitivity": "strict",
+        "endOfLine": "lf",
+        "openingBraceNewLine": "false",
+        "documentSelectors": ["**/*.{js,jsx,ts,tsx,vue,html,css,scss,less,json,md,mdx,graphql,yaml,yml,php}"]
+      },
+      {
+        "usePrettierrc": false
+      }
+    ]
   },
+
   "ignorePatterns": ["out", "dist", "**/*.d.ts"],
-  "extends": ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "eslint-config-prettier", "eslint:recommended"]
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier", "plugin:prettier/recommended", "plugin:regexp/recommended"]
 }

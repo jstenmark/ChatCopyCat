@@ -1,13 +1,10 @@
-// Place your settings in this file to overwrite default and user settings.
 {
   "files.exclude": {
-    "out": false // set this to true to hide the "out" folder with the compiled JS files
+    "out": false
   },
   "search.exclude": {
-    "out": true // set this to false to include "out" folder in search results
+    "out": true
   },
-  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-  "typescript.tsc.autoDetect": "off",
   "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
   "editor.formatOnPaste": false, // required
   "editor.formatOnType": false, // required
@@ -20,5 +17,5 @@
   },
   "[markdown]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-  } // set as "true" to run 'prettier' last not first
+  }
 }

@@ -5,3 +5,4 @@ node_modules
 *.vsix
 .vscode/PythonImportHelper-v2-Completion.json
 yarn-error.log
+docs
