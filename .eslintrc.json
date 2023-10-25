@@ -4,7 +4,7 @@
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module",
-    "project": "tsconfig.json"
+    "project": ["./tsconfig.json"]
   },
   "plugins": ["@typescript-eslint", "prettier", "regexp"],
   "rules": {
@@ -53,7 +53,7 @@
       }
     ]
   },
-  "ignorePatterns": ["out", "dist", "**/*.d.ts", "Untitled-**"],
+  "ignorePatterns": ["out", "dist", "**/*.d.ts", "**/*titled-*","*titled-*"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",

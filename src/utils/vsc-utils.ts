@@ -14,6 +14,21 @@ export function copyToClipboard(text: string): boolean {
     return false
   }
 }
+export async function readFromClipboard(): Promise<string> {
+  try {
+    const content = await vscode.env.clipboard.readText()
+    return content
+  } catch (error) {
+    showErrorMessage('Failed to read text from clipboard:' + error)
+    return ''
+  }
+}
+
+// To reset the clipboard, you can introduce this function:
+export function resetClipboard(): boolean {
+  return copyToClipboard('') // Write empty string to clipboard to clear it
+}
+
 export function showErrorMessage(message: string): void {
   vscode.window.showErrorMessage(message)
 }

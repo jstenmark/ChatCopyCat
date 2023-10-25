@@ -1,10 +1,16 @@
 import * as vscode from 'vscode'
+export const templateHeader = '## Code Inquiry Template'
 
 import { detectSectionType, SectionType } from '../utils/section-utils'
+import { handleFileLanguageId } from '../handlers'
 // TODO: Fix working config
 const config = vscode.workspace.getConfiguration('ChatCopyCat')
 const enableQuestionType = config.get<boolean>('enableQuestionType')
 const enableAdditionalInfo = config.get<string>('enableAdditionalInfo')
+
+export function generateMinimalMetadataSection(filePath: string): string {
+  return `**File:** ${filePath}\n`
+}
 
 export function generateMetadataSection(filePath: string, questionTypes: string[] | undefined, additionalInfo: string[] | undefined): string {
   let metadata = `**Metadata:**\n- **File:** ${filePath}\n`
@@ -25,27 +31,21 @@ export function generateCodeSnippetSection(sectionType: SectionType, codeSnippet
   return `
 **${sectionType || SectionType.CODE_SNIPPET}:**
 \`\`\`${codeSnippetLanguage}
-${selectionText}
+${handleFileLanguageId(codeSnippetLanguage, selectionText)}
 \`\`\`
 `
 }
 
-const template = (metaDataSection: string, codeSnippetSection: string) => `
-## Code Inquiry Template
-${metaDataSection}
----
-${codeSnippetSection}
-`
-
-export function generateCodeInquiryTemplate(
+export async function generateCodeInquiryTemplate(
   text: string,
   filePath: string,
   codeSnippetLanguage: string,
   editor: vscode.TextEditor,
   questionType: string[],
   additionalInfo: string[],
-): string {
+): Promise<string> {
   const metadataSection = generateMetadataSection(filePath, questionType, additionalInfo)
   const codeSnippetSection = generateCodeSnippetSection(detectSectionType(text, editor), codeSnippetLanguage, text)
-  return template(metadataSection, codeSnippetSection)
+
+  return `${metadataSection}\n${codeSnippetSection}`
 }

@@ -51,3 +51,15 @@ function isFullFileSelected(editor: vscode.TextEditor): boolean {
 
   return isFullSelection
 }
+
+export function debounce(func: () => void, wait: number): () => void {
+  let timeout: NodeJS.Timeout | null = null
+  return () => {
+    if (timeout) {
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(() => {
+      func()
+    }, wait)
+  }
+}
