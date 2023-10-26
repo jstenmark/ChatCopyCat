@@ -1,8 +1,17 @@
 import * as vscode from 'vscode'
 
+/**
+ * Prompts the user with a quick pick selection of predefined options along with an option to input a custom value.
+ *
+ * @param title - A descriptive title representing the nature of the options.
+ * @param items - A list of predefined string options for the user to choose from.
+ * @param customItemLabel - A label for the option that allows the user to input a custom value.
+ * @returns A promise that resolves to an array containing the selected option or a custom input value. Returns an empty array if no option is selected.
+ */
 async function generateInputOrSelectOptions(title: string, items: string[], customItemLabel: string): Promise<string[]> {
   const customItem = `${customItemLabel} (Input Custom)`
   const options = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))]
+  await vscode.commands.executeCommand('setContext', 'copyInputBoxOpen', true)
   const selectedOption = await vscode.window.showQuickPick(options, {
     placeHolder: `Select or Input ${title}`,
   })
@@ -20,7 +29,7 @@ async function generateInputOrSelectOptions(title: string, items: string[], cust
   return []
 }
 
-export async function generateAdditionalInformationExamples(): Promise<string[] | undefined> {
+export async function generateAdditionalInformationExamples(): Promise<string[]> {
   const examples = [
     'This is part of a larger project.',
     'Im getting a "TypeError" when running the code.',
@@ -37,7 +46,7 @@ export async function generateAdditionalInformationExamples(): Promise<string[] 
   return generateInputOrSelectOptions('Additional Information', examples, 'Custom')
 }
 
-export async function generateQuestionTypes(): Promise<string[] | undefined> {
+export async function generateQuestionTypes(): Promise<string[]> {
   const types = ['Optimization', 'Syntax', 'Logic', 'Debugging', 'Error Handling', 'Code Structure', 'Performance', 'Testing', 'Security', 'Documentation']
 
   return generateInputOrSelectOptions('Question Type', types, 'Custom')

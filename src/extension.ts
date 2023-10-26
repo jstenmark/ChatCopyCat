@@ -8,17 +8,22 @@ const copyCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopy
 const closeCopyInputBoxCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.closecopy', closeCopyInputBox)
 const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.projectfiles', getProjectsFileTree)
 
+/**
+ * This function is called when the extension is activated.
+ * It is used to setup the extension, register commands, and allocate resources.
+ * @param {vscode.ExtensionContext} context - The extension context.
+ */
 export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(outputChannel)
   outputChannel.show(true)
-
-  context.subscriptions.push(copyCommand)
-  context.subscriptions.push(closeCopyInputBoxCommand)
-  context.subscriptions.push(projectFilesCommand)
+  context.subscriptions.push(copyCommand, closeCopyInputBoxCommand, projectFilesCommand)
 }
+
+/**
+ * This function is called when the extension is deactivated.
+ * It is used to dispose of resources and clean up before the extension is unloaded.
+ */
 export function deactivate() {
-  if (copyCommand) {
-    copyCommand.dispose()
-    outputChannel.dispose()
-  }
+  copyCommand.dispose()
+  outputChannel.dispose()
 }

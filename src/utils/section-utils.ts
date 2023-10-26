@@ -7,12 +7,18 @@ export enum SectionType { // eslint-disable-line @typescript-eslint/naming-conve
   CODE_SNIPPET = 'Selection (Code Snippet)', // eslint-disable-line @typescript-eslint/naming-convention
   FULL_FILE = 'File Content', // eslint-disable-line @typescript-eslint/naming-convention
 }
-
-export function detectSectionType(selectedText: string = '', editor: vscode.TextEditor): SectionType {
+/**
+ * Determines the type of section that the provided text belongs to.
+ *
+ * @param text - The text to analyze.
+ * @param editor - The active text editor in VS Code.
+ * @returns The determined section type.
+ */
+export const detectSectionType = (text: string, editor: vscode.TextEditor): SectionType => {
   const functionRegex = /function\s+[a-zA-Z_]\w*\s*\(|\([\w\s,]*\)\s*=>/g
   const classRegex = /class\s+[a-zA-Z_]\w*\s*\{/
-  const functionMatches = selectedText.match(functionRegex) || []
-  const classMatches = selectedText.match(classRegex) || []
+  const functionMatches = text.match(functionRegex) || []
+  const classMatches = text.match(classRegex) || []
 
   if (isFullFileSelected(editor)) {
     return SectionType.FULL_FILE
@@ -52,7 +58,14 @@ function isFullFileSelected(editor: vscode.TextEditor): boolean {
   return isFullSelection
 }
 
-export function debounce(func: () => void, wait: number): () => void {
+/**
+ * Adds a debounce to a function call, ensuring that the function is not called too frequently.
+ *
+ * @param func - The function to debounce.
+ * @param wait - The amount of time in milliseconds to wait before allowing the next invocation of the function.
+ * @returns A debounced version of the provided function.
+ */
+export const debounce = (func: () => void, wait: number): (() => void) => {
   let timeout: NodeJS.Timeout | null = null
   return () => {
     if (timeout) {

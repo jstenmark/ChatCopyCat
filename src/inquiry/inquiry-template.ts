@@ -7,13 +7,13 @@ import { handleFileLanguageId } from '../handlers'
 const config = vscode.workspace.getConfiguration('ChatCopyCat')
 const enableQuestionType = config.get<boolean>('enableQuestionType')
 const enableAdditionalInfo = config.get<string>('enableAdditionalInfo')
-
+export const metadataHeader = '**Metadata:**'
 export function generateMinimalMetadataSection(filePath: string): string {
   return `**File:** ${filePath}\n`
 }
 
 export function generateMetadataSection(filePath: string, questionTypes: string[] | undefined, additionalInfo: string[] | undefined): string {
-  let metadata = `**Metadata:**\n- **File:** ${filePath}\n`
+  let metadata = `${metadataHeader}\n- **File:** ${filePath}\n`
 
   if (questionTypes && questionTypes.length > 0 && enableQuestionType) {
     const questionNames = questionTypes.join(', ')

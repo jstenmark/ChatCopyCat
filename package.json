@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "description": "A Visual Studio Code extension for copying code to improve chat assistant coding workflows",
+  "description": "A VS Code extension to enhance coding workflows with chat assistants",
   "repository": "https://github.com/jstenmark/ChatCopyCat",
   "version": "0.0.1",
   "engines": {
@@ -21,7 +21,7 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "ChatCopyCat",
+      "title": "ChatCopyCat Settings",
       "properties": {
         "ChatCopyCat.enableQuestionType": {
           "type": "boolean",
@@ -38,15 +38,15 @@
     "commands": [
       {
         "command": "ChatCopyCat.copy",
-        "title": "ChatCopyCat: Copy"
+        "title": "ChatCopyCat: Copy with Metadata"
       },
       {
         "command": "ChatCopyCat.closecopy",
-        "title": "Close inputbox"
+        "title": "Close suggestion"
       },
       {
         "command": "ChatCopyCat.projectfiles",
-        "title": "ChatCopyCat: Get file list"
+        "title": "ChatCopyCat: Get Project File List"
       }
     ],
     "keybindings": [
@@ -95,10 +95,7 @@
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^4.4.4",
-    "vm": "^0.1.0"
-  },
-  "dependencies": {
-    "@vscode/vsce": "^2.21.1",
-    "eslint-config-prettier": "^9.0.0"
+    "vm": "^0.1.0",
+    "@vscode/vsce": "^2.21.1"
   }
 }
