@@ -1,5 +1,5 @@
-import { generateCodeInquiryTemplate, generateCodeSnippetSection, metadataHeader } from '../inquiry/inquiry-template'
-import { generateQuestionTypes, generateAdditionalInformationExamples } from '../inquiry/inquiry-utils'
+import { generateCodeInquiryTemplate, generateCodeSnippetSection, metadataHeader } from '../inquiry/inquiryTemplate'
+import { generateQuestionTypes, generateAdditionalInformationExamples } from '../inquiry/inquiryUtils'
 import { getFilePathOrFullPath } from '../utils/file-utils'
 import { getCodeSnippetLanguageInfo } from '../utils/lang-utils'
 import { copyToClipboard, log, readFromClipboard, showErrorMessage } from '../utils/vsc-utils'
@@ -12,15 +12,9 @@ const resetQuickCopy = debounce(() => {
   quickCopyCount = 0
 }, 500) // Reset after 5 seconds of inactivity
 
-/**
- * Closes the currently active input box and any associated quick picks in the VS Code editor.
- */
-export const closeCopyInputBox = async (): Promise<void> => {
-  log('Closing input')
-  await vscode.commands.executeCommand('setContext', 'copyInputBoxOpen', false)
-  await vscode.commands.executeCommand('workbench.action.closeQuickOpen')
-}
-
+export const copyStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
+copyStatus.text = 'CCC: X'
+copyStatus.show()
 /**
  * Handles the logic for copying text from the editor to the clipboard.
  * If this function is triggered twice in quick succession, it will clear the clipboard.

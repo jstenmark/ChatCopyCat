@@ -1,7 +1,6 @@
-// https://prettier.io/docs/en/plugins#printers
-import * as vscode from 'vscode' // Add this import at the top of your file
+import * as vscode from 'vscode'
 
-export const getTabSpaces = (defaultTabSize: number = 2) => vscode.workspace.getConfiguration('editor').get<number>('tabSize') || defaultTabSize
+export const getTabSpaces = (defaultTabSize = 2) => vscode.workspace.getConfiguration('editor').get<number>('tabSize') || defaultTabSize
 
 export function semiSafeRemoveNewlinesJsTs(code: string): string {
   let inSingleQuoteString = false
@@ -115,7 +114,7 @@ const removeNewlines = (input: string): string => input.replace(/\n\n/g, '\n')
 
 const removeTrailingSpacesFromLines = (lines: string[]): string[] => lines.map(line => line.replace(/\s+$/, ''))
 
-export function tabifyCode(inputString: string, tabSpaces: number, applyRemoveNewlines: boolean = true, applyRemoveTrailingSpaces: boolean = true): string {
+export function tabifyCode(inputString: string, tabSpaces: number, applyRemoveNewlines = true, applyRemoveTrailingSpaces = true): string {
   let lines: string[] = inputString.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n')
 
   if (applyRemoveTrailingSpaces) {

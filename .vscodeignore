@@ -7,5 +7,7 @@ src/**
 **/.eslintrc.json
 **/*.map
 **/*.ts
-.vscode/PythonImportHelper-v2-Completion.json
 yarn-error.log
+docs
+out/test/**
+test/**

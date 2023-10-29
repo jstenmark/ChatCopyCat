@@ -1,6 +1,6 @@
+import * as vscode from 'vscode'
 const defaultCodeSnippetLanguage = '[Specify the programming language]'
 import { showErrorMessage, log } from './vsc-utils'
-import * as vscode from 'vscode'
 
 export function getCodeSnippetLanguageInfo(editor: vscode.TextEditor): string {
   return editor?.document.languageId || defaultCodeSnippetLanguage

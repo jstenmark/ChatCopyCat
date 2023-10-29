@@ -33,4 +33,8 @@ export function showErrorMessage(message: string): void {
   vscode.window.showErrorMessage(message)
 }
 export const outputChannel = vscode.window.createOutputChannel('ChatCopyCat')
-export const log = outputChannel.appendLine
+export const log = outputChannel.append
+export const logLine = outputChannel.appendLine
+export const clear = outputChannel.clear
+export const showClipboard = outputChannel.show
+export const hideClipboard = outputChannel.hide

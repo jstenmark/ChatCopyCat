@@ -1,8 +1,11 @@
+/// <reference types="node" />
+
 import * as vscode from 'vscode'
 
 import { outputChannel } from './utils/vsc-utils'
-import { copy, closeCopyInputBox } from './commands/copy'
-import { getProjectsFileTree } from './commands/projectfiles'
+import { copy } from './commands/copy'
+import { closeCopyInputBox } from './commands/closeCopyInputBox'
+import { getProjectsFileTree } from './commands/projectFiles'
 
 const copyCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
 const closeCopyInputBoxCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.closecopy', closeCopyInputBox)
@@ -23,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext) {
  * This function is called when the extension is deactivated.
  * It is used to dispose of resources and clean up before the extension is unloaded.
  */
-export function deactivate() {
+export async function deactivate() {
   copyCommand.dispose()
   outputChannel.dispose()
 }

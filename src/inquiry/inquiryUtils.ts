@@ -1,4 +1,8 @@
 import * as vscode from 'vscode'
+import { UIComponentManager } from '../ui/UIComponentManager'
+
+export const quickPickManager = new UIComponentManager<vscode.QuickPick<vscode.QuickPickItem>>()
+export const inputBoxManager = new UIComponentManager<vscode.InputBox>()
 
 /**
  * Prompts the user with a quick pick selection of predefined options along with an option to input a custom value.
@@ -10,22 +14,40 @@ import * as vscode from 'vscode'
  */
 async function generateInputOrSelectOptions(title: string, items: string[], customItemLabel: string): Promise<string[]> {
   const customItem = `${customItemLabel} (Input Custom)`
-  const options = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))]
-  await vscode.commands.executeCommand('setContext', 'copyInputBoxOpen', true)
-  const selectedOption = await vscode.window.showQuickPick(options, {
-    placeHolder: `Select or Input ${title}`,
+
+  const selectedOption = await quickPickManager.show(() => {
+    const quickPick = vscode.window.createQuickPick()
+    quickPick.items = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))]
+    quickPick.placeholder = `Select or Input ${title}`
+    return quickPick
   })
+  quickPickManager.close()
 
   if (selectedOption) {
-    if (selectedOption.label === customItem) {
-      const customInput = await vscode.window.showInputBox({
-        placeHolder: `Enter Custom ${title}`,
+    if (selectedOption === customItem) {
+      const customInput = await inputBoxManager.show(() => {
+        const inputBox = vscode.window.createInputBox()
+        inputBox.placeholder = 'Type something...'
+        return inputBox
       })
+      inputBoxManager.close()
+
       return customInput ? [customInput] : []
     } else {
-      return [selectedOption.label]
+      return [selectedOption]
     }
   }
+
+  //if (selectedlabelOption) {
+  //  if (selectedOption.label === customItem) {
+  //    const customInput = await vscode.window.showInputBox({
+  //      placeHolder: `Enter Custom ${title}`,
+  //    })
+  //    return customInput ? [customInput] : []
+  //  } else {
+  //    return [selectedOption.label]
+  //  }
+  //}
   return []
 }
 

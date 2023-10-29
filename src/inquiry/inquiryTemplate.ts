@@ -27,7 +27,7 @@ export function generateMetadataSection(filePath: string, questionTypes: string[
   return metadata
 }
 
-export function generateCodeSnippetSection(sectionType: SectionType, codeSnippetLanguage: string, selectionText: string = ''): string {
+export function generateCodeSnippetSection(sectionType: SectionType, codeSnippetLanguage: string, selectionText = ''): string {
   return `
 **${sectionType || SectionType.CODE_SNIPPET}:**
 \`\`\`${codeSnippetLanguage}

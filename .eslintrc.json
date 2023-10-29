@@ -22,10 +22,7 @@
     ],
     "@typescript-eslint/semi": ["error", "never"],
     "curly": "warn",
-    "eqeqeq": "warn",
-    "no-throw-literal": "warn",
-    "semi": "off",
-    "no-underscore-dangle": "error",
+    "no-underscore-dangle": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       { "argsIgnorePattern": "^_" }
@@ -43,10 +40,7 @@
         "arrowParens": "avoid",
         "htmlWhitespaceSensitivity": "strict",
         "endOfLine": "lf",
-        "openingBraceNewLine": false,
-        "documentSelectors": [
-          "**/*.{js,jsx,ts,tsx,vue,html,css,scss,less,json,md,mdx,graphql,yaml,yml,php}"
-        ]
+        "openingBraceNewLine": false
       },
       {
         "usePrettierrc": false
@@ -57,7 +51,6 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
     "plugin:prettier/recommended",
     "plugin:regexp/recommended"
   ]

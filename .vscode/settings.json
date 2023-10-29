@@ -1,21 +1,31 @@
 {
   "files.exclude": {
-    "out": false
+    "out": true,
+    "node_modules": true,
+    "**/*.js": { "when": "$(basename).ts"}
   },
-  "search.exclude": {
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
     "out": true
   },
-  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
-  "editor.formatOnPaste": false, // required
-  "editor.formatOnType": false, // required
-  "editor.formatOnSave": true, // optional
-  "editor.formatOnSaveMode": "file", // required to format on save
+
+  "files.trimTrailingWhitespace": false,
+  "search.exclude": {
+    "**/node_modules": true,
+    "out": true
+  },
   "files.autoSave": "onFocusChange", // optional but recommended
   "vs-code-prettier-eslint.prettierLast": false,
-  "[typescript]": {
+  "[typescript][markdown][json][jsonc]": {
+    "editor.formatOnPaste": false, // required
+    "editor.formatOnType": false, // required
+    "editor.formatOnSave": true, // optional
+    "editor.formatOnSaveMode": "file", // required to format on save
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-  }
+  },
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+  "update.channel": "ChatCopyCat",
 }

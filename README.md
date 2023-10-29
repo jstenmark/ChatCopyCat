@@ -56,10 +56,13 @@ To tweak these settings, pounce over to your VS Code settings and search for "Ch
 - Python (`.py`)
 
 ## Wishlist
-
-- better context store
+- anonymization of inquirys to aid privacy issues
+- further token window opimizations
+- improved clipboard management/context store
 - include syntax/code problmes from the UI
 - customizable question types eg. `Add docstrings to the code`
+- clipboard preview
+- take more inspiration from latest cursor blogpost
 
 ## License
 
