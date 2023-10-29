@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import { UIComponentManager } from '../ui/UIComponentManager'
+import { DialogComponentManager } from '../ui/DialogComponentManager'
 
-export const quickPickManager = new UIComponentManager<vscode.QuickPick<vscode.QuickPickItem>>()
-export const inputBoxManager = new UIComponentManager<vscode.InputBox>()
+export const quickPickManager = new DialogComponentManager()
+export const inputBoxManager = new DialogComponentManager()
 
 /**
  * Prompts the user with a quick pick selection of predefined options along with an option to input a custom value.
@@ -21,7 +21,6 @@ async function generateInputOrSelectOptions(title: string, items: string[], cust
     quickPick.placeholder = `Select or Input ${title}`
     return quickPick
   })
-  quickPickManager.close()
 
   if (selectedOption) {
     if (selectedOption === customItem) {
@@ -30,24 +29,11 @@ async function generateInputOrSelectOptions(title: string, items: string[], cust
         inputBox.placeholder = 'Type something...'
         return inputBox
       })
-      inputBoxManager.close()
-
       return customInput ? [customInput] : []
     } else {
       return [selectedOption]
     }
   }
-
-  //if (selectedlabelOption) {
-  //  if (selectedOption.label === customItem) {
-  //    const customInput = await vscode.window.showInputBox({
-  //      placeHolder: `Enter Custom ${title}`,
-  //    })
-  //    return customInput ? [customInput] : []
-  //  } else {
-  //    return [selectedOption.label]
-  //  }
-  //}
   return []
 }
 

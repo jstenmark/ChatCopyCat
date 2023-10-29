@@ -1,18 +1,19 @@
-import { onDidCloseInput } from '../inquiry/inquiryUtils'
+import { inputBoxManager, quickPickManager } from '../inquiry/dialogTemplate'
 import { log } from '../utils/vsc-utils'
-import * as vscode from 'vscode'
 
 /**
- * Closes the currently active input box and any associated quick picks in the VS Code editor.
+ * Closes the currently active UI component used for copying input.
+ *
+ * This function determines which of the two UI components (QuickPick or InputBox)
+ * is currently active and closes it. It ensures that unnecessary function calls
+ * are avoided by only attempting to close the component if it is active.
  */
-
-export const closeCopyInputBox = async (): Promise<void> => {
+export const closeCopyInputBox = (): void => {
   log('Closing input')
-  onDidCloseInput.fire()
-}
 
-// export const closeCopyInputBox = async (): Promise<void> => {
-//   log('Closing input')
-//   await vscode.commands.executeCommand('setContext', 'copyInputBoxOpen', false)
-//   await vscode.commands.executeCommand('workbench.action.closeQuickOpen')
-// }
+  if (quickPickManager.isActive()) {
+    quickPickManager.close()
+  } else if (inputBoxManager.isActive()) {
+    inputBoxManager.close()
+  }
+}

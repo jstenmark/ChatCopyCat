@@ -1,5 +1,5 @@
 import { generateCodeInquiryTemplate, generateCodeSnippetSection, metadataHeader } from '../inquiry/inquiryTemplate'
-import { generateQuestionTypes, generateAdditionalInformationExamples } from '../inquiry/inquiryUtils'
+import { generateQuestionTypes, generateAdditionalInformationExamples } from '../inquiry/dialogTemplate'
 import { getFilePathOrFullPath } from '../utils/file-utils'
 import { getCodeSnippetLanguageInfo } from '../utils/lang-utils'
 import { copyToClipboard, log, readFromClipboard, showErrorMessage } from '../utils/vsc-utils'
