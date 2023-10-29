@@ -1,14 +1,10 @@
-/// <reference types="node" />
-
 import * as vscode from 'vscode'
 
-import { outputChannel } from './utils/vsc-utils'
+import { copyStatus, outputChannel } from './utils/vsc-utils'
 import { copy } from './commands/copy'
-import { closeCopyInputBox } from './commands/closeCopyInputBox'
-import { getProjectsFileTree } from './commands/projectFiles'
+import { getProjectsFileTree } from './commands/project-files'
 
 const copyCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
-const closeCopyInputBoxCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.closecopy', closeCopyInputBox)
 const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.projectfiles', getProjectsFileTree)
 
 /**
@@ -19,7 +15,9 @@ const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand('
 export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(outputChannel)
   outputChannel.show(true)
-  context.subscriptions.push(copyCommand, closeCopyInputBoxCommand, projectFilesCommand)
+  context.subscriptions.push(copyCommand, projectFilesCommand)
+  copyStatus.text = 'X'
+  copyStatus.show()
 }
 
 /**

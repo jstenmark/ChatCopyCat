@@ -2,10 +2,8 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import ignore from 'ignore'
 import * as path from 'path'
-
-type GetWorkspaceFolderFn = (uri: vscode.Uri) => vscode.WorkspaceFolder | undefined
-
-const defaultIgnoreList = ['out/**', 'docs/**', '.vscode/**', '.git/**', 'node_modules/**']
+import { defaultIgnoreList } from './consts'
+import { GetWorkspaceFolderFn } from './types'
 
 /**
  * Extracts the relative path to the project folder.

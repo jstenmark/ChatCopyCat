@@ -32,8 +32,10 @@ export function resetClipboard(): boolean {
 export function showErrorMessage(message: string): void {
   vscode.window.showErrorMessage(message)
 }
+
+export const copyStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
 export const outputChannel = vscode.window.createOutputChannel('ChatCopyCat')
-export const log = outputChannel.append
+export const log = outputChannel.appendLine
 export const logLine = outputChannel.appendLine
 export const clear = outputChannel.clear
 export const showClipboard = outputChannel.show

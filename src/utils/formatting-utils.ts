@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
+import { defaultTabSize } from './consts'
 
-export const getTabSpaces = (defaultTabSize = 2) => vscode.workspace.getConfiguration('editor').get<number>('tabSize') || defaultTabSize
+export const getTabSpaces = (tabsize = defaultTabSize) => vscode.workspace.getConfiguration('editor').get<number>('tabSize') || tabsize
 
 export function semiSafeRemoveNewlinesJsTs(code: string): string {
   let inSingleQuoteString = false

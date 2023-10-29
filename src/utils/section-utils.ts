@@ -1,12 +1,6 @@
 import * as vscode from 'vscode'
+import { SectionType, classRegex, functionRegex } from './consts'
 
-export enum SectionType { // eslint-disable-line @typescript-eslint/naming-convention
-  MULTIPLE_FUNCTIONS_AND_CLASSES = 'Selection (Multiple Functions and Classes)', // eslint-disable-line @typescript-eslint/naming-convention
-  MULTIPLE_FUNCTIONS = 'Selection (Multiple Functions)', // eslint-disable-line @typescript-eslint/naming-convention
-  MULTIPLE_CLASSES = 'Selection (Multiple Classes)', // eslint-disable-line @typescript-eslint/naming-convention
-  CODE_SNIPPET = 'Selection (Code Snippet)', // eslint-disable-line @typescript-eslint/naming-convention
-  FULL_FILE = 'File Content', // eslint-disable-line @typescript-eslint/naming-convention
-}
 /**
  * Determines the type of section that the provided text belongs to.
  *
@@ -15,8 +9,6 @@ export enum SectionType { // eslint-disable-line @typescript-eslint/naming-conve
  * @returns The determined section type.
  */
 export const detectSectionType = (text: string, editor: vscode.TextEditor): SectionType => {
-  const functionRegex = /function\s+[a-zA-Z_]\w*\s*\(|\([\w\s,]*\)\s*=>/g
-  const classRegex = /class\s+[a-zA-Z_]\w*\s*\{/
   const functionMatches = text.match(functionRegex) || []
   const classMatches = text.match(classRegex) || []
 

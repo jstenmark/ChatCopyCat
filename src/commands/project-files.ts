@@ -1,7 +1,7 @@
 import ignore from 'ignore'
 import { getFileList, getProjectRootPaths } from '../utils/file-utils'
 import { copyToClipboard, log, showErrorMessage } from '../utils/vsc-utils'
-import { generateFilesTemplate } from '../inquiry/filesTemplate'
+import { generateFilesTemplate } from '../inquiry/files-template'
 
 interface IProjectFile {
   rootPath: string

@@ -1,10 +1,12 @@
-import { generateCodeInquiryTemplate, generateCodeSnippetSection, metadataHeader } from '../inquiry/inquiryTemplate'
-import { generateQuestionTypes, generateAdditionalInformationExamples } from '../inquiry/dialogTemplate'
+import { generateCodeInquiryTemplate, generateCodeSnippetSection } from '../inquiry/inquiry-template'
+import { metadataHeader } from '../utils/consts'
+import { generateQuestionTypes, generateAdditionalInformationExamples } from '../ui/dialog-template'
 import { getFilePathOrFullPath } from '../utils/file-utils'
 import { getCodeSnippetLanguageInfo } from '../utils/lang-utils'
-import { copyToClipboard, log, readFromClipboard, showErrorMessage } from '../utils/vsc-utils'
+import { copyStatus, copyToClipboard, log, readFromClipboard, showErrorMessage } from '../utils/vsc-utils'
 import * as vscode from 'vscode'
 import { debounce, detectSectionType } from '../utils/section-utils'
+import { inputBoxManager, quickPickManager } from '../ui/dialog-template'
 
 let quickCopyCount = 0
 let lastCopyTimestamp = Date.now()
@@ -12,14 +14,24 @@ const resetQuickCopy = debounce(() => {
   quickCopyCount = 0
 }, 500) // Reset after 5 seconds of inactivity
 
-export const copyStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
-copyStatus.text = 'CCC: X'
-copyStatus.show()
 /**
  * Handles the logic for copying text from the editor to the clipboard.
  * If this function is triggered twice in quick succession, it will clear the clipboard.
  */
 export const copy = async (): Promise<void> => {
+  const editor = vscode.window.activeTextEditor
+  if (!editor) {
+    return
+  }
+
+  if (quickPickManager.isActive()) {
+    quickPickManager.close()
+    return
+  } else if (inputBoxManager.isActive()) {
+    inputBoxManager.close()
+    return
+  }
+
   const now = Date.now()
   const timeSinceLastCopy = now - lastCopyTimestamp
   lastCopyTimestamp = now
@@ -36,11 +48,7 @@ export const copy = async (): Promise<void> => {
     copyToClipboard('')
     quickCopyCount = 0
     log('Clipboard emptied...')
-  }
-
-  const editor = vscode.window.activeTextEditor
-  if (!editor) {
-    return
+    copyStatus.text = 'X'
   }
 
   const workspace = vscode.workspace
@@ -58,12 +66,13 @@ export const copy = async (): Promise<void> => {
   if (isHeaderPresent) {
     const codeSnippetSection = generateCodeSnippetSection(detectSectionType(documentOrSelectedContent, editor), codeSnippetLanguage, documentOrSelectedContent)
     finalContent = currentClipboardContent + codeSnippetSection
+    copyStatus.text = copyStatus.text + 'C'
   } else {
     // If not, generate the metadata section and the code snippet section
     const selectedType = await generateQuestionTypes()
     const additionalInfo = await generateAdditionalInformationExamples()
-    await vscode.commands.executeCommand('setContext', 'copyInputBoxOpen', false)
     finalContent = await generateCodeInquiryTemplate(documentOrSelectedContent, filePath, codeSnippetLanguage, editor, selectedType, additionalInfo)
+    copyStatus.text = 'C'
   }
 
   if (!copyToClipboard(finalContent)) {

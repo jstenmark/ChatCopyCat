@@ -1,6 +1,6 @@
 # ChatCopyCat
 
-Unleash the playful prowess of coding and chatting with ChatCopyCat, your feline agent in the mysterious alley of VS Code.
+Unleash the playful prowess of coding and chatting with ChatCopyCat, your feline companion in the mysterious alley of VS Code.
 
 ## Description
 
@@ -12,7 +12,7 @@ Incorporate ChatCopyCat into your VS Code, and watch as it brings a touch of the
 
 ## Seamless Integration with Chat-Based AI
 
-ChatCopyCat is meticulously crafted to enhance your interaction with chat-based AI agents like ChatGPT UI. It acts as a bridge, ensuring that your code is seamlessly transferred from your editor to the chat, all while preserving necessary metadata and maintaining the elegance of minified syntax. Whether you're seeking coding advice, debugging help, or intelligent code suggestions, ChatCopyCat ensures that your conversation with AI is as smooth and productive as a cat’s sleek stride.
+ChatCopyCat is crafted to enhance your interaction with chat-based AI agents like ChatGPT. It acts as a bridge, ensuring that your code is seamlessly transferred from your editor to the chat, all while preserving necessary metadata and maintaining the elegance of minified syntax. Whether you're seeking coding advice, debugging help, or intelligent code suggestions, ChatCopyCat ensures that your conversation with AI is as smooth and productive as a cat’s sleek stride.
 
 - **Effortless Code Sharing**: Share your code snippets directly in the chat with AI agents, and receive context-aware responses that understand your code's intricacies.
 - **Minimized Token Count**: Keep your interactions concise. Minified code ensures that you make the most out of every token in the conversation, especially crucial when dealing with token limits in AI models.
@@ -21,7 +21,7 @@ ChatCopyCat is meticulously crafted to enhance your interaction with chat-based 
 With ChatCopyCat, your coding workflow transforms into a seamless dance with AI, ensuring that every interaction is not just an exchange of code, but a sophisticated conversation that propels your projects forward.
 
 ## Features
-
+- **Clipboard-Ready Code**: Formats your code and adds necessary metadata for a seamless pasting experience into your chat with AI agents.
 - **Minify Your Code**: Effortlessly reduce token count in js/ts/python files for concise and efficient interactions, just like a cat’s sleek move.
 - **Metadata-Rich Copying**: Copy your code with a sprinkle of metadata magic, enhancing the clarity and context in your chat adventures.
 - **Auto-Detect File Details**: Let ChatCopyCat’s feline senses catch details like filename and language, streamlining your workflow with a cat’s agility.
@@ -29,14 +29,14 @@ With ChatCopyCat, your coding workflow transforms into a seamless dance with AI,
 
 ## How to Use
 
-1. **Copy Code with Metadata**: Place your cursor in the code or highlight the specific snippet you wish to copy. Press `Ctrl+Shift+C` (Windows/Linux) or `Cmd+Shift+C` (Mac), and let ChatCopyCat work its alley magic, copying the code along with a sprinkle of metadata for enriched chat interactions.
+1. **Prepare Code for Chat**: Place your cursor in the code or highlight the specific snippet you wish to copy. Press `Ctrl+Shift+C` (Windows/Linux) or `Cmd+Shift+C` (Mac), and let ChatCopyCat prepare your code for chat-based interactions.
 2. **Minify Code**: For the sleek cats coding in js/ts/python, ChatCopyCat automatically minifies your code, ensuring your token count is as light and agile as a cat on the prowl.
 
 
 ## Keybindings
 
-- **Windows/Linux**: `Ctrl+Shift+C` - Copy code with a touch of alley magic.
-- **Mac**: `Cmd+Shift+C` - Engage with the feline agent in Mac style.
+- `Ctrl+[Shift/Command]+C` - Copy code with a touch of alley magic.
+- `Ctrl+[Shift/Command]+C` - Shortcut for closing the context info menus
 
 ## Configuration
 

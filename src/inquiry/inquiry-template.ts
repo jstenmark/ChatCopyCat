@@ -1,13 +1,14 @@
 import * as vscode from 'vscode'
 export const templateHeader = '## Code Inquiry Template'
 
-import { detectSectionType, SectionType } from '../utils/section-utils'
-import { handleFileLanguageId } from '../handlers'
+import { detectSectionType } from '../utils/section-utils'
+import { SectionType } from '../utils/consts'
+import { handleFileLanguageId } from './handlers'
+import { metadataHeader } from '../utils/consts'
 // TODO: Fix working config
 const config = vscode.workspace.getConfiguration('ChatCopyCat')
 const enableQuestionType = config.get<boolean>('enableQuestionType')
 const enableAdditionalInfo = config.get<string>('enableAdditionalInfo')
-export const metadataHeader = '**Metadata:**'
 export function generateMinimalMetadataSection(filePath: string): string {
   return `**File:** ${filePath}\n`
 }
@@ -26,14 +27,14 @@ export function generateMetadataSection(filePath: string, questionTypes: string[
   }
   return metadata
 }
-
 export function generateCodeSnippetSection(sectionType: SectionType, codeSnippetLanguage: string, selectionText = ''): string {
-  return `
-**${sectionType || SectionType.CODE_SNIPPET}:**
+  // Remove leading and trailing newlines
+  const trimmedSelectionText = selectionText.replace(/^\n+|\n+$/g, '')
+
+  return `**${sectionType || SectionType.CODE_SNIPPET}:**
 \`\`\`${codeSnippetLanguage}
-${handleFileLanguageId(codeSnippetLanguage, selectionText)}
-\`\`\`
-`
+${handleFileLanguageId(codeSnippetLanguage, trimmedSelectionText)}
+\`\`\`\n`
 }
 
 export async function generateCodeInquiryTemplate(

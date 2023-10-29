@@ -1,5 +1,6 @@
-import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCode, getTabSpaces } from './utils/formatting-utils'
-import { log } from './utils/vsc-utils'
+import { semiSafeRemoveNewlinesJsTs, semiSafeRemoveTrailingSpacesJsTs, tabifyCode } from '../utils/formatting-utils'
+import { getTabSpaces } from '../utils/formatting-utils'
+import { log } from '../utils/vsc-utils'
 
 export function handleTypeScriptFile(content: string): string {
   log('.ts handler')

@@ -54,10 +54,6 @@
         "title": "ChatCopyCat: Copy with Metadata"
       },
       {
-        "command": "ChatCopyCat.closecopy",
-        "title": "Close suggestion"
-      },
-      {
         "command": "ChatCopyCat.projectfiles",
         "title": "ChatCopyCat: Get Project File List"
       }
@@ -65,13 +61,7 @@
     "keybindings": [
       {
         "key": "ctrl+shift+c",
-        "command": "ChatCopyCat.copy",
-        "when": "editorTextFocus"
-      },
-      {
-        "key": "ctrl+shift+c",
-        "command": "ChatCopyCat.closecopy",
-        "when": "copyInputBoxOpen"
+        "command": "ChatCopyCat.copy"
       }
     ]
   },
