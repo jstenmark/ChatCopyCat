@@ -1,5 +1,6 @@
 .vscode/**
 .vscode-test/**
+out/test/**
 src/**
 .gitignore
 .yarnrc
@@ -7,8 +8,8 @@ src/**
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+
 yarn-error.log
 docs
-out/test/**
-test/**
-docs/*
+

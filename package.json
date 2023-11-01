@@ -8,7 +8,10 @@
   "engines": {
     "vscode": "^1.83.0"
   },
-  "repository": {"type":"git","url":"https://github.com/jstenmark/ChatCopyCat"},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jstenmark/ChatCopyCat"
+  },
   "categories": [
     "Snippets",
     "Programming Languages",
@@ -62,7 +65,7 @@
       {
         "key": "ctrl+shift+c",
         "command": "ChatCopyCat.copy",
-        "when": "editorTextFocus || inQuickOpen"
+        "when": "!terminalFocus && editorTextFocus || !terminalFocus && inQuickOpen"
       }
     ]
   },
@@ -74,18 +77,20 @@
     "lint:debug": "eslint --debug src/**/*.ts --ext ts",
     "lint:config": "eslint --print-config .eslintrc.json",
     "test": "node -v",
-    "test_": "node ./out/test/runTest.js",
+    "test_": "tsc && node ./out/test/runTest.js",
     "pkg": "vsce package && code --install-extension ./chatcopycat-0.0.*.vsix"
   },
   "devDependencies": {
     "@types/eslint": "^8.0.0",
+    "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.3",
     "@types/node": "^17.0.0",
     "@types/vscode": "^1.83.1",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/experimental-utils": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "@vscode/test-electron": "^2.3.5",
+    "@typescript-eslint/parser": "^6.9.1",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.6",
     "@vscode/vsce": "^2.21.1",
     "electron": "^27.0.2",
     "eslint": "^8.0.0",
@@ -93,7 +98,7 @@
     "eslint-plugin-local-rules": "^2.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-regexp": "^2.1.1",
-    "glob": "^10.3.10",
+    "glob": "^8.1.0",
     "ignore": "^5.2.4",
     "mocha": "^10.2.0",
     "prettier": "3.0.3",

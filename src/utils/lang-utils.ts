@@ -1,15 +1,21 @@
 import * as vscode from 'vscode'
-const defaultCodeSnippetLanguage = '[Specify the programming language]'
-import { showErrorMessage, log } from './vsc-utils'
+import { ILangOpts } from './types'
+import { log, showNotification } from './vsc-utils'
 
-export function getCodeSnippetLanguageInfo(editor: vscode.TextEditor): string {
-  return editor?.document.languageId || defaultCodeSnippetLanguage
+export const getLangOpts = (editor: vscode.TextEditor): ILangOpts => {
+  const { tabSize: _tabSize, insertSpaces: _insertSpaces }: vscode.TextEditorOptions = editor.options
+  const { languageId: language }: vscode.TextDocument = editor.document
+
+  const tabSize: number = typeof _tabSize === 'number' ? _tabSize : 2
+  const insertSpaces = !!_insertSpaces
+
+  return { tabSize, language, insertSpaces }
 }
 
 export async function copyDefinitions() {
   const editor = vscode.window.activeTextEditor
   if (!editor) {
-    showErrorMessage('No active editor found!')
+    await showNotification('error', 'No active editor found!')
     return
   }
 
@@ -20,7 +26,7 @@ export async function copyDefinitions() {
     const position = new vscode.Position(i, 0)
     const definitions = await vscode.commands.executeCommand<vscode.Location[]>('vscode.executeDefinitionProvider', doc.uri, position)
 
-    if (definitions && definitions.length) {
+    if (definitions?.length) {
       for (const def of definitions) {
         if (def.uri.fsPath === doc.uri.fsPath) {
           allDefinitions.push(doc.getText(def.range))
@@ -29,6 +35,6 @@ export async function copyDefinitions() {
     }
   }
 
-  vscode.env.clipboard.writeText(allDefinitions.join('\n'))
+  await vscode.env.clipboard.writeText(allDefinitions.join('\n'))
   log(`Copied ${allDefinitions.length} definitions to clipboard.`)
 }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
+import { descriptionExamples as inquirtyDescriptionExamples, questionContextExamples as inquiryTypeExamples } from '../utils/consts'
 import { DialogComponentManager } from './dialog-component-manager'
-import { descriptionExamples, questionTypeExamples } from '../utils/consts'
 
 export const quickPickManager = new DialogComponentManager()
 export const inputBoxManager = new DialogComponentManager()
@@ -13,7 +13,7 @@ export const inputBoxManager = new DialogComponentManager()
  * @param customItemLabel - A label for the option that allows the user to input a custom value.
  * @returns A promise that resolves to an array containing the selected option or a custom input value. Returns an empty array if no option is selected.
  */
-async function generateInputOrSelectOptions(title: string, items: string[], customItemLabel: string): Promise<string[]> {
+async function getInquirytOptions(title: string, items: string[], customItemLabel: string): Promise<string[]> {
   const customItem = `${customItemLabel} (Input Custom)`
 
   const selectedOption = await quickPickManager.show(() => {
@@ -27,7 +27,7 @@ async function generateInputOrSelectOptions(title: string, items: string[], cust
     if (selectedOption === customItem) {
       const customInput = await inputBoxManager.show(() => {
         const inputBox = vscode.window.createInputBox()
-        inputBox.placeholder = 'Type something...'
+        inputBox.placeholder = '...'
         return inputBox
       })
       return customInput ? [customInput] : []
@@ -38,10 +38,15 @@ async function generateInputOrSelectOptions(title: string, items: string[], cust
   return []
 }
 
-export async function generateAdditionalInformationExamples(): Promise<string[]> {
-  return generateInputOrSelectOptions('Additional Information', descriptionExamples, 'Custom')
+export async function getInquirtyDescription(): Promise<string[]> {
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableQuestionType')
+  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableAdditionalInfo')
+
+  return inquiryTypeEnabled && inquiryDescriptionEnabled ? getInquirytOptions('Additional Information', inquirtyDescriptionExamples, 'Custom') : []
 }
 
-export async function generateQuestionTypes(): Promise<string[]> {
-  return generateInputOrSelectOptions('Question Type', questionTypeExamples, 'Custom')
+export async function getInquiryType(): Promise<string[]> {
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableQuestionType')
+
+  return inquiryTypeEnabled ? getInquirytOptions('Question Context', inquiryTypeExamples, 'Custom') : []
 }

@@ -1,52 +1,52 @@
 import * as vscode from 'vscode'
-export const templateHeader = '## Code Inquiry Template'
 
-import { detectSectionType } from '../utils/section-utils'
-import { SectionType } from '../utils/consts'
+import { SectionType, metadataHeader } from '../utils/consts'
+import { ILangOpts } from '../utils/types'
 import { handleFileLanguageId } from './handlers'
-import { metadataHeader } from '../utils/consts'
-// TODO: Fix working config
-const config = vscode.workspace.getConfiguration('ChatCopyCat')
-const enableQuestionType = config.get<boolean>('enableQuestionType')
-const enableAdditionalInfo = config.get<string>('enableAdditionalInfo')
-export function generateMinimalMetadataSection(filePath: string): string {
-  return `**File:** ${filePath}\n`
-}
 
-export function generateMetadataSection(filePath: string, questionTypes: string[] | undefined, additionalInfo: string[] | undefined): string {
-  let metadata = `${metadataHeader}\n- **File:** ${filePath}\n`
+export function generateMetadataSection(
+  fileName: string | undefined,
+  inquiryTypes: string[] | undefined,
+  inquiryDescripton: string[] | undefined,
+  sectionType: SectionType,
+  problemCount: number,
+  headerIsInClipboard: boolean,
+): string {
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableQuestionType')
+  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableAdditionalInfo')
+  let metadata = !headerIsInClipboard ? `${metadataHeader}\n` : '\n'
+  metadata += `- File: ${fileName}\n`
+  metadata += `- Section: ${sectionType}\n`
+  metadata += problemCount > 0 ? `- Problem Count: ${problemCount}\n` : ''
 
-  if (questionTypes && questionTypes.length > 0 && enableQuestionType) {
-    const questionNames = questionTypes.join(', ')
-    metadata += `- **Question Type:** ${questionNames}\n`
+  if (inquiryTypes && inquiryTypes.length > 0 && inquiryTypeEnabled) {
+    const questionNames = inquiryTypes.join(', ')
+    metadata += `- Type: ${questionNames}\n`
   }
 
-  if (additionalInfo && additionalInfo.length > 0 && enableAdditionalInfo) {
-    const additionalInfoContent = additionalInfo.join(', ')
-    metadata += `- **Additional Information:** ${additionalInfoContent}\n`
+  if (inquiryDescripton && inquiryDescripton.length > 0 && inquiryDescriptionEnabled) {
+    const additionalInfoContent = inquiryDescripton.join(', ')
+    metadata += `- Description: ${additionalInfoContent}\n`
   }
   return metadata
 }
-export function generateCodeSnippetSection(sectionType: SectionType, codeSnippetLanguage: string, selectionText = ''): string {
-  // Remove leading and trailing newlines
-  const trimmedSelectionText = selectionText.replace(/^\n+|\n+$/g, '')
-
-  return `**${sectionType || SectionType.CODE_SNIPPET}:**
-\`\`\`${codeSnippetLanguage}
-${handleFileLanguageId(codeSnippetLanguage, trimmedSelectionText)}
+export function generateCodeSnippetSection(selectionText: string, langOpts: ILangOpts): string {
+  return `
+\`\`\`${langOpts.language}
+${handleFileLanguageId(selectionText, langOpts)}
 \`\`\`\n`
 }
 
-export async function generateCodeInquiryTemplate(
-  text: string,
-  filePath: string,
-  codeSnippetLanguage: string,
-  editor: vscode.TextEditor,
-  questionType: string[],
-  additionalInfo: string[],
-): Promise<string> {
-  const metadataSection = generateMetadataSection(filePath, questionType, additionalInfo)
-  const codeSnippetSection = generateCodeSnippetSection(detectSectionType(text, editor), codeSnippetLanguage, text)
+export function generateDiagnosticsSection(diagnostics: vscode.Diagnostic[]): string {
+  const strippedDiagnostics = diagnostics
+    .map(({ source, message, range }: vscode.Diagnostic): string => {
+      const rangeStr = `${range.start.line}:${range.start.character}-${range.end.line}:${range.start.character}`
+      return `${source},${rangeStr}\t${message}`
+    })
+    .join('\n')
 
-  return `${metadataSection}\n${codeSnippetSection}`
+  return `[VSCodeProblems] (source,startline:startchar-endline-endchar message)\n${strippedDiagnostics}\n`
+}
+export function getInquiry(metadataSection: string, codeSnippetSection: string, diagnosticsSection: string): string {
+  return `${metadataSection}\n${codeSnippetSection}\n${diagnosticsSection}\n`
 }

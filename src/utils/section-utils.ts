@@ -9,8 +9,9 @@ import { SectionType, classRegex, functionRegex } from './consts'
  * @returns The determined section type.
  */
 export const detectSectionType = (text: string, editor: vscode.TextEditor): SectionType => {
-  const functionMatches = text.match(functionRegex) || []
-  const classMatches = text.match(classRegex) || []
+  // TODO: Handle multiple languages
+  const functionMatches = text.match(functionRegex) ?? []
+  const classMatches = text.match(classRegex) ?? []
 
   if (isFullFileSelected(editor)) {
     return SectionType.FULL_FILE

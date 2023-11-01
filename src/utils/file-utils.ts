@@ -1,63 +1,34 @@
-import * as vscode from 'vscode'
 import * as fs from 'fs'
 import ignore from 'ignore'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { defaultIgnoreList } from './consts'
-import { GetWorkspaceFolderFn } from './types'
 
-/**
- * Extracts the relative path to the project folder.
- * @param vscodeFilePath - The full file path.
- * @param projectFolder - The project's root folder name.
- * @returns The relative path to the project folder.
- */
-export function extractWorkdirPath(vscodeFilePath: string, projectFolder: string): string {
-  const projectFolderIndex = vscodeFilePath.indexOf(projectFolder)
-  if (projectFolderIndex !== -1) {
-    const pathRelativeToProject = vscodeFilePath.substring(projectFolderIndex + projectFolder.length)
-    return pathRelativeToProject.startsWith('/') ? pathRelativeToProject.substring(1) : pathRelativeToProject
-  } else {
-    return vscodeFilePath
+export function getRelativePathOrBasename(fileFsPath: string, workspaceFsPath?: string): string {
+  if (workspaceFsPath) {
+    const projectFolderIndex = fileFsPath.indexOf(workspaceFsPath)
+    const relativePath = path.relative(workspaceFsPath, fileFsPath)
+
+    if (!relativePath.startsWith('..') || projectFolderIndex !== -1) {
+      return relativePath.replace(/\\/g, '/').replace(/^\/+/g, '')
+    }
   }
-}
-
-export function getRelativePathOfFile(fileAbsolutePath: string, projectRoot: string): string | undefined {
-  if (projectRoot) {
-    return path.relative(projectRoot, fileAbsolutePath)
-  }
-  return undefined
-}
-
-export function getFilePathOrFullPath(
-  fileName: string | undefined,
-  editor: vscode.TextEditor | undefined,
-  getWorkspaceFolder: GetWorkspaceFolderFn,
-): string | undefined {
-  const workspaceFolder = getDocumentWorkspaceFolder(editor, getWorkspaceFolder)
-  const filePath = workspaceFolder && fileName?.startsWith(workspaceFolder) ? extractWorkdirPath(fileName, workspaceFolder) : fileName || undefined
-  return filePath
+  return path.basename(fileFsPath)
 }
 
 /**
- * Get the workspace folder (project folder) or undefined if not found.
- * @returns The workspace folder path or undefined.
+ * Get an array of project root paths.
+ * @returns An array of project root paths or undefined if no workspace folders exist.
  */
-export function getDocumentWorkspaceFolder(editor: vscode.TextEditor | undefined, getWorkspaceFolder: GetWorkspaceFolderFn): string | undefined {
-  const document = editor?.document
-  if (document) {
-    const workspaceFolder = getWorkspaceFolder(document.uri)
-    return workspaceFolder?.uri.fsPath
-  }
-  return undefined
-}
-
 export function getProjectRootPaths(): string[] | undefined {
-  if (vscode.workspace.workspaceFolders) {
-    return vscode.workspace.workspaceFolders.map(f => f.uri.fsPath)
-  }
-  return undefined
+  return vscode.workspace.workspaceFolders?.map(f => f.uri.fsPath)
 }
 
+/**
+ * Check if a path is a directory.
+ * @param filePath - The file path.
+ * @returns True if it's a directory, false otherwise.
+ */
 export async function isDirectory(filePath: string): Promise<boolean> {
   try {
     const stat = await fs.promises.stat(filePath)
@@ -67,19 +38,23 @@ export async function isDirectory(filePath: string): Promise<boolean> {
   }
 }
 
-export async function getFileList(directory = __dirname, originalRoot = directory, ig = ignore(), ignoreList: string[] = defaultIgnoreList) {
-  const fileList: string[] = []
-
-  // These are default patterns to ignore.
+/**
+ * Get a list of files based on directory, ignoring patterns from gitignore files.
+ * @param directory - The directory path.
+ * @param originalRoot - The original root directory.
+ * @param ig - Ignore instance.
+ * @param ignoreList - List of patterns to ignore.
+ * @returns A promise that resolves to an array of file paths.
+ */
+export async function getFileList(directory = __dirname, originalRoot = directory, ig = ignore(), ignoreList: string[] = defaultIgnoreList): Promise<string[]> {
   ig.add(ignoreList)
-
   const files = await fs.promises.readdir(directory)
+  const fileList: string[] = []
 
   for (const file of files) {
     const fullPath = path.join(directory, file)
     const fullRelativePath = path.relative(originalRoot, fullPath)
 
-    // Skip if the file or directory is ignored
     if (ig.ignores(fullRelativePath)) {
       continue
     }
@@ -95,7 +70,6 @@ export async function getFileList(directory = __dirname, originalRoot = director
         const patterns = parseGitignore(gitignoreContent, gitignoreDir)
         ig.add(patterns)
       }
-
       fileList.push(fullRelativePath)
     }
   }
@@ -104,7 +78,7 @@ export async function getFileList(directory = __dirname, originalRoot = director
 }
 
 /**
- * Parses a .gitignore content and returns an array of patterns.
+ * Parse a .gitignore content and return an array of patterns.
  * @param gitignoreContent - The content of the .gitignore file.
  * @param basePath - The directory path of the .gitignore file.
  * @returns An array of patterns to be ignored.

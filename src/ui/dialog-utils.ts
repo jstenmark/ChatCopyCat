@@ -10,6 +10,6 @@ export const isInputBox = (component: DialogComponent): component is vscode.Inpu
  * @param disposables An array of disposables to be disposed.
  */
 export function disposeAllEventHandlers(disposables: vscode.Disposable[]): void {
-  disposables.forEach(d => d.dispose())
+  disposables.forEach(d => d.dispose() as void)
   disposables.length = 0
 }

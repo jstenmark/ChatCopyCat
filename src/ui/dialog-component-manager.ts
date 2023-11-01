@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
-import { isQuickPick, isInputBox, DialogComponent } from './dialog-utils'
-import { disposeAllEventHandlers } from './dialog-utils'
+import { DialogComponent, disposeAllEventHandlers, isInputBox, isQuickPick } from './dialog-utils'
 
 /**
  * Manages UI dialog components for a Visual Studio Code extension.
@@ -13,7 +12,7 @@ export class DialogComponentManager {
 
   private component?: DialogComponent
   private disposable?: vscode.Disposable
-  private queue: Array<() => Promise<string | undefined>> = []
+  private queue: (() => Promise<string | undefined>)[] = []
 
   /**
    * Display the dialog component created by the given factory function.
@@ -73,7 +72,7 @@ export class DialogComponentManager {
       if (!component) {
         return undefined
       }
-      return (await this.handleComponentInteraction(component)) || undefined
+      return (await this.handleComponentInteraction(component)) ?? undefined
     } catch (err) {
       console.error('An error occurred while creating the component:', err)
       return undefined

@@ -1,7 +1,4 @@
-import * as vscode from 'vscode'
-import { defaultTabSize } from './consts'
-
-export const getTabSpaces = (tabsize = defaultTabSize) => vscode.workspace.getConfiguration('editor').get<number>('tabSize') || tabsize
+import { ILangOpts } from './types'
 
 export function semiSafeRemoveNewlinesJsTs(code: string): string {
   let inSingleQuoteString = false
@@ -112,10 +109,12 @@ export function semiSafeRemoveTrailingSpacesJsTs(code: string): string {
 }
 
 const removeNewlines = (input: string): string => input.replace(/\n\n/g, '\n')
-
 const removeTrailingSpacesFromLines = (lines: string[]): string[] => lines.map(line => line.replace(/\s+$/, ''))
+export const removeMultiLineComments = (input: string) => input.replace(/\/\*[\s\S]*?\*\//g, '')
+export const removeSingleLineComments = (input: string) => input.replace(/\/\/.*$/gm, '')
+export const removedQuotes = (input: string) => input.replace(/^["'](.+(?=["']$))["']$/, '$1')
 
-export function tabifyCode(inputString: string, tabSpaces: number, applyRemoveNewlines = true, applyRemoveTrailingSpaces = true): string {
+export function tabifyCode(inputString: string, langOpts: ILangOpts, applyRemoveNewlines = true, applyRemoveTrailingSpaces = true): string {
   let lines: string[] = inputString.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n')
 
   if (applyRemoveTrailingSpaces) {
@@ -125,11 +124,11 @@ export function tabifyCode(inputString: string, tabSpaces: number, applyRemoveNe
   // TODO: log indent maybe
   const processedLines = lines.map(line => {
     const leadingSpacesOrTabs = line.match(/^[ \t]*/)
-    const indent = leadingSpacesOrTabs ? leadingSpacesOrTabs[0].replace('\t', ' '.repeat(tabSpaces)).length : 0
+    const indent = leadingSpacesOrTabs ? leadingSpacesOrTabs[0].replace('\t', ' '.repeat(langOpts.tabSize)).length : 0
     const lineContent = line.substring(indent)
-    const numTabs = Math.floor(indent / tabSpaces)
+    const numTabs = Math.floor(indent / langOpts.tabSize)
 
-    const spacesLeft = indent - numTabs * tabSpaces
+    const spacesLeft = indent - numTabs * langOpts.tabSize
     return `${'\t'.repeat(numTabs)}${' '.repeat(spacesLeft)}${lineContent}`
   })
 
@@ -140,4 +139,39 @@ export function tabifyCode(inputString: string, tabSpaces: number, applyRemoveNe
   }
 
   return output
+}
+
+export const removeCommentsAndDocstrings = (inputCode: string): string => {
+  let modifiedCode = ''
+  let inDocstring = false
+
+  // Regular expression to match Python multiline docstrings
+  const docstringRegex = /(['"]{3})[\s\S]*?\1/g
+
+  // Regular expression to match Python single-line comments
+  const commentRegex = /#.*$/gm
+
+  const lines = inputCode.split('\n')
+
+  for (let line of lines) {
+    if (inDocstring) {
+      if (line.match(docstringRegex)) {
+        // End of docstring
+        inDocstring = false
+        line = line.replace(docstringRegex, '')
+      }
+    } else {
+      // Check for docstring
+      if (line.match(docstringRegex)) {
+        inDocstring = true
+        line = line.replace(docstringRegex, '')
+      }
+      // Remove single-line comments
+      line = line.replace(commentRegex, '')
+    }
+
+    modifiedCode += line + '\n'
+  }
+
+  return modifiedCode.trim()
 }

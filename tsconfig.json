@@ -18,6 +18,7 @@
     "preserveConstEnums": true
   },
   "exclude": [
-    "node_modules", ".vscode-test", "out", "docs"
+    "node_modules", ".vscode-test", "out", "docs", ".github", ".git"
   ],
+  "include": ["src"],
 }

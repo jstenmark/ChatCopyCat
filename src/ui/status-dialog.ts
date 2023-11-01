@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { copyToClipboard, log } from '../utils/vsc-utils'
+import { resetClipboard, showNotification } from '../utils/vsc-utils'
 
 export class ClipboardStatusBar {
   private statusBarItem: vscode.StatusBarItem
@@ -34,11 +34,10 @@ export class ClipboardStatusBar {
   }
 
   // @ clipboardStatusBar.command
-  public setClipboardEmpty() {
-    copyToClipboard('')
+  public async setClipboardEmpty() {
+    await resetClipboard()
+    await showNotification('warning', 'Clipboard has been reset')
     clipboardStatusBar.resetCount()
-    log('Clipboard has been reset.')
-    vscode.window.showInformationMessage('Clipboard has been reset.')
     this.statusBarItem.text = `C:0`
   }
 
@@ -53,7 +52,7 @@ export class ClipboardStatusBar {
   public async showClipBoardMenu() {
     const action = await vscode.window.showQuickPick(['Reset Clipboard'], { placeHolder: 'Select an action' })
     if (action === 'Reset Clipboard') {
-      vscode.commands.executeCommand('ChatCopyCat.resetClipboard')
+      await vscode.commands.executeCommand('ChatCopyCat.resetClipboard')
     }
   }
 }

@@ -27,6 +27,16 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "label": "Lint",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}; yarn lint",
+      "problemMatcher": ["$eslint-stylish"],
+      "presentation": {
+        "reveal": "always",
+        "focus": true
+      },
     }
   ]
 }

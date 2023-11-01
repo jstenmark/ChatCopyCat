@@ -5,3 +5,9 @@ export interface IProjectFile {
   rootPath: string
   files: string[]
 }
+
+export interface ILangOpts {
+  tabSize: number
+  insertSpaces: boolean
+  language: string
+}

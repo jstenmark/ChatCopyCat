@@ -1,4 +1,4 @@
-export const defaultIgnoreList = ['out/**', 'docs/**', '.vscode/**', '.git/**', 'node_modules/**', "docs/**"]
+export const defaultIgnoreList = ['out/**', 'docs/**', '.vscode/**', '.git/**', 'node_modules/**', 'docs', '**/__pycache__/**', '.vscode-test']
 export const defaultTabSize = 2
 
 export enum SectionType {
@@ -24,7 +24,7 @@ export const descriptionExamples = [
   'This code was working fine until I made some changes yesterday.',
 ]
 
-export const questionTypeExamples = [
+export const questionContextExamples = [
   'Optimization',
   'Syntax',
   'Logic',
@@ -36,4 +36,4 @@ export const questionTypeExamples = [
   'Security',
   'Documentation',
 ]
-export const metadataHeader = '**Metadata:**'
+export const metadataHeader = '[Metadata]'

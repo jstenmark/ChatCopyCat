@@ -2,29 +2,44 @@
   "files.exclude": {
     "out": true,
     "node_modules": true,
-    "**/*.js": { "when": "$(basename).ts"}
-  },
-  "files.watcherExclude": {
-    "**/.git/objects/**": true,
-    "out": true
+    "**/*.js": { "when": "$(basename).ts"},
+    "**/.git/objects": true,
   },
 
-  "files.trimTrailingWhitespace": false,
-  "search.exclude": {
-    "**/node_modules": true,
-    "out": true
+
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on",
+    "other": "on"
   },
+  "editor.unicodeHighlight.ambiguousCharacters": true,
+  "editor.unicodeHighlight.invisibleCharacters": true,
+  "editor.wordWrap": "off",
+
+
   "[typescript][markdown][json][jsonc]": {
-    "editor.formatOnPaste": false, // required
-    "editor.formatOnType": false, // required
-    "editor.formatOnSave": true, // optional
-    "editor.formatOnSaveMode": "file", // required to format on save
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.formatOnPaste": false,
+    "editor.formatOnSaveMode": "modifications",
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": "always",
+      "source.fixAll": true,
+    },
+    "files.trimTrailingWhitespace": true,
+    "diffEditor.ignoreTrimWhitespace": false,
   },
+  "eslint.validate": ["typescript"],
+  "eslint.enable":true,
+  "eslint.problems.shortenToSingleLine": false,
+  "eslint.lintTask.enable": true,
+  "eslint.options": {
+    "overrideConfigFile": "./.eslintrc.json"
+  },
+
+
   "[markdown]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "diffEditor.ignoreTrimWhitespace": true,
+    "files.trimTrailingWhitespace": false,
   },
-  "telemetry.enableCrashReporter": false,
-  "telemetry.enableTelemetry": false,
-  "update.channel": "ChatCopyCat",
 }
