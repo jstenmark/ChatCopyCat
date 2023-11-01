@@ -1,4 +1,4 @@
-export const defaultIgnoreList = ['out/**', 'docs/**', '.vscode/**', '.git/**', 'node_modules/**']
+export const defaultIgnoreList = ['out/**', 'docs/**', '.vscode/**', '.git/**', 'node_modules/**', "docs/**"]
 export const defaultTabSize = 2
 
 export enum SectionType {

@@ -14,16 +14,15 @@
     "**/node_modules": true,
     "out": true
   },
-  "files.autoSave": "onFocusChange", // optional but recommended
-  "vs-code-prettier-eslint.prettierLast": false,
   "[typescript][markdown][json][jsonc]": {
     "editor.formatOnPaste": false, // required
     "editor.formatOnType": false, // required
     "editor.formatOnSave": true, // optional
     "editor.formatOnSaveMode": "file", // required to format on save
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[markdown]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "telemetry.enableCrashReporter": false,
   "telemetry.enableTelemetry": false,

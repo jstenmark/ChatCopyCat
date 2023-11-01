@@ -2,12 +2,9 @@ import ignore from 'ignore'
 import { getFileList, getProjectRootPaths } from '../utils/file-utils'
 import { copyToClipboard, log, showErrorMessage } from '../utils/vsc-utils'
 import { generateFilesTemplate } from '../inquiry/files-template'
+import { IProjectFile } from '../utils/types'
 
-interface IProjectFile {
-  rootPath: string
-  files: string[]
-}
-
+// TODO: Check "Explorer contexts" if a folder is selected to copy relative filetree for a keybinding
 export const getProjectsFileTree = async (): Promise<void> => {
   const rootPaths: string[] = getProjectRootPaths() || []
   const projectsFiles: IProjectFile[] = []

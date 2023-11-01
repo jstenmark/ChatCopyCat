@@ -1,12 +1,13 @@
+import * as vscode from 'vscode'
 import { generateCodeInquiryTemplate, generateCodeSnippetSection } from '../inquiry/inquiry-template'
 import { metadataHeader } from '../utils/consts'
 import { generateQuestionTypes, generateAdditionalInformationExamples } from '../ui/dialog-template'
 import { getFilePathOrFullPath } from '../utils/file-utils'
 import { getCodeSnippetLanguageInfo } from '../utils/lang-utils'
-import { copyStatus, copyToClipboard, log, readFromClipboard, showErrorMessage } from '../utils/vsc-utils'
-import * as vscode from 'vscode'
+import { copyToClipboard, readFromClipboard, showErrorMessage } from '../utils/vsc-utils'
 import { debounce, detectSectionType } from '../utils/section-utils'
 import { inputBoxManager, quickPickManager } from '../ui/dialog-template'
+import { clipboardStatusBar } from '../ui/status-dialog'
 
 let quickCopyCount = 0
 let lastCopyTimestamp = Date.now()
@@ -45,10 +46,8 @@ export const copy = async (): Promise<void> => {
   resetQuickCopy()
   // If two quick copies have been made, reset clipboard and counter
   if (quickCopyCount >= 2) {
-    copyToClipboard('')
+    clipboardStatusBar.setClipboardEmpty()
     quickCopyCount = 0
-    log('Clipboard emptied...')
-    copyStatus.text = 'X'
   }
 
   const workspace = vscode.workspace
@@ -66,13 +65,13 @@ export const copy = async (): Promise<void> => {
   if (isHeaderPresent) {
     const codeSnippetSection = generateCodeSnippetSection(detectSectionType(documentOrSelectedContent, editor), codeSnippetLanguage, documentOrSelectedContent)
     finalContent = currentClipboardContent + codeSnippetSection
-    copyStatus.text = copyStatus.text + 'C'
+    clipboardStatusBar.incrementCount()
   } else {
     // If not, generate the metadata section and the code snippet section
     const selectedType = await generateQuestionTypes()
     const additionalInfo = await generateAdditionalInformationExamples()
     finalContent = await generateCodeInquiryTemplate(documentOrSelectedContent, filePath, codeSnippetLanguage, editor, selectedType, additionalInfo)
-    copyStatus.text = 'C'
+    clipboardStatusBar.updateCount(1)
   }
 
   if (!copyToClipboard(finalContent)) {

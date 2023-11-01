@@ -35,8 +35,26 @@ With ChatCopyCat, your coding workflow transforms into a seamless dance with AI,
 
 ## Keybindings
 
-- `Ctrl+[Shift/Command]+C` - Copy code with a touch of alley magic.
-- `Ctrl+[Shift/Command]+C` - Shortcut for closing the context info menus
+- `Ctrl+Shift+C` - Copy code with a touch of alley magic.
+- `Ctrl+Shift+C` - Shortcut for closing the context info menus
+- `Ctrl+Shift+C + Ctrl+Shift+C` - Reset clipboard if pressed witin 300ms
+
+## Keybindings
+
+- **Copy to clipboard:** `Ctrl+Shift+C`
+  - Copies the selected code or current line to the clipboard with metadata formatting and minification applied. This allows you to seamlessly paste the code into a chat with an AI assistant.
+
+- **Append to clipboard:** `Ctrl+Shift+C`
+  - Copies the selected code or current line to the clipboard with metadata formatting and minification applied. This allows you to seamlessly paste the code into a chat with an AI assistant.
+
+- **Close suggestions:**`Ctrl+Shift+C`
+  - When a context menu is open, this shortcut will close it.
+
+- **Reset clipboard** `Ctrl+Shift+C` + `Ctrl+Shift+C`
+  - If these two keybindings are pressed within 300ms of each other, the clipboard will be reset. This allows you to quickly clear the clipboard if needed.
+
+
+
 
 ## Configuration
 
