@@ -27,32 +27,19 @@ With ChatCopyCat, your coding workflow transforms into a seamless dance with AI,
 - **Auto-Detect File Details**: Let ChatCopyCat’s feline senses catch details like filename and language, streamlining your workflow with a cat’s agility.
 - **Customizable Banter**: Tailor your experience with configurable question types and additional information prompts, making each chat a paw-sonalized adventure.
 
-## How to Use
-
-1. **Prepare Code for Chat**: Place your cursor in the code or highlight the specific snippet you wish to copy. Press `Ctrl+Shift+C` (Windows/Linux) or `Cmd+Shift+C` (Mac), and let ChatCopyCat prepare your code for chat-based interactions.
-2. **Minify Code**: For the sleek cats coding in js/ts/python, ChatCopyCat automatically minifies your code, ensuring your token count is as light and agile as a cat on the prowl.
-
-
 ## Keybindings
-
-- `Ctrl+Shift+C` - Copy code with a touch of alley magic.
-- `Ctrl+Shift+C` - Shortcut for closing the context info menus
-- `Ctrl+Shift+C + Ctrl+Shift+C` - Reset clipboard if pressed witin 300ms
-
-## Keybindings
-
+> Basicly `Ctrl+Shift+C` for every clipboard interaction
 - **Copy to clipboard:** `Ctrl+Shift+C`
-  - Copies the selected code or current line to the clipboard with metadata formatting and minification applied. This allows you to seamlessly paste the code into a chat with an AI assistant.
+  - Copies the selected code or file content to the clipboard **with** metadata, and formatting and minification/token optimization is applied. ***This allows you to seamlessly paste the code into a chat with an AI assistant.***
 
 - **Append to clipboard:** `Ctrl+Shift+C`
-  - Copies the selected code or current line to the clipboard with metadata formatting and minification applied. This allows you to seamlessly paste the code into a chat with an AI assistant.
+  - Copies the selected code or current line to the clipboard **without** metadata, and formatting and minification is applied.
 
 - **Close suggestions:**`Ctrl+Shift+C`
-  - When a context menu is open, this shortcut will close it.
+  - When a metadata suggestions menu is open - this shortcut will close it.
 
 - **Reset clipboard** `Ctrl+Shift+C` + `Ctrl+Shift+C`
-  - If these two keybindings are pressed within 300ms of each other, the clipboard will be reset. This allows you to quickly clear the clipboard if needed.
-
+  - If these two keybindings are pressed within 300ms of each other, the clipboard will be reset. ***This allows you to quickly clear the clipboard if needed.***
 
 
 
