@@ -74,7 +74,7 @@ export const copy = async (): Promise<void> => {
 
     const diagnosticsSection = textContentDiagnostics.length > 0 ? generateDiagnosticsSection(textContentDiagnostics, selection) : ''
     const codeSnippetSection = generateCodeSnippetSection(textContent, selection, langOpts)
-    const inquiry = getInquiry(selectionMetadata + '\n', codeSnippetSection + '\n', diagnosticsSection + '\n').trim()
+    const inquiry = getInquiry(selectionMetadata + '\n', codeSnippetSection + '\n', diagnosticsSection + '\n').trimEnd()
 
     // Append the generated inquiry for the current selection
     handledSelections.push(inquiry)
