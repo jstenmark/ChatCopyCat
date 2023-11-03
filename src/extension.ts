@@ -4,10 +4,7 @@ import { getProjectsFileTree } from './commands/project-files'
 import { clipboardStatusBar } from './ui/status-dialog'
 import { outputChannel } from './utils/vsc-utils'
 
-const copyCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
-const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.projectfiles', getProjectsFileTree)
-const resetClipBoardCommand = vscode.commands.registerCommand('ChatCopyCat.resetClipboard', clipboardStatusBar.setClipboardEmpty.bind(clipboardStatusBar))
-const showClipBoardMenu = vscode.commands.registerCommand('ChatCopyCat.showClipBoardMenu', clipboardStatusBar.showClipBoardMenu.bind(clipboardStatusBar))
+let copyCommand: vscode.Disposable
 
 /**
  * This function is called when the extension is activated.
@@ -15,10 +12,15 @@ const showClipBoardMenu = vscode.commands.registerCommand('ChatCopyCat.showClipB
  * @param {vscode.ExtensionContext} context - The extension context.
  */
 export function activate(context: vscode.ExtensionContext) {
+  copyCommand = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
+  const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.projectFiles', getProjectsFileTree)
+  const resetClipboardCommand = vscode.commands.registerCommand('ChatCopyCat.resetClipboard', clipboardStatusBar.setClipboardEmpty.bind(clipboardStatusBar))
+  const showClipBoardMenu = vscode.commands.registerCommand('ChatCopyCat.showClipBoardMenu', clipboardStatusBar.showClipboardMenu.bind(clipboardStatusBar))
+
   context.subscriptions.push(outputChannel)
   outputChannel.show(true)
   clipboardStatusBar.show()
-  context.subscriptions.push(copyCommand, projectFilesCommand, resetClipBoardCommand, showClipBoardMenu)
+  context.subscriptions.push(copyCommand, projectFilesCommand, resetClipboardCommand, showClipBoardMenu)
 }
 
 /**

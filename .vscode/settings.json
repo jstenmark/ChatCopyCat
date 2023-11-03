@@ -37,7 +37,14 @@
     "overrideConfigFile": "./.eslintrc.json"
   },
 
-
+  "[json][jsonc]": {
+    "editor.formatOnPaste": false,
+    "editor.formatOnSaveMode": "file",
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "files.trimTrailingWhitespace": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.formatOnSave": true
+  },
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": true,
     "files.trimTrailingWhitespace": false,

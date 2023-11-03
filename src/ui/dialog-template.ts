@@ -39,14 +39,14 @@ async function getInquirytOptions(title: string, items: string[], customItemLabe
 }
 
 export async function getInquirtyDescription(): Promise<string[]> {
-  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableQuestionType')
-  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableAdditionalInfo')
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryType')
+  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryDescription')
 
   return inquiryTypeEnabled && inquiryDescriptionEnabled ? getInquirytOptions('Additional Information', inquirtyDescriptionExamples, 'Custom') : []
 }
 
 export async function getInquiryType(): Promise<string[]> {
-  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableQuestionType')
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryType')
 
   return inquiryTypeEnabled ? getInquirytOptions('Question Context', inquiryTypeExamples, 'Custom') : []
 }

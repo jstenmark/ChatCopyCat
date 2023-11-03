@@ -6,7 +6,7 @@
   "publisher": "JStenmark",
   "main": "./out/extension.js",
   "engines": {
-    "vscode": "^1.83.0"
+    "vscode": "^1.83.1"
   },
   "repository": {
     "type": "git",
@@ -39,12 +39,12 @@
           "default": true,
           "description": "Enable clipoard reset hotkey"
         },
-        "ChatCopyCat.enableQuestionType": {
+        "ChatCopyCat.inquiryType": {
           "type": "boolean",
           "default": true,
           "description": "Enable prompting of predefined question types"
         },
-        "ChatCopyCat.enableAdditionalInfo": {
+        "ChatCopyCat.inquiryDescription": {
           "type": "boolean",
           "default": true,
           "description": "Enable prompting of predefined additional information"
@@ -57,7 +57,7 @@
         "title": "ChatCopyCat: Copy with Metadata"
       },
       {
-        "command": "ChatCopyCat.projectfiles",
+        "command": "ChatCopyCat.projectFiles",
         "title": "ChatCopyCat: Get Project File List"
       }
     ],
@@ -70,15 +70,16 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "yarn compile",
     "compile": "tsc -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint --fix src/**/*.ts --ext ts",
-    "lint:debug": "eslint --debug src/**/*.ts --ext ts",
+    "watch": "tsc --watch",
+    "pretest": "yarn compile && yarn lint",
+    "lint": "eslint --fix src --ext ts",
+    "lint:debug": "eslint --debug src --ext ts",
     "lint:config": "eslint --print-config .eslintrc.json",
-    "test": "node -v",
-    "test_": "tsc && node ./out/test/runTest.js",
-    "pkg": "vsce package && code --install-extension ./chatcopycat-0.0.*.vsix"
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package --yarn",
+    "pkg": "yarn package && code --install-extension ./chatcopycat-*.vsix"
   },
   "devDependencies": {
     "@types/eslint": "^8.0.0",
@@ -104,6 +105,7 @@
     "prettier": "3.0.3",
     "ts-node": "^10.9.1",
     "typescript": "<=5.2.0",
-    "vm": "^0.1.0"
+    "vm": "^0.1.0",
+    "vsce": "^2.15.0"
   }
 }

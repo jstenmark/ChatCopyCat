@@ -1,10 +1,11 @@
 import * as vscode from 'vscode'
-import { resetClipboard, showNotification } from '../utils/vsc-utils'
+import { getProjectsFileTree } from '../commands/project-files'
+import { copyToClipboard, showNotification } from '../utils/vsc-utils'
 
 export class ClipboardStatusBar {
   private statusBarItem: vscode.StatusBarItem
   private clipboardCount = 0
-  public command = 'ChatCopyCat.resetClipboard'
+  private readonly command = 'ChatCopyCat.resetClipboard'
 
   constructor() {
     this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100)
@@ -19,40 +20,43 @@ export class ClipboardStatusBar {
   }
 
   public updateCount(count: number) {
-    this.clipboardCount = count
-    this.refresh()
+    if (count !== this.clipboardCount) {
+      this.clipboardCount = count
+      this.refresh()
+    }
   }
-
   public resetCount() {
-    this.clipboardCount = 0
-    this.refresh()
+    if (this.clipboardCount !== 0) {
+      this.clipboardCount = 0
+      this.refresh()
+    }
   }
-
   public incrementCount() {
-    this.clipboardCount += 1
-    this.refresh()
+    this.updateCount(this.clipboardCount + 1)
   }
 
   // @ clipboardStatusBar.command
   public async setClipboardEmpty() {
-    await resetClipboard()
+    await copyToClipboard('')
     await showNotification('warning', 'Clipboard has been reset')
-    clipboardStatusBar.resetCount()
-    this.statusBarItem.text = `C:0`
-  }
-
-  public initClickEvent() {
-    this.statusBarItem.command = 'ChatCopyCat.resetClipboard'
+    this.resetCount()
   }
 
   private refresh() {
     this.statusBarItem.text = `C:${this.clipboardCount}`
   }
 
-  public async showClipBoardMenu() {
-    const action = await vscode.window.showQuickPick(['Reset Clipboard'], { placeHolder: 'Select an action' })
-    if (action === 'Reset Clipboard') {
-      await vscode.commands.executeCommand('ChatCopyCat.resetClipboard')
+  public async showClipboardMenu() {
+    const picks = [
+      { label: 'Reset Clipboard', action: this.setClipboardEmpty.bind(this) },
+      { label: 'Get project Files', action: getProjectsFileTree },
+      // Add more actions here as needed
+    ]
+
+    const pick = await vscode.window.showQuickPick(picks, { placeHolder: 'Clipboard Actions' })
+
+    if (pick?.action) {
+      await pick.action()
     }
   }
 }

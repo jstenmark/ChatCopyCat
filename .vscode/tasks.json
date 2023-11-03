@@ -6,37 +6,14 @@
       "script": "watch",
       "problemMatcher": "$tsc-watch",
       "isBackground": true,
-      "presentation": {
-        "reveal": "never"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "presentation": {"reveal": "never"},
+      "group": {"kind": "build", "isDefault": false}
     },
     {
-      "label": "Package and Reload Window",
-      "type": "shell",
-      "command": "yarn pkg",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "focus": true
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "type": "npm",
+      "script": "compile",
+      "group": {"kind": "build", "isDefault": true}
     },
-    {
-      "label": "Lint",
-      "type": "shell",
-      "command": "cd ${workspaceFolder}; yarn lint",
-      "problemMatcher": ["$eslint-stylish"],
-      "presentation": {
-        "reveal": "always",
-        "focus": true
-      },
-    }
+    { "type": "npm", "script": "lint", "problemMatcher": ["$tsc"] }
   ]
 }

@@ -24,14 +24,6 @@ export async function readFromClipboard(): Promise<string> {
   }
 }
 
-// To reset the clipboard, you can introduce this function:
-export async function resetClipboard(): Promise<boolean> {
-  log('')
-  log('####')
-  log('')
-  return await copyToClipboard('') // Write empty string to clipboard to clear it
-}
-
 export const showNotification = async (type: 'error' | 'info' | 'warning', message: string): Promise<void> => {
   const action = {
     error: vscode.window.showErrorMessage,

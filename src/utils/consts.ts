@@ -2,6 +2,7 @@ export const defaultIgnoreList = ['out/**', 'docs/**', '.vscode/**', '.git/**', 
 export const defaultTabSize = 2
 
 export enum SectionType {
+  MULTIPLE_SELECTIONS = 'Selections',
   MULTIPLE_FUNCTIONS_AND_CLASSES = 'Selection (Multiple Functions and Classes)',
   MULTIPLE_FUNCTIONS = 'Selection (Multiple Functions)',
   MULTIPLE_CLASSES = 'Selection (Multiple Classes)',
@@ -36,4 +37,4 @@ export const questionContextExamples = [
   'Security',
   'Documentation',
 ]
-export const metadataHeader = '[Metadata]'
+export const metadataHeader = '# VSCode'

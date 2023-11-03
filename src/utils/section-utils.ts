@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { SectionType, classRegex, functionRegex } from './consts'
+import { SectionType } from './consts'
 
 /**
  * Determines the type of section that the provided text belongs to.
@@ -8,49 +8,22 @@ import { SectionType, classRegex, functionRegex } from './consts'
  * @param editor - The active text editor in VS Code.
  * @returns The determined section type.
  */
-export const detectSectionType = (text: string, editor: vscode.TextEditor): SectionType => {
-  // TODO: Handle multiple languages
-  const functionMatches = text.match(functionRegex) ?? []
-  const classMatches = text.match(classRegex) ?? []
-
+export const detectSectionType = (editor: vscode.TextEditor): SectionType => {
   if (isFullFileSelected(editor)) {
     return SectionType.FULL_FILE
-  }
-
-  if (functionMatches.length > 1 && classMatches.length > 1) {
-    return SectionType.MULTIPLE_FUNCTIONS_AND_CLASSES
-  } else if (functionMatches.length > 1) {
-    return SectionType.MULTIPLE_FUNCTIONS
-  } else if (classMatches.length > 1) {
-    return SectionType.MULTIPLE_CLASSES
+  } else if (editor.selections.length > 1) {
+    return SectionType.MULTIPLE_SELECTIONS
   } else {
     return SectionType.CODE_SNIPPET
   }
 }
 
 function isFullFileSelected(editor: vscode.TextEditor): boolean {
-  if (!editor) {
-    return false
-  }
-
   const selection = editor.selection
   const document = editor.document
 
-  // Check if the selection and document exist
-  if (!selection || !document) {
-    return false
-  }
-
-  // Check if the selection covers the entire document
-  const isFullSelection =
-    selection.start.line === 0 && // Start of the document
-    selection.start.character === 0 &&
-    selection.end.line === document.lineCount - 1 && // End of the document
-    selection.end.character === document.lineAt(document.lineCount - 1).text.length
-
-  return isFullSelection
+  return selection.start.isEqual(new vscode.Position(0, 0)) && selection.end.isEqual(document.lineAt(document.lineCount - 1).range.end)
 }
-
 /**
  * Adds a debounce to a function call, ensuring that the function is not called too frequently.
  *

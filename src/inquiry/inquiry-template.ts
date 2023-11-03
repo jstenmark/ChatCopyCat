@@ -4,49 +4,66 @@ import { SectionType, metadataHeader } from '../utils/consts'
 import { ILangOpts } from '../utils/types'
 import { handleFileLanguageId } from './handlers'
 
-export function generateMetadataSection(
+export function generateSelectionMetadataSection(fileName: string | undefined, problemCount: number): string {
+  let metadata = '\n'
+  if (fileName) {
+    metadata += `## Selection ${fileName}\n`
+  }
+  if (problemCount > 0) {
+    metadata += `- Problem Count: ${problemCount}\n`
+  }
+  return metadata
+}
+
+export function generateFileMetadataSection(
   fileName: string | undefined,
+  selectionsCount: number,
   inquiryTypes: string[] | undefined,
   inquiryDescripton: string[] | undefined,
   sectionType: SectionType,
   problemCount: number,
   headerIsInClipboard: boolean,
 ): string {
-  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableQuestionType')
-  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('enableAdditionalInfo')
-  let metadata = !headerIsInClipboard ? `${metadataHeader}\n` : '\n'
-  metadata += `- File: ${fileName}\n`
-  metadata += `- Section: ${sectionType}\n`
-  metadata += problemCount > 0 ? `- Problem Count: ${problemCount}\n` : ''
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryType')
+  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryDescription')
+  const metadata: string[] = !headerIsInClipboard ? [metadataHeader] : []
+  metadata.push(`- File: ${fileName}`)
+  metadata.push(`- Selection type: ${sectionType}`)
+  metadata.push(`- Selection count: ${selectionsCount}`)
+  metadata.push(`- Problem Count: ${problemCount}`)
 
   if (inquiryTypes && inquiryTypes.length > 0 && inquiryTypeEnabled) {
-    const questionNames = inquiryTypes.join(', ')
-    metadata += `- Type: ${questionNames}\n`
+    const questionNames = inquiryTypes.join(',').trim()
+    metadata.push(`- Type: ${questionNames}`)
   }
 
   if (inquiryDescripton && inquiryDescripton.length > 0 && inquiryDescriptionEnabled) {
-    const additionalInfoContent = inquiryDescripton.join(', ')
-    metadata += `- Description: ${additionalInfoContent}\n`
+    const additionalInfoContent = inquiryDescripton.join(', ').trim()
+    metadata.push(`- Description: ${additionalInfoContent}`)
   }
-  return metadata
+  return metadata.join('\n')
 }
-export function generateCodeSnippetSection(selectionText: string, langOpts: ILangOpts): string {
+export function generateCodeSnippetSection(selectionText: string, selection: vscode.Selection, langOpts: ILangOpts): string {
   return `
-\`\`\`${langOpts.language}
-${handleFileLanguageId(selectionText, langOpts)}
-\`\`\`\n`
+- Language: ${langOpts.language}
+\`\`\`Ln:${selection.start.line}
+${handleFileLanguageId(selectionText, langOpts).trim()}
+\`\`\``
 }
 
-export function generateDiagnosticsSection(diagnostics: vscode.Diagnostic[]): string {
+export function generateDiagnosticsSection(diagnostics: vscode.Diagnostic[], selection: vscode.Selection): string {
+  const baseLine = selection.start.line
   const strippedDiagnostics = diagnostics
-    .map(({ source, message, range }: vscode.Diagnostic): string => {
-      const rangeStr = `${range.start.line}:${range.start.character}-${range.end.line}:${range.start.character}`
-      return `${source},${rangeStr}\t${message}`
+    .map(diagnostic => {
+      const { source, message, range } = diagnostic
+      const rangeStr = `${range.start.line - baseLine}:${range.start.character}-${range.end.line - baseLine}:${range.end.character}`
+      return `${source},\t${rangeStr}\t${message}`
     })
     .join('\n')
+    .trim()
 
-  return `[VSCodeProblems] (source,startline:startchar-endline-endchar message)\n${strippedDiagnostics}\n`
+  return `## Problems (source,startline:startchar-endline:endchar message)\n${strippedDiagnostics}\n`
 }
 export function getInquiry(metadataSection: string, codeSnippetSection: string, diagnosticsSection: string): string {
-  return `${metadataSection}\n${codeSnippetSection}\n${diagnosticsSection}\n`
+  return `${metadataSection}${codeSnippetSection}${diagnosticsSection}`
 }
