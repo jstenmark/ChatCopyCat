@@ -1,10 +1,9 @@
 import ignore from 'ignore'
+import { ClipboardManager } from '../extension'
 import { generateFilesTemplate } from '../inquiry/files-template'
 import { getFileList, getProjectRootPaths } from '../utils/file-utils'
 import { IProjectFile } from '../utils/types'
-import { copyToClipboard, log, showNotification } from '../utils/vsc-utils'
 
-// TODO: Check "Explorer contexts" if a folder is selected to copy relative filetree for a keybinding
 export const getProjectsFileTree = async (): Promise<void> => {
   const rootPaths: string[] = getProjectRootPaths() ?? []
   const projectsFiles: IProjectFile[] = []
@@ -16,9 +15,6 @@ export const getProjectsFileTree = async (): Promise<void> => {
   }
 
   const template: string = generateFilesTemplate(projectsFiles)
-  log(template)
-  const success: boolean = await copyToClipboard(template)
-  if (!success) {
-    await showNotification('error', 'ChatCopyCat: Failed to copy text to clipboard.')
-  }
+
+  await ClipboardManager.copyToClipboard(template)
 }

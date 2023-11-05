@@ -1,69 +1,47 @@
 import * as vscode from 'vscode'
-
-import { SectionType, metadataHeader } from '../utils/consts'
+import { metadataHeader } from '../utils/consts'
+import { getDiagnostics as getSelectionDiagnostics } from '../utils/section-utils'
 import { ILangOpts } from '../utils/types'
 import { handleFileLanguageId } from './handlers'
 
-export function generateSelectionMetadataSection(fileName: string | undefined, problemCount: number): string {
-  let metadata = '\n'
-  if (fileName) {
-    metadata += `## Selection ${fileName}\n`
-  }
-  if (problemCount > 0) {
-    metadata += `- Problem Count: ${problemCount}\n`
-  }
-  return metadata
+export function getMetadataSection(inquiryTypes: string[] | undefined, headerIsInClipboard: boolean): string {
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('chatcopycat').get<boolean>('inquiryType')
+  const inquiryTypeSection = inquiryTypeEnabled && inquiryTypes && inquiryTypes.length > 0 ? `- Inquiry: ${inquiryTypes.join(',')}\n` : undefined
+  return `${!headerIsInClipboard ? metadataHeader : '\n---'}\n` + `${inquiryTypeSection ? inquiryTypeSection + '\n' : ''}`
 }
 
-export function generateFileMetadataSection(
-  fileName: string | undefined,
-  selectionsCount: number,
-  inquiryTypes: string[] | undefined,
-  inquiryDescripton: string[] | undefined,
-  sectionType: SectionType,
-  problemCount: number,
-  headerIsInClipboard: boolean,
-): string {
-  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryType')
-  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryDescription')
-  const metadata: string[] = !headerIsInClipboard ? [metadataHeader] : []
-  metadata.push(`- File: ${fileName}`)
-  metadata.push(`- Selection type: ${sectionType}`)
-  metadata.push(`- Selection count: ${selectionsCount}`)
-  metadata.push(`- Problem Count: ${problemCount}`)
-
-  if (inquiryTypes && inquiryTypes.length > 0 && inquiryTypeEnabled) {
-    const questionNames = inquiryTypes.join(',').trim()
-    metadata.push(`- Type: ${questionNames}`)
-  }
-
-  if (inquiryDescripton && inquiryDescripton.length > 0 && inquiryDescriptionEnabled) {
-    const additionalInfoContent = inquiryDescripton.join(', ').trim()
-    metadata.push(`- Description: ${additionalInfoContent}`)
-  }
-  return metadata.join('\n')
-}
-export function generateCodeSnippetSection(selectionText: string, selection: vscode.Selection, langOpts: ILangOpts): string {
-  return `
-- Language: ${langOpts.language}
-\`\`\`Ln:${selection.start.line}
-${handleFileLanguageId(selectionText, langOpts).trim()}
-\`\`\``
+export interface IContentSection {
+  selectionSection: string
+  selectionDiagnostics: vscode.Diagnostic[]
 }
 
-export function generateDiagnosticsSection(diagnostics: vscode.Diagnostic[], selection: vscode.Selection): string {
-  const baseLine = selection.start.line
-  const strippedDiagnostics = diagnostics
-    .map(diagnostic => {
-      const { source, message, range } = diagnostic
-      const rangeStr = `${range.start.line - baseLine}:${range.start.character}-${range.end.line - baseLine}:${range.end.character}`
-      return `${source},\t${rangeStr}\t${message}`
+export function getContentSection(
+  selection: vscode.Selection,
+  editor: vscode.TextEditor,
+  langOpts: ILangOpts,
+  relativePathOrBasename: string,
+): IContentSection {
+  const textContent = editor.document.getText(selection)
+  const textSection = handleFileLanguageId(textContent, langOpts).trimEnd()
+  const selectionDiagnostics = getSelectionDiagnostics(editor.document, selection)
+  const diagnosticsSection = getDiagnosticsSection(selectionDiagnostics)
+
+  const selectionSection =
+    `\`\`\`${langOpts.language} ${relativePathOrBasename} Ln:${selection.start.line}\n` +
+    `${textSection}\n` +
+    `\`\`\`\n` +
+    `${selectionDiagnostics.length > 0 ? diagnosticsSection : ''}`
+
+  return { selectionSection, selectionDiagnostics }
+}
+
+// @ selection
+export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[]): string =>
+  `- Errors: (source,aproxiemate lines, message)\n` +
+  diagnostics
+    .map(({ source, message, range }) => {
+      const rangeStr = `${range.start.line}:${range.start.character}-${range.end.line}:${range.end.character}`
+      return `[${source}]\tLn:${rangeStr}\t${message}`
     })
     .join('\n')
-    .trim()
-
-  return `## Problems (source,startline:startchar-endline:endchar message)\n${strippedDiagnostics}\n`
-}
-export function getInquiry(metadataSection: string, codeSnippetSection: string, diagnosticsSection: string): string {
-  return `${metadataSection}${codeSnippetSection}${diagnosticsSection}`
-}
+    .trimEnd()

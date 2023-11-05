@@ -15,7 +15,7 @@ export const getLangOpts = (editor: vscode.TextEditor): ILangOpts => {
 export async function copyDefinitions() {
   const editor = vscode.window.activeTextEditor
   if (!editor) {
-    await showNotification('error', 'No active editor found!')
+    showNotification('error', 'No active editor found!')
     return
   }
 

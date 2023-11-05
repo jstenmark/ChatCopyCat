@@ -14,7 +14,7 @@
   },
   "editor.unicodeHighlight.ambiguousCharacters": true,
   "editor.unicodeHighlight.invisibleCharacters": true,
-  "editor.wordWrap": "off",
+  "editor.wordWrap": "wordWrapColumn",
 
 
   "[typescript][markdown][json][jsonc]": {
@@ -31,7 +31,7 @@
   },
   "eslint.validate": ["typescript"],
   "eslint.enable":true,
-  "eslint.problems.shortenToSingleLine": false,
+  "eslint.problems.shortenToSingleLine": true,
   "eslint.lintTask.enable": true,
   "eslint.options": {
     "overrideConfigFile": "./.eslintrc.json"

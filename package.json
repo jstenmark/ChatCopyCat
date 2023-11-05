@@ -17,7 +17,7 @@
     "Programming Languages",
     "Other"
   ],
-  "homepage": "https://github.com/jstenmark/ChatCopyCat/blob/main/README.md",
+  "homepage": "https://github.com/jstenmark/ChatCopyCat/README.md",
   "activationEvents": [
     "onStartupFinished"
   ],
@@ -34,40 +34,60 @@
       "type": "object",
       "title": "ChatCopyCat Settings",
       "properties": {
-        "ChatCopyCat.enableClipboardResetHotkey": {
+        "chatcopycat.enableClipboardResetHotkey": {
           "type": "boolean",
           "default": true,
           "description": "Enable clipoard reset hotkey"
         },
-        "ChatCopyCat.inquiryType": {
+        "chatcopycat.inquiryType": {
           "type": "boolean",
           "default": true,
           "description": "Enable prompting of predefined question types"
-        },
-        "ChatCopyCat.inquiryDescription": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable prompting of predefined additional information"
         }
       }
     },
     "commands": [
       {
-        "command": "ChatCopyCat.copy",
-        "title": "ChatCopyCat: Copy with Metadata"
+        "command": "chatcopycat.copy",
+        "title": "ChatCopyCat: Snag & Tag",
+        "group": "chatcopycat"
       },
       {
-        "command": "ChatCopyCat.projectFiles",
-        "title": "ChatCopyCat: Get Project File List"
+        "command": "chatcopycat.projectFiles",
+        "title": "ChatCopyCat: Raid the File Cabinet",
+        "group": "chatcopycat"
+      },
+      {
+        "command": "chatcopycat.resetClipboard",
+        "title": "ChatCopyCat: Clipboard Makeover",
+        "group": "chatcopycat"
+      },
+      {
+        "command": "chatcopycat.showClipboardMenu",
+        "title": "ChatCopyCat: The Command Central",
+        "group": "chatcopycat"
       }
     ],
     "keybindings": [
       {
         "key": "ctrl+shift+c",
-        "command": "ChatCopyCat.copy",
+        "command": "chatcopycat.copy",
         "when": "!terminalFocus && editorTextFocus || !terminalFocus && inQuickOpen"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "chatcopycat.showClipboardMenu"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "chatcopycat.showClipboardMenu",
+          "group": "chatcopycat"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn compile",
@@ -79,7 +99,7 @@
     "lint:config": "eslint --print-config .eslintrc.json",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
-    "pkg": "yarn package && code --install-extension ./chatcopycat-*.vsix"
+    "pkg": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt"
   },
   "devDependencies": {
     "@types/eslint": "^8.0.0",

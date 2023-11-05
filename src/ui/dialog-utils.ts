@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { log } from '../utils/vsc-utils'
 
 export type DialogComponent = vscode.QuickPick<vscode.QuickPickItem> | vscode.InputBox
 
@@ -12,4 +13,5 @@ export const isInputBox = (component: DialogComponent): component is vscode.Inpu
 export function disposeAllEventHandlers(disposables: vscode.Disposable[]): void {
   disposables.forEach(d => d.dispose() as void)
   disposables.length = 0
+  log('disposables disposed')
 }

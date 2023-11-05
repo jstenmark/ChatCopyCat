@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { log } from '../utils/vsc-utils'
 import { DialogComponent, disposeAllEventHandlers, isInputBox, isQuickPick } from './dialog-utils'
 
 /**
@@ -55,6 +56,7 @@ export class DialogComponentManager {
   private async showComponent(componentFactory: () => DialogComponent): Promise<string | undefined> {
     const component = componentFactory()
     if (!component) {
+      log('No component was created.')
       return undefined
     }
     this.component = component
@@ -91,15 +93,15 @@ export class DialogComponentManager {
       const acceptCallback = () => {
         if (isQuickPick(component)) {
           const selectedItem = component.activeItems[0]
-          if (selectedItem) {
-            resolve(selectedItem.label || undefined)
-            return
-          }
+          log('Quick pick accepted=' + selectedItem.label)
+          resolve(selectedItem?.label)
         } else if (isInputBox(component)) {
-          resolve(component.value || undefined)
-          return
+          log('isInputBox accepted=' + component.value)
+          resolve(component.value)
+        } else {
+          log('isNotValueSelectedInDialog')
+          resolve(undefined)
         }
-        resolve(undefined)
         disposeAllEventHandlers(disposables)
       }
 
@@ -108,23 +110,20 @@ export class DialogComponentManager {
         disposeAllEventHandlers(disposables)
       }
 
-      const acceptDisposable = component.onDidAccept(acceptCallback)
-      const hideDisposable = component.onDidHide(hideCallback)
-
-      disposables.push(acceptDisposable, hideDisposable)
+      disposables.push(component.onDidAccept(acceptCallback), component.onDidHide(hideCallback))
 
       component.show()
 
       this.disposable = vscode.Disposable.from(component, ...disposables)
-    }).finally(() => {
-      this.disposable?.dispose()
-      this.disposable = undefined
-      if (this.component) {
-        this.component.dispose()
-        this.component = undefined
-      }
-      this.processQueue()
-    })
+    }).finally(() => this.cleanUp())
+  }
+
+  private cleanUp() {
+    this.disposable?.dispose()
+    this.component?.dispose()
+    this.disposable = undefined
+    this.component = undefined
+    this.processQueue() // Assuming this method exists to handle queued tasks
   }
 
   /**

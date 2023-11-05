@@ -1,10 +1,16 @@
 import * as vscode from 'vscode'
+import { Clipboard } from './clipboard/clipboard'
 import { copy } from './commands/copy'
 import { getProjectsFileTree } from './commands/project-files'
-import { clipboardStatusBar } from './ui/status-dialog'
-import { outputChannel } from './utils/vsc-utils'
+import { StatusBar } from './ui/statusbar'
+import { outputChannel, watchForExtensionChanges } from './utils/vsc-utils'
 
-let copyCommand: vscode.Disposable
+export const StatusBarManager = new StatusBar()
+export const ClipboardManager = new Clipboard(StatusBarManager)
+
+const resetClipboardCommand = vscode.commands.registerCommand('chatcopycat.resetClipboard', ClipboardManager.resetClipboard.bind(ClipboardManager))
+
+const showClipboardMenuCommand = vscode.commands.registerCommand('chatcopycat.showClipboardMenu', ClipboardManager.showClipboardMenu.bind(ClipboardManager))
 
 /**
  * This function is called when the extension is activated.
@@ -12,15 +18,24 @@ let copyCommand: vscode.Disposable
  * @param {vscode.ExtensionContext} context - The extension context.
  */
 export function activate(context: vscode.ExtensionContext) {
-  copyCommand = vscode.commands.registerCommand('ChatCopyCat.copy', copy)
-  const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand('ChatCopyCat.projectFiles', getProjectsFileTree)
-  const resetClipboardCommand = vscode.commands.registerCommand('ChatCopyCat.resetClipboard', clipboardStatusBar.setClipboardEmpty.bind(clipboardStatusBar))
-  const showClipBoardMenu = vscode.commands.registerCommand('ChatCopyCat.showClipBoardMenu', clipboardStatusBar.showClipboardMenu.bind(clipboardStatusBar))
+  const copyCommand = vscode.commands.registerCommand('chatcopycat.copy', copy)
+  const projectFilesCommand = vscode.commands.registerCommand('chatcopycat.projectFiles', getProjectsFileTree)
+  const reloadWindowCommand = vscode.commands.registerCommand('chatcopycat.reloadWindow', async () => {
+    await vscode.commands.executeCommand('workbench.action.reloadWindow')
+  })
+  const watcherDisposable: vscode.Disposable = watchForExtensionChanges()
 
-  context.subscriptions.push(outputChannel)
+  context.subscriptions.push(
+    outputChannel,
+    copyCommand,
+    projectFilesCommand,
+    resetClipboardCommand,
+    showClipboardMenuCommand,
+    reloadWindowCommand,
+    watcherDisposable,
+  )
+
   outputChannel.show(true)
-  clipboardStatusBar.show()
-  context.subscriptions.push(copyCommand, projectFilesCommand, resetClipboardCommand, showClipBoardMenu)
 }
 
 /**
@@ -28,6 +43,5 @@ export function activate(context: vscode.ExtensionContext) {
  * It is used to dispose of resources and clean up before the extension is unloaded.
  */
 export function deactivate() {
-  copyCommand.dispose()
   outputChannel.dispose()
 }

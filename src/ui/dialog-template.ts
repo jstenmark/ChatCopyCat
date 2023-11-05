@@ -1,7 +1,9 @@
 import * as vscode from 'vscode'
-import { descriptionExamples as inquirtyDescriptionExamples, questionContextExamples as inquiryTypeExamples } from '../utils/consts'
+import { questionContextExamples as inquiryTypeExamples } from '../utils/consts'
+import { log } from '../utils/vsc-utils'
 import { DialogComponentManager } from './dialog-component-manager'
 
+// TODO: merge these two to use the same state manager for the type dialog
 export const quickPickManager = new DialogComponentManager()
 export const inputBoxManager = new DialogComponentManager()
 
@@ -20,8 +22,10 @@ async function getInquirytOptions(title: string, items: string[], customItemLabe
     const quickPick = vscode.window.createQuickPick()
     quickPick.items = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))]
     quickPick.placeholder = `Select or Input ${title}`
+    log('inside selectedOption ' + JSON.stringify([quickPick.placeholder]))
     return quickPick
   })
+  log('returning from selectedOption -> quickPickManager=' + JSON.stringify(selectedOption))
 
   if (selectedOption) {
     if (selectedOption === customItem) {
@@ -35,18 +39,12 @@ async function getInquirytOptions(title: string, items: string[], customItemLabe
       return [selectedOption]
     }
   }
+  log('returning from getInquirytOptions')
   return []
 }
 
-export async function getInquirtyDescription(): Promise<string[]> {
-  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryType')
-  const inquiryDescriptionEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryDescription')
+export async function getInquiryType(): Promise<string[] | undefined> {
+  const inquiryTypeEnabled = vscode.workspace.getConfiguration('chatcopycat').get<boolean>('inquiryType')
 
-  return inquiryTypeEnabled && inquiryDescriptionEnabled ? getInquirytOptions('Additional Information', inquirtyDescriptionExamples, 'Custom') : []
-}
-
-export async function getInquiryType(): Promise<string[]> {
-  const inquiryTypeEnabled = vscode.workspace.getConfiguration('ChatCopyCat').get<boolean>('inquiryType')
-
-  return inquiryTypeEnabled ? getInquirytOptions('Question Context', inquiryTypeExamples, 'Custom') : []
+  return inquiryTypeEnabled ? getInquirytOptions('Question Context', inquiryTypeExamples, 'Custom') : undefined
 }

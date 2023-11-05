@@ -1,80 +1,63 @@
-# ChatCopyCat
+<h2 align="center"><img src="images/cat_out2.png" height="384"><br>ChatCopyCat</h2>
+<p align="center"><strong>VSCode prompt workflow utility </strong></p>
 
-Unleash the playful prowess of coding and chatting with ChatCopyCat, your feline companion in the mysterious alley of VS Code.
 
-## Description
+<p align="center">Dive into the prompts with a side of sly with ChatCopyCat for VS Code.</strong></p>
 
-Tread softly into the alley of chatters with ChatCopyCat. Here, every interaction is a paw-sitive step into the unknown, as this feline agent gracefully leaps towards uncharted conversational territories with each witty and precise response. Feel the whisper of the grand chat maestros, yet with a fresh set of whiskers.
+## Just Code and Chill
 
-ChatCopyCat isn’t just about chat; it's an alley where chat blossoms, copy transforms, and a nip of cat clip gets the chat pad lit, setting the digital alley aglow. Amidst the clever banter, the cat code gits through, adding a purr of enigma to every dialogue, making your coding experience as thrilling as a cat chase. 😺
+ChatCopyCat isn’t about hype. It's your coding sidekick, sliding into the VS Code scene with a "do your thing" attitude. No sales pitch, just a nifty tool that's there when you need it, invisible when you don't. It's about keeping things real and your code flowing.
 
-Incorporate ChatCopyCat into your VS Code, and watch as it brings a touch of the alley’s mystery and playfulness to your workflow.
+Add ChatCopyCat to your editor, kick back, and let the good code roll.
 
-## Seamless Integration with Chat-Based AI
+## Coding, But Cooler
 
-ChatCopyCat is crafted to enhance your interaction with chat-based AI agents like ChatGPT. It acts as a bridge, ensuring that your code is seamlessly transferred from your editor to the chat, all while preserving necessary metadata and maintaining the elegance of minified syntax. Whether you're seeking coding advice, debugging help, or intelligent code suggestions, ChatCopyCat ensures that your conversation with AI is as smooth and productive as a cat’s sleek stride.
+This extension is all about the laid-back approach to getting things done. It’s there to make sure your code just... works with your AI chat.
 
-- **Effortless Code Sharing**: Share your code snippets directly in the chat with AI agents, and receive context-aware responses that understand your code's intricacies.
-- **Minimized Token Count**: Keep your interactions concise. Minified code ensures that you make the most out of every token in the conversation, especially crucial when dealing with token limits in AI models.
-- **Rich Metadata**: ChatCopyCat enriches your code with metadata, providing AI agents with the context needed to understand your coding environment and offer precise suggestions.
+- **Share Your Code**: Do it your way, or let the cat handle it. No fuss.
+- **Keep It Light**: It's about using fewer tokens because sometimes less is more.
+- **Add a Dash of Context**: Only if you want, though. Your code, your rules.
 
-With ChatCopyCat, your coding workflow transforms into a seamless dance with AI, ensuring that every interaction is not just an exchange of code, but a sophisticated conversation that propels your projects forward.
+With ChatCopyCat, your coding sessions are as chill as a cat lounging in the sun.
 
-## Features
-- **Clipboard-Ready Code**: Formats your code and adds necessary metadata for a seamless pasting experience into your chat with AI agents.
-- **Minify Your Code**: Effortlessly reduce token count in js/ts/python files for concise and efficient interactions, just like a cat’s sleek move.
-- **Metadata-Rich Copying**: Copy your code with a sprinkle of metadata magic, enhancing the clarity and context in your chat adventures.
-- **Auto-Detect File Details**: Let ChatCopyCat’s feline senses catch details like filename and language, streamlining your workflow with a cat’s agility.
-- **Customizable Banter**: Tailor your experience with configurable question types and additional information prompts, making each chat a paw-sonalized adventure.
+## Features That Don't Fuss
+- **Paste with Ease**: Get your code prompt-ready, or don't. No pressure.
+- **Trim the Fat**: Minify? Sure, if that's your thing. (.py .ts .js)
+- **Context, If You Care**: It's there if you need it, out of the way if you don't.
+- **Know Your File**: It’s got a knack for catching file details, but only if that's your jam.
+- **You Do You**: Customize if you want, or go with the flow. This cat's not judging.
 
 ## Keybindings
-> Basicly `Ctrl+Shift+C` for every clipboard interaction
-- **Copy to clipboard:** `Ctrl+Shift+C`
-  - Copies the selected code or file content to the clipboard **with** metadata, and formatting and minification/token optimization is applied. ***This allows you to seamlessly paste the code into a chat with an AI assistant.***
+>`Ctrl+Shift+C` is your Swiss Army knife here.
 
-- **Append to clipboard:** `Ctrl+Shift+C`
-  - Copies the selected code or current line to the clipboard **without** metadata, and formatting and minification is applied.
+- **Quick Copy**: `Ctrl+Shift+C` - Snags your code, adds some pizzazz if you're into that, and preps it for a chat.
 
-- **Close suggestions:**`Ctrl+Shift+C`
-  - When a metadata suggestions menu is open - this shortcut will close it.
+- **Just the Code**: `Ctrl+Shift+C` - Grabs the code or the line you're on, no extras attached, with a touch of style.
 
-- **Reset clipboard** `Ctrl+Shift+C` + `Ctrl+Shift+C`
-  - If these two keybindings are pressed within 300ms of each other, the clipboard will be reset. ***This allows you to quickly clear the clipboard if needed.***
+- **Silence the Suggestions**: `Ctrl+Shift+C` - Got suggestions poppin'? This will shush 'em.
+
+- **Clipboard Do-Over**: Double-tap `Ctrl+Shift+C` - Made a mess? Clean slate in under half a second.
+
+## Settings? Sure, If You Want
+For those who like to fiddle:
+
+- **`chatcopycat.inquiryType`** - Flip this on for a bit of Q&A before the magic happens.
+
+You'll find these in the usual VS Code settings spot. Just look for "ChatCopyCat" and tweak away.
+
+## Keeping It Relevant
+Right now, ChatCopyCat is all about choice—grab what you need, tag it if you feel like it, and keep it simple.
+
+- **[Future Brainwaves](ROADMAP.md)**: We're thinking of ways to make it even smarter down the road.
+
+For now, whether it's a snippet or the whole shebang, we're keeping it casual and integrated. 
 
 
+## Open-Source Love
+ChatCopyCat is yours, free and easy, under the [MIT License](LICENSE.md). Share, tweak, do your thing.
 
-## Configuration
+## Alley-Oop!
+Got ideas or just wanna help out? [GitHub](https://github.com/jstenmark/ChatCopyCat) is where the party's at. Bugs, brainwaves, PRs—all welcome.
 
-Make your alley adventure uniquely yours:
+Keep it laid-back, coders. 🐾
 
-| Property                             | Type    | Default | Description                                              |
-|--------------------------------------|---------|---------|----------------------------------------------------------|
-| `ChatCopyCat.enableQuestionType`     | Boolean | `true`  | Enable a prompt for predefined question types, ensuring each chat is a step into the unknown. |
-| `ChatCopyCat.enableAdditionalInfo`   | Boolean | `true`  | Enable a prompt for predefined additional information, adding a sprinkle of detail to your chat adventures. |
-
-To tweak these settings, pounce over to your VS Code settings and search for "ChatCopyCat".
-
-## Supported Languages for Minification
-
-- JavaScript (`.js`)
-- TypeScript (`.ts`)
-- Python (`.py`)
-
-## Wishlist
-- anonymization of inquirys to aid privacy issues
-- further token window opimizations
-- improved clipboard management/context store
-- include syntax/code problmes from the UI
-- customizable question types eg. `Add docstrings to the code`
-- clipboard preview
-- take more inspiration from latest cursor blogpost
-
-## License
-
-ChatCopyCat is shared with love under the [MIT License](LICENSE.md), ensuring freedom for cats and coders alike.
-
-## Contribute
-
-Join the alley’s glow on [GitHub](https://github.com/jstenmark/ChatCopyCat). Report issues, suggest features, or submit a pull request. Every paw print makes the alley brighter!
-
-Happy Coding, Fellow Chatter! 🐾
