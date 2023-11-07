@@ -1,4 +1,4 @@
-import { ILangOpts } from './types'
+import { ILangOpts } from '../common/types'
 
 export const cleanQuotes = (input: string) => input.replace(/^["'](.+(?=["']$))["']$/, '$1')
 
@@ -11,7 +11,11 @@ export function cleanCodeTsJs(_code: string, langOpts: ILangOpts): string {
   const code = _code.replace(/\r\n?/g, '\n') // normalize line endings
 
   for (let i = 0; i < code.length; i++) {
-    if (!inSingleLineComment && !inMultiLineComment && (code[i] === '"' || code[i] === "'" || code[i] === '`')) {
+    if (
+      !inSingleLineComment &&
+      !inMultiLineComment &&
+      (code[i] === '"' || code[i] === "'" || code[i] === '`')
+    ) {
       inString = !inString
     }
     if (!inString && !inMultiLineComment && code[i] === '/' && code[i + 1] === '/') {

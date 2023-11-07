@@ -5,6 +5,6 @@ docs
 
 .vscode/*workspace
 .vscode/*-Completion.json
-
+.vsode/Python*
 *.vsix
 *.log

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { log } from '../utils/vsc-utils'
+import { log } from '../logging/log-manager'
 import { DialogComponent, disposeAllEventHandlers, isInputBox, isQuickPick } from './dialog-utils'
 
 /**
@@ -21,7 +21,9 @@ export class DialogComponentManager {
    * @returns A promise that resolves to the user's input or undefined.
    */
   public async show(componentFactory: () => DialogComponent): Promise<string | undefined> {
-    return this.isActive() ? this.enqueueComponent(componentFactory) : this.showComponent(componentFactory)
+    return this.isActive()
+      ? this.enqueueComponent(componentFactory)
+      : this.showComponent(componentFactory)
   }
 
   /**
@@ -29,23 +31,28 @@ export class DialogComponentManager {
    * @param componentFactory A function that creates a dialog component.
    * @returns A promise that resolves to the user's input or undefined.
    */
-  private async enqueueComponent(componentFactory: () => DialogComponent): Promise<string | undefined> {
-    return new Promise(resolve => {
-      this.queue.push(() =>
-        this.createComponentAndHandleInteraction(componentFactory)
-          .then(result => {
-            resolve(result)
-            return result
-          })
-          .catch(() => {
-            resolve(undefined)
-            return undefined
-          }),
-      )
-      if (!this.isActive()) {
-        this.processQueue()
-      }
-    })
+  private async enqueueComponent(
+    componentFactory: () => DialogComponent,
+  ): Promise<string | undefined> {
+    if (this.isActive()) {
+      return new Promise<string | undefined>(resolve => {
+        this.queue.push(() =>
+          this.createComponentAndHandleInteraction(componentFactory)
+            .then(result => {
+              log.debug('[DIALOGMANAGER] enqueueComponent interaction:', result)
+              resolve(result)
+              return result
+            })
+            .catch(e => {
+              log.debug('Error during enqueueComponent:', e)
+              resolve(undefined)
+              return undefined as string | undefined
+            }),
+        )
+      })
+    } else {
+      return this.showComponent(componentFactory)
+    }
   }
 
   /**
@@ -53,13 +60,16 @@ export class DialogComponentManager {
    * @param componentFactory A function that creates a dialog component.
    * @returns A promise that resolves to the user's input or undefined.
    */
-  private async showComponent(componentFactory: () => DialogComponent): Promise<string | undefined> {
+  private async showComponent(
+    componentFactory: () => DialogComponent,
+  ): Promise<string | undefined> {
     const component = componentFactory()
     if (!component) {
-      log('No component was created.')
+      log.debug('No component was created.')
       return undefined
     }
     this.component = component
+    // Make sure to return the result of handleComponentInteraction.
     return this.handleComponentInteraction(component)
   }
 
@@ -68,7 +78,9 @@ export class DialogComponentManager {
    * @param componentFactory A function that creates a dialog component.
    * @returns A promise that resolves to the user's input or undefined.
    */
-  private async createComponentAndHandleInteraction(componentFactory: () => DialogComponent): Promise<string | undefined> {
+  private async createComponentAndHandleInteraction(
+    componentFactory: () => DialogComponent,
+  ): Promise<string | undefined> {
     try {
       const component = componentFactory()
       if (!component) {
@@ -86,20 +98,22 @@ export class DialogComponentManager {
    * @param component The dialog component.
    * @returns A promise that resolves to the user's input or undefined.
    */
-  private handleComponentInteraction(component: DialogComponent): Promise<string | undefined> {
+  private async handleComponentInteraction(
+    component: DialogComponent,
+  ): Promise<string | undefined> {
     return new Promise<string | undefined>(resolve => {
       const disposables: vscode.Disposable[] = []
 
       const acceptCallback = () => {
         if (isQuickPick(component)) {
           const selectedItem = component.activeItems[0]
-          log('Quick pick accepted=' + selectedItem.label)
+          log.debug('Quick pick accepted=' + selectedItem.label)
           resolve(selectedItem?.label)
         } else if (isInputBox(component)) {
-          log('isInputBox accepted=' + component.value)
+          log.debug('isInputBox accepted=' + component.value)
           resolve(component.value)
         } else {
-          log('isNotValueSelectedInDialog')
+          log.debug('isNotValueSelectedInDialog')
           resolve(undefined)
         }
         disposeAllEventHandlers(disposables)
@@ -115,31 +129,32 @@ export class DialogComponentManager {
       component.show()
 
       this.disposable = vscode.Disposable.from(component, ...disposables)
-    }).finally(() => this.cleanUp())
+    }).finally(() => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      this.cleanUp()
+    })
   }
 
-  private cleanUp() {
+  private async cleanUp() {
     this.disposable?.dispose()
     this.component?.dispose()
     this.disposable = undefined
     this.component = undefined
-    this.processQueue() // Assuming this method exists to handle queued tasks
+    await this.processQueue() // Assuming this method exists to handle queued tasks
   }
 
   /**
    * Process the queue of dialog components to be displayed.
    */
-  private processQueue(): void {
-    if (!this.isActive() && this.queue.length > 0) {
+  private async processQueue(): Promise<void> {
+    while (!this.isActive() && this.queue.length > 0) {
       const nextTask = this.queue.shift()
       if (nextTask) {
-        nextTask()
-          .then(() => {
-            this.processQueue()
-          })
-          .catch(err => {
-            console.error('An error occurred while processing the queue:', err)
-          })
+        try {
+          await nextTask()
+        } catch (err) {
+          console.error('An error occurred while processing the queue:', err)
+        }
       }
     }
   }
@@ -164,18 +179,18 @@ export class DialogComponentManager {
   /**
    * Dispose of the currently active UI component and associated resources.
    */
-  public dispose(): void {
+  public async dispose(): Promise<void> {
     this.disposable?.dispose()
     this.component = undefined
     this.disposable = undefined
-    this.processQueue()
+    await this.processQueue()
   }
 
   /**
    * Reset the state of the manager, disposing of any active components and clearing the queue.
    */
-  public reset(): void {
-    this.dispose()
+  public async reset(): Promise<void> {
+    await this.dispose()
     this.queue = []
   }
 }

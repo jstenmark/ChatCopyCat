@@ -1,9 +1,9 @@
-<h2 align="center"><img src="images/cat_out2.png" height="384"><br>ChatCopyCat</h2>
+<h2 align="center"><img src="images/out.png" height="384"><br>ChatCopyCat</h2>
 <p align="center"><strong>VSCode prompt workflow utility </strong></p>
 
 
 <p align="center">Dive into the prompts with a side of sly with ChatCopyCat for VS Code.</strong></p>
-
+Wip...
 ## Just Code and Chill
 
 ChatCopyCat isn’t about hype. It's your coding sidekick, sliding into the VS Code scene with a "do your thing" attitude. No sales pitch, just a nifty tool that's there when you need it, invisible when you don't. It's about keeping things real and your code flowing.

@@ -2,7 +2,8 @@ import * as fs from 'fs'
 import ignore from 'ignore'
 import * as path from 'path'
 import * as vscode from 'vscode'
-import { defaultIgnoreList } from './consts'
+import { defaultIgnoreList } from '../common/consts'
+import { log } from '../logging/log-manager'
 
 export function getRelativePathOrBasename(fileFsPath: string, workspaceFsPath?: string): string {
   if (workspaceFsPath) {
@@ -18,24 +19,10 @@ export function getRelativePathOrBasename(fileFsPath: string, workspaceFsPath?: 
 
 /**
  * Get an array of project root paths.
- * @returns An array of project root paths or undefined if no workspace folders exist.
+ * @returns getDiagnosticsSectionAn array of project root paths or undefined if no workspace folders exist.
  */
 export function getProjectRootPaths(): string[] | undefined {
   return vscode.workspace.workspaceFolders?.map(f => f.uri.fsPath)
-}
-
-/**
- * Check if a path is a directory.
- * @param filePath - The file path.
- * @returns True if it's a directory, false otherwise.
- */
-export async function isDirectory(filePath: string): Promise<boolean> {
-  try {
-    const stat = await fs.promises.stat(filePath)
-    return stat.isDirectory()
-  } catch (err) {
-    return false
-  }
 }
 
 /**
@@ -46,7 +33,12 @@ export async function isDirectory(filePath: string): Promise<boolean> {
  * @param ignoreList - List of patterns to ignore.
  * @returns A promise that resolves to an array of file paths.
  */
-export async function getFileList(directory = __dirname, originalRoot = directory, ig = ignore(), ignoreList: string[] = defaultIgnoreList): Promise<string[]> {
+export async function getFileList(
+  directory = __dirname,
+  originalRoot = directory,
+  ig = ignore(),
+  ignoreList: string[] = defaultIgnoreList,
+): Promise<string[]> {
   ig.add(ignoreList)
   const files = await fs.promises.readdir(directory)
   const fileList: string[] = []
@@ -88,4 +80,46 @@ function parseGitignore(gitignoreContent: string, basePath: string): string[] {
     .split(/\n|\r/)
     .filter(line => !line.startsWith('#') && line.trim() !== '')
     .map(line => path.join(basePath, line))
+}
+
+export const isFullFileSelected = (editor: vscode.TextEditor): boolean => {
+  return (
+    editor.selection.start.isEqual(new vscode.Position(0, 0)) &&
+    editor.selection.end.isEqual(editor.document.lineAt(editor.document.lineCount - 1).range.end)
+  )
+}
+
+/**
+ * Get diagnostics (problems) for a given document or a specific selection range.
+ * @param {vscode.TextDocument} document The VSCode document to retrieve diagnostics from.
+ * @param {vscode.Range} selection (Optional) The selection range to filter diagnostics. If not provided, diagnostics for the entire document will be returned.
+ * @returns An array of diagnostic objects.
+ */
+
+export function getAllDiagnostics(
+  document: vscode.TextDocument,
+  selection: vscode.Selection,
+): vscode.Diagnostic[] {
+  return vscode.languages.getDiagnostics(document.uri).filter(({ range }) => {
+    return selection.intersection(range)
+  })
+}
+
+export function watchForExtensionChanges(): vscode.Disposable {
+  const watchFolder = path.resolve(__dirname, '../../../../watchdir/done.txt')
+  log.debug(`Watching ${watchFolder} for changes.`)
+
+  const watcher = (curr: fs.Stats, prev: fs.Stats) => {
+    if (curr.mtimeMs !== prev.mtimeMs) {
+      log.info(`Detected change in ${watchFolder}, reloading window.`)
+      vscode.commands.executeCommand('chatcopycat.reloadWindow').then(
+        () => log.info('Window reloaded successfully.'),
+        (err: Error) => log.error('Failed to reload window: ' + err.message),
+      )
+    }
+  }
+
+  fs.watchFile(watchFolder, { interval: 3000 }, watcher)
+
+  return new vscode.Disposable(() => fs.unwatchFile(watchFolder, watcher))
 }

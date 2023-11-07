@@ -1,47 +1,70 @@
 import * as vscode from 'vscode'
-import { Clipboard } from './clipboard/clipboard'
-import { copy } from './commands/copy'
-import { getProjectsFileTree } from './commands/project-files'
-import { StatusBar } from './ui/statusbar'
-import { outputChannel, watchForExtensionChanges } from './utils/vsc-utils'
+import { ClipboardManager } from './clipboard/clipboard-manager'
+import { copy } from './commands/copy-command'
+import { getFileTree } from './commands/filetree-command'
+import { reloadWindow } from './commands/reload-command'
+import { resetClipboard } from './commands/resetclipboard-command'
+import { showClipboardMenu } from './commands/show-clipboard-menu-command'
+import { getChannel } from './config/output-channel'
+import { registerContext } from './config/store-util'
+import { close } from './dialog/dialog-utils'
+import { log } from './logging/log-manager'
+import { StatusBarManager } from './statusbar/statusbar-manager'
+import { watchForExtensionChanges } from './utils/file-utils'
 
-export const StatusBarManager = new StatusBar()
-export const ClipboardManager = new Clipboard(StatusBarManager)
-
-const resetClipboardCommand = vscode.commands.registerCommand('chatcopycat.resetClipboard', ClipboardManager.resetClipboard.bind(ClipboardManager))
-
-const showClipboardMenuCommand = vscode.commands.registerCommand('chatcopycat.showClipboardMenu', ClipboardManager.showClipboardMenu.bind(ClipboardManager))
+export const statusBarManager = new StatusBarManager()
+export const clipboardManager = new ClipboardManager(statusBarManager)
 
 /**
  * This function is called when the extension is activated.
  * It is used to setup the extension, register commands, and allocate resources.
  * @param {vscode.ExtensionContext} context - The extension context.
  */
-export function activate(context: vscode.ExtensionContext) {
-  const copyCommand = vscode.commands.registerCommand('chatcopycat.copy', copy)
-  const projectFilesCommand = vscode.commands.registerCommand('chatcopycat.projectFiles', getProjectsFileTree)
-  const reloadWindowCommand = vscode.commands.registerCommand('chatcopycat.reloadWindow', async () => {
-    await vscode.commands.executeCommand('workbench.action.reloadWindow')
-  })
-  const watcherDisposable: vscode.Disposable = watchForExtensionChanges()
+export async function activate(context: vscode.ExtensionContext) {
+  try {
+    await registerContext()
+    const logChannel = getChannel()
 
-  context.subscriptions.push(
-    outputChannel,
-    copyCommand,
-    projectFilesCommand,
-    resetClipboardCommand,
-    showClipboardMenuCommand,
-    reloadWindowCommand,
-    watcherDisposable,
-  )
+    const copyCommand: vscode.Disposable = vscode.commands.registerCommand('chatcopycat.copy', copy)
+    const closeDialogCommand: vscode.Disposable = vscode.commands.registerCommand(
+      'chatcopycat.closeDialog',
+      close,
+    )
+    const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand(
+      'chatcopycat.getFileTree',
+      getFileTree,
+    )
+    const reloadWindowCommand: vscode.Disposable = vscode.commands.registerCommand(
+      'chatcopycat.reloadWindow',
+      reloadWindow,
+    )
+    const resetClipboardCommand: vscode.Disposable = vscode.commands.registerCommand(
+      'chatcopycat.resetClipboard',
+      resetClipboard,
+    )
+    const showClipboardMenuCommand: vscode.Disposable = vscode.commands.registerCommand(
+      'chatcopycat.showClipboardMenu',
+      showClipboardMenu,
+    )
+    const watcherDisposable: vscode.Disposable = watchForExtensionChanges()
 
-  outputChannel.show(true)
+    context.subscriptions.push(
+      logChannel,
+      copyCommand,
+      closeDialogCommand,
+      projectFilesCommand,
+      resetClipboardCommand,
+      showClipboardMenuCommand,
+      reloadWindowCommand,
+      watcherDisposable,
+    )
+
+    logChannel.show(true)
+  } catch (error) {
+    log.error('Failed to set semaphore state:', error)
+  }
 }
 
-/**
- * This function is called when the extension is deactivated.
- * It is used to dispose of resources and clean up before the extension is unloaded.
- */
 export function deactivate() {
-  outputChannel.dispose()
+  //
 }

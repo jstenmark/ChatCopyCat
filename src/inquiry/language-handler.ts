@@ -1,5 +1,5 @@
+import { ILangOpts } from '../common/types'
 import { cleanCodeTsJs, tabify } from '../utils/formatting-utils'
-import { ILangOpts } from '../utils/types'
 
 export function handleTypeScriptFile(content: string, langOpts: ILangOpts): string {
   const cleaned = cleanCodeTsJs(content, langOpts)

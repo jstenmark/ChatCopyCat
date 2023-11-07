@@ -17,6 +17,7 @@
     "Programming Languages",
     "Other"
   ],
+  "icon": "media/out.png",
   "homepage": "https://github.com/jstenmark/ChatCopyCat/README.md",
   "activationEvents": [
     "onStartupFinished"
@@ -48,12 +49,17 @@
     },
     "commands": [
       {
+        "command": "chatcopycat.closeDialog",
+        "title": "ChatCopyCat: Close em",
+        "group": "chatcopycat"
+      },
+      {
         "command": "chatcopycat.copy",
         "title": "ChatCopyCat: Snag & Tag",
         "group": "chatcopycat"
       },
       {
-        "command": "chatcopycat.projectFiles",
+        "command": "chatcopycat.getFileTree",
         "title": "ChatCopyCat: Raid the File Cabinet",
         "group": "chatcopycat"
       },
@@ -72,7 +78,12 @@
       {
         "key": "ctrl+shift+c",
         "command": "chatcopycat.copy",
-        "when": "!terminalFocus && editorTextFocus || !terminalFocus && inQuickOpen"
+        "when": "!terminalFocus && editorTextFocus && chatcopycat:semaphoreDialogOpen == false && !inQuickOpen"
+      },
+      {
+        "key": "ctrl+shift+c",
+        "command": "chatcopycat.closeDialog",
+        "when": "!terminalFocus && chatcopycat:semaphoreDialogOpen == true"
       }
     ],
     "menus": {
@@ -91,8 +102,8 @@
   },
   "scripts": {
     "vscode:prepublish": "yarn compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc --watch",
+    "compile": "tsc --experimentalDecorators -p ./",
+    "watch": "tsc --experimentalDecorators --watch",
     "pretest": "yarn compile && yarn lint",
     "lint": "eslint --fix src --ext ts",
     "lint:debug": "eslint --debug src --ext ts",

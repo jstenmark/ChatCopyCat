@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "module": "CommonJS",
     "target": "ESNext",
     "outDir": "out",
-    "lib": ["ES2022", "ESNext.AsyncIterable"],
+    "lib": [
+      "ES2022",
+      "ESNext.AsyncIterable"
+    ],
     "sourceMap": true,
     "rootDir": "src",
     "esModuleInterop": true,
@@ -18,7 +23,18 @@
     "preserveConstEnums": true
   },
   "exclude": [
-    "node_modules", ".vscode-test", "out", "docs", ".github", ".git"
+    "node_modules",
+    ".vscode-test",
+    "out",
+    "docs",
+    ".github",
+    ".git"
   ],
-  "include": ["src"],
+  "include": [
+    "src",
+    "src/logging/log-manager.ts",
+    "docs/show-progress.ts",
+    "docs/configuration-util.ts",
+    "docs/commands.ts"
+  ],
 }

@@ -2,22 +2,12 @@
   "files.exclude": {
     "out": true,
     "node_modules": true,
-    "**/*.js": { "when": "$(basename).ts"},
-    "**/.git/objects": true,
+    "**/*.js": {
+      "when": "$(basename).ts"
+    },
+    "**/.git": true,
   },
-
-
-  "editor.quickSuggestions": {
-    "comments": "on",
-    "strings": "on",
-    "other": "on"
-  },
-  "editor.unicodeHighlight.ambiguousCharacters": true,
-  "editor.unicodeHighlight.invisibleCharacters": true,
-  "editor.wordWrap": "wordWrapColumn",
-
-
-  "[typescript][markdown][json][jsonc]": {
+  "[typescript][markdown]": {
     "editor.formatOnPaste": false,
     "editor.formatOnSaveMode": "modifications",
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
@@ -29,18 +19,19 @@
     "files.trimTrailingWhitespace": true,
     "diffEditor.ignoreTrimWhitespace": false,
   },
-  "eslint.validate": ["typescript"],
-  "eslint.enable":true,
+  "eslint.validate": [
+    "typescript"
+  ],
+  "eslint.enable": true,
   "eslint.problems.shortenToSingleLine": true,
   "eslint.lintTask.enable": true,
   "eslint.options": {
     "overrideConfigFile": "./.eslintrc.json"
   },
-
   "[json][jsonc]": {
     "editor.formatOnPaste": false,
     "editor.formatOnSaveMode": "file",
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.defaultFormatter": "vscode.json-language-features",
     "files.trimTrailingWhitespace": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.formatOnSave": true

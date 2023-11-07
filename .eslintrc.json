@@ -6,25 +6,50 @@
     "sourceType": "module",
     "project": true
   },
-  "plugins": ["@typescript-eslint", "prettier", "regexp"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "regexp"
+  ],
+  //  '@typescript-eslint/no-unused-vars': ["error", { "argsIgnorePattern": "(returns|of)" }]
   "rules": {
-    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+    "brace-style": [
+      "error",
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
     "no-underscore-dangle": "off",
     "curly": "warn",
     "@typescript-eslint/naming-convention": [
       "error",
       {
         "selector": "interface",
-        "format": ["PascalCase"],
+        "format": [
+          "PascalCase"
+        ],
         "custom": {
           "regex": "^I[A-Z]",
           "match": true
         }
       }
     ],
-    "@typescript-eslint/semi": ["error", "never"],
+    "@typescript-eslint/semi": [
+      "error",
+      "never"
+    ],
     "@typescript-eslint/no-floating-promises": "warn",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": true,
+        "caughtErrors": "none"
+      }
+    ],
     "@typescript-eslint/no-misused-promises": [
       "warn",
       {
@@ -38,20 +63,30 @@
         "tabWidth": 2,
         "semi": false,
         "singleQuote": true,
-        "printWidth": 160,
+        "printWidth": 100,
         "bracketSpacing": true,
         "bracketSameLine": true,
         "arrowParens": "avoid",
         "htmlWhitespaceSensitivity": "strict",
         "endOfLine": "lf",
-        "openingBraceNewLine": false
+        "openingBraceNewLine": false,
+        "ignorePatterns": [
+          "/**/*",
+          "!/*/*/src/utils/*.ts"
+        ]
       },
       {
         "usePrettierrc": false
       }
     ]
   },
-  "ignorePatterns": ["out", "docs","node_modules","**/*.d.ts","**/*.js"],
+  "ignorePatterns": [
+    "out",
+    "docs",
+    "node_modules",
+    "**/*.d.ts",
+    "**/*.js"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended-type-checked",

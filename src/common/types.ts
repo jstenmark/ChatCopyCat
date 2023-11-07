@@ -11,3 +11,7 @@ export interface ILangOpts {
   insertSpaces: boolean
   language: string
 }
+export interface IContentSection {
+  selectionSection: string
+  selectionDiagnostics: vscode.Diagnostic[]
+}

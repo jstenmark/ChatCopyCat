@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
-import { questionContextExamples as inquiryTypeExamples } from '../utils/consts'
-import { log } from '../utils/vsc-utils'
-import { DialogComponentManager } from './dialog-component-manager'
+import { questionContextExamples as inquiryTypeExamples } from '../common/consts'
+import { onDialogClose, onDialogOpen } from '../config/store-util'
+import { log } from '../logging/log-manager'
+import { DialogComponentManager } from './dialog-manager'
 
-// TODO: merge these two to use the same state manager for the type dialog
 export const quickPickManager = new DialogComponentManager()
 export const inputBoxManager = new DialogComponentManager()
 
@@ -15,21 +15,28 @@ export const inputBoxManager = new DialogComponentManager()
  * @param customItemLabel - A label for the option that allows the user to input a custom value.
  * @returns A promise that resolves to an array containing the selected option or a custom input value. Returns an empty array if no option is selected.
  */
-async function getInquirytOptions(title: string, items: string[], customItemLabel: string): Promise<string[]> {
+async function getInquiryOptions(
+  title: string,
+  items: string[],
+  customItemLabel: string,
+): Promise<string[]> {
   const customItem = `${customItemLabel} (Input Custom)`
 
   const selectedOption = await quickPickManager.show(() => {
     const quickPick = vscode.window.createQuickPick()
-    quickPick.items = [{ label: customItem, description: `Input custom ${title}` }, ...items.map(item => ({ label: item, description: `Select ${title}` }))]
+    quickPick.items = [
+      { label: customItem, description: `Input custom ${title}` },
+      ...items.map(item => ({ label: item, description: `Select ${title}` })),
+    ]
     quickPick.placeholder = `Select or Input ${title}`
-    log('inside selectedOption ' + JSON.stringify([quickPick.placeholder]))
+    log.debug('inside selectedOption ', quickPick.placeholder)
     return quickPick
   })
-  log('returning from selectedOption -> quickPickManager=' + JSON.stringify(selectedOption))
+  log.debug('returning from selectedOption -> quickPickManager=' + JSON.stringify(selectedOption))
 
   if (selectedOption) {
     if (selectedOption === customItem) {
-      const customInput = await inputBoxManager.show(() => {
+      const customInput: string | undefined | void = await inputBoxManager.show(() => {
         const inputBox = vscode.window.createInputBox()
         inputBox.placeholder = '...'
         return inputBox
@@ -39,12 +46,21 @@ async function getInquirytOptions(title: string, items: string[], customItemLabe
       return [selectedOption]
     }
   }
-  log('returning from getInquirytOptions')
+  log.debug('returning from getInquirytOptions')
   return []
 }
 
 export async function getInquiryType(): Promise<string[] | undefined> {
-  const inquiryTypeEnabled = vscode.workspace.getConfiguration('chatcopycat').get<boolean>('inquiryType')
+  log.debug('[INQUIRY] OPEN')
+  await onDialogOpen()
+  const inquiryTypeEnabled = vscode.workspace
+    .getConfiguration('chatcopycat')
+    .get<boolean>('inquiryType')
 
-  return inquiryTypeEnabled ? getInquirytOptions('Question Context', inquiryTypeExamples, 'Custom') : undefined
+  const res = inquiryTypeEnabled
+    ? await getInquiryOptions('Question Context', inquiryTypeExamples, 'Custom')
+    : undefined
+
+  await onDialogClose()
+  return res
 }

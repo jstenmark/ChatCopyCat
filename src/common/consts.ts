@@ -1,4 +1,13 @@
-export const defaultIgnoreList = ['out/**', 'docs/**', '.vscode/**', '.git/**', 'node_modules/**', 'docs', '**/__pycache__/**', '.vscode-test']
+export const defaultIgnoreList = [
+  'out/**',
+  'docs/**',
+  '.vscode/**',
+  '.git/**',
+  'node_modules/**',
+  'docs',
+  '**/__pycache__/**',
+  '.vscode-test',
+]
 export const defaultTabSize = 2
 
 export enum SectionType {
@@ -23,5 +32,6 @@ export const questionContextExamples = [
   'Testing',
   'Security',
   'Documentation',
+  'Docstrings',
 ]
 export const metadataHeader = '# ChatGPT Code inquiry'
