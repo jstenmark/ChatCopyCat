@@ -11,7 +11,6 @@
     "prettier",
     "regexp"
   ],
-  //  '@typescript-eslint/no-unused-vars': ["error", { "argsIgnorePattern": "(returns|of)" }]
   "rules": {
     "brace-style": [
       "error",
@@ -56,6 +55,16 @@
         "checksConditionals": false
       }
     ],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "only-multiline",
+        "objects": "only-multiline",
+        "imports": "only-multiline",
+        "exports": "ignore",
+        "functions": "only-multiline"
+      }
+    ],
     "prettier/prettier": [
       "error",
       {
@@ -72,7 +81,7 @@
         "openingBraceNewLine": false,
         "ignorePatterns": [
           "/**/*",
-          "!/*/*/src/utils/*.ts"
+          "!/*/*/src/**/*.ts"
         ]
       },
       {
@@ -91,7 +100,7 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
-    "plugin:prettier/recommended",
-    "plugin:regexp/recommended"
+    "plugin:regexp/recommended",
+    "plugin:prettier/recommended"
   ]
 }

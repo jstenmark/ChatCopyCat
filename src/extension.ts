@@ -8,12 +8,12 @@ import { showClipboardMenu } from './commands/show-clipboard-menu-command'
 import { getChannel } from './config/output-channel'
 import { registerContext } from './config/store-util'
 import { close } from './dialog/dialog-utils'
-import { log } from './logging/log-manager'
+import { LogManager, log } from './logging'
 import { StatusBarManager } from './statusbar/statusbar-manager'
 import { watchForExtensionChanges } from './utils/file-utils'
 
-export const statusBarManager = new StatusBarManager()
-export const clipboardManager = new ClipboardManager(statusBarManager)
+export let statusBarManager: StatusBarManager
+export let clipboardManager: ClipboardManager
 
 /**
  * This function is called when the extension is activated.
@@ -22,9 +22,13 @@ export const clipboardManager = new ClipboardManager(statusBarManager)
  */
 export async function activate(context: vscode.ExtensionContext) {
   try {
+    const logChannel = getChannel('ChatCopyCat')
+    LogManager.instance.setChannel(logChannel)
     await registerContext()
-    const logChannel = getChannel()
+    statusBarManager = new StatusBarManager()
+    clipboardManager = new ClipboardManager(statusBarManager)
 
+    // commands
     const copyCommand: vscode.Disposable = vscode.commands.registerCommand('chatcopycat.copy', copy)
     const closeDialogCommand: vscode.Disposable = vscode.commands.registerCommand(
       'chatcopycat.closeDialog',
@@ -61,7 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     logChannel.show(true)
   } catch (error) {
-    log.error('Failed to set semaphore state:', error)
+    log.error('Failed to activate extension:', error)
   }
 }
 

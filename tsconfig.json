@@ -32,9 +32,6 @@
   ],
   "include": [
     "src",
-    "src/logging/log-manager.ts",
-    "docs/show-progress.ts",
-    "docs/configuration-util.ts",
-    "docs/commands.ts"
+    "images",
   ],
 }

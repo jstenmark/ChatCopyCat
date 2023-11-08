@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
 
-export function getChannel(): vscode.OutputChannel {
-  return vscode.window.createOutputChannel('ChatCopyCat')
+export function getChannel(name: string): vscode.OutputChannel {
+  return vscode.window.createOutputChannel(name)
 }

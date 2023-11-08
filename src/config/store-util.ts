@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { log } from '../logging/log-manager'
+import { log } from '../logging'
 
 export const SEMAPHORE_CONTEXT_KEY = 'chatcopycat:semaphoreDialogOpen'
 

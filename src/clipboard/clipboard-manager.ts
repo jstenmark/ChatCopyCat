@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
-import { log } from '../logging/log-manager'
+import { AsyncLogDecorator, LogDecorator, log } from '../logging'
+import { LogLevel } from '../logging/log-mixin'
 import { StatusBarManager } from '../statusbar/statusbar-manager'
 import { copyDefinitions } from '../utils/lang-utils'
 
@@ -10,30 +11,29 @@ export class ClipboardManager implements vscode.Disposable {
     this.statusBarManager = StatusBarManager
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  @LogDecorator(LogLevel.WARN, 'Disposing Clipboardmanager')
   dispose() {
     this.statusBarManager.dispose()
   }
 
+  @LogDecorator(LogLevel.INFO, 'Clipboard reset')
   public async resetClipboard(): Promise<void> {
     await ClipboardManager.copyText('')
-    log.debug('info', 'Clipboard has been reset')
-
     this.statusBarManager.updateCopyCount(0)
   }
 
+  @LogDecorator(LogLevel.INFO, 'Copied to clipboard')
   public async copyToClipboard(text: string): Promise<void> {
     await ClipboardManager.copyText(text)
     this.statusBarManager.updateCopyCount()
-    log.info('Copied to clipboard')
   }
 
+  @LogDecorator(LogLevel.INFO, 'Reading from clipboard')
   public async readFromClipboard(): Promise<string> {
-    const text = await ClipboardManager.pasteText()
-    log.debug(`[CLIPBOARD_READ]=${text.slice(0, 15)}`)
-    return text
+    return await ClipboardManager.pasteText()
   }
 
+  @AsyncLogDecorator(LogLevel.INFO, 'Show clipboard menu')
   public async showClipboardMenu(): Promise<void> {
     const picks = [
       { label: 'Reset Clipboard', action: this.resetClipboard.bind(this) },
@@ -52,7 +52,7 @@ export class ClipboardManager implements vscode.Disposable {
     try {
       await vscode.env.clipboard.writeText(text)
     } catch (e) {
-      log.debug('Failed to copy to clipboard:' + (e as Error).message || 'UNKNOWN ERROR')
+      log.error('Failed to copy to clipboard', e as Error)
     }
   }
 
@@ -60,7 +60,7 @@ export class ClipboardManager implements vscode.Disposable {
     try {
       return await vscode.env.clipboard.readText()
     } catch (e) {
-      log.debug('Failed to copy to clipboard:' + (e as Error).message || 'UNKNOWN ERROR')
+      log.error('Failed to paste to clipboard', e as Error)
       return ''
     }
   }

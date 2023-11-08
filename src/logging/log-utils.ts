@@ -1,5 +1,5 @@
-import { log } from './log-manager'
-
+import { log } from './log-base'
+import { LogFunction, LogLevel } from './log-mixin'
 export const getTargetName = (_target: object): string =>
   _target?.constructor ? _target.constructor.name : ''
 
@@ -35,12 +35,6 @@ export interface ILogInfo {
   level: LogLevel
 }
 
-export enum LogLevel {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error',
-}
 export interface ITraceInfo {
   elapsed: number
   returnValue?: unknown
@@ -60,7 +54,6 @@ function normalizeCall(call: ICallInfo): ICallInfo {
   }
   return { targetType, name, args }
 }
-
 function formatMessages(traced: ITraceInfo, call: ICallInfo) {
   const data = normalizeCall(call)
 
@@ -71,11 +64,20 @@ function formatMessages(traced: ITraceInfo, call: ICallInfo) {
   return { ms, hasReturnValue, ...data, name }
 }
 
+export function truncate(str: string, maxLength = 200): string {
+  return str.length > maxLength ? str.substring(0, maxLength) + '...' : str
+}
+
 export function logResult(logInfo: ILogInfo, traced: ITraceInfo, call: ICallInfo) {
   const formatted = formatMessages(traced, call)
-  if (traced.err === undefined) {
-    log[logInfo.level.toLocaleLowerCase()](logInfo.message, formatted)
+  const levelMethod: keyof typeof log = logInfo.level.toLowerCase() as keyof typeof log
+
+  if (typeof log[levelMethod] === 'function') {
+    ;(log[levelMethod] as LogFunction)(
+      logInfo.message,
+      traced.err === undefined ? formatted : { error: traced.err, ...formatted },
+    )
   } else {
-    log[logInfo.level.toLocaleLowerCase()](logInfo.message, { error: traced.err, ...formatted })
+    console.warn(`Log level method '${levelMethod}' is not a function.`)
   }
 }

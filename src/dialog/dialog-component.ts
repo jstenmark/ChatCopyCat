@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { questionContextExamples as inquiryTypeExamples } from '../common/consts'
 import { onDialogClose, onDialogOpen } from '../config/store-util'
-import { log } from '../logging/log-manager'
+import { log } from '../logging'
 import { DialogComponentManager } from './dialog-manager'
 
 export const quickPickManager = new DialogComponentManager()

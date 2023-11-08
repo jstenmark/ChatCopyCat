@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { log } from '../logging/log-manager'
+import { log } from '../logging'
 import { DialogComponent, disposeAllEventHandlers, isInputBox, isQuickPick } from './dialog-utils'
 
 /**

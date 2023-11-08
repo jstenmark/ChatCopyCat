@@ -17,7 +17,7 @@
     "Programming Languages",
     "Other"
   ],
-  "icon": "media/out.png",
+  "icon": "images/out.png",
   "homepage": "https://github.com/jstenmark/ChatCopyCat/README.md",
   "activationEvents": [
     "onStartupFinished"
