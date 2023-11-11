@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { inputBoxManager, quickPickManager } from './dialog-component'
+import { log } from '../logging'
 
 export type DialogComponent = vscode.QuickPick<vscode.QuickPickItem> | vscode.InputBox
 
@@ -18,7 +19,20 @@ export function disposeAllEventHandlers(disposables: vscode.Disposable[]): void 
   disposables.length = 0
 }
 
-export const close = (): void => {
+export const closeDialog = (): void => {
   quickPickManager.close()
   inputBoxManager.close()
+}
+
+export function handleActiveDialogs(): boolean {
+  if (quickPickManager.isActive()) {
+    quickPickManager.close()
+    log.debug('closing quickPick')
+    return true
+  } else if (inputBoxManager.isActive()) {
+    inputBoxManager.close()
+    log.debug('closing inputBox')
+    return true
+  }
+  return false
 }

@@ -2905,11 +2905,6 @@ v8-compile-cache-lib@^3.0.1:
   resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
   integrity sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
 
-vm@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/vm/-/vm-0.1.0.tgz#0060d485e8b89858946c40b01a6ba07945db70a8"
-  integrity sha512-1aKVjgohVDnVhGrJLhl2k8zIrapH+7HsdnIjGvBp3XX2OCj6XGzsIbDp9rZ3r7t6qgDfXEE1EoEAEOLJm9LKnw==
-
 vsce@^2.15.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/vsce/-/vsce-2.15.0.tgz#4a992e78532092a34a755143c6b6c2cabcb7d729"

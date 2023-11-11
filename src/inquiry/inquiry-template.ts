@@ -1,28 +1,32 @@
 import * as vscode from 'vscode'
-import { metadataHeader } from '../common/consts'
-import { IContentSection, ILangOpts } from '../common/types'
-import { getAllDiagnostics } from '../utils/file-utils'
+import { IContentSection, ILangOpts, fileTreeEnd, fileTreeHeader, generateHeader } from '../common'
+import { getAllDiagnostics } from '../utils'
 import { handleFileLanguageId } from './language-handler'
+import { configStore } from '../extension'
 
 export function getMetadataSection(
   inquiryTypes: string[] | undefined,
   headerIsInClipboard: boolean,
+  langOpts: ILangOpts,
+  isMultipleSelections: boolean,
 ): string {
-  const inquiryTypeEnabled = vscode.workspace
-    .getConfiguration('chatcopycat')
-    .get<boolean>('inquiryType')
+  const inquiryTypeEnabled = configStore.get('inquiryType')
+  const multipleSelectionns = isMultipleSelections ? ' // Multiple Selections from file' : undefined
   const inquiryTypeSection =
     inquiryTypeEnabled && inquiryTypes && inquiryTypes.length > 0
-      ? `- Inquiry: ${inquiryTypes.join(',')}\n`
+      ? `${inquiryTypes.join(',')}`
       : undefined
-  return (
-    `${!headerIsInClipboard ? metadataHeader : '\n---'}\n` +
-    `${inquiryTypeSection ? inquiryTypeSection + '\n' : ''}`
-  )
+
+  return `${
+    !headerIsInClipboard
+      ? generateHeader(inquiryTypeSection, langOpts.language) +
+        `${isMultipleSelections ? '\n - ' + multipleSelectionns : ''}`
+      : `\n---${isMultipleSelections ? multipleSelectionns : ''}`
+  }\n`
 }
 
 export function getContentSection(
-  selection: vscode.Selection,
+  selection: vscode.Selection | undefined,
   editor: vscode.TextEditor,
   langOpts: ILangOpts,
   relativePathOrBasename: string,
@@ -32,9 +36,12 @@ export function getContentSection(
 
   const selectionDiagnostics: vscode.Diagnostic[] = getAllDiagnostics(editor.document, selection)
   const diagnosticsSection = getDiagnosticsSection(selectionDiagnostics)
+  const showLangInPerSnippet: boolean = configStore.get('showLanguageInSnippets')
 
   const selectionSection =
-    `\`\`\`${langOpts.language} ${relativePathOrBasename} Ln:${selection.start.line}\n` +
+    `\`\`\`${showLangInPerSnippet ? langOpts.language : ''} ${relativePathOrBasename} ${
+      selection ? 'Ln:' + selection.start.line : ''
+    }\n` +
     `${textSection}\n` +
     `\`\`\`\n` +
     `${selectionDiagnostics.length > 0 ? diagnosticsSection : ''}`
@@ -43,7 +50,10 @@ export function getContentSection(
 }
 
 export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[]): string => {
+  const customMessage: string = configStore.get('customDiagnosticsMessage')
+  const _message: string | undefined = customMessage.length > 0 ? customMessage : undefined
   return (
+    `${_message ? _message + '\n' : ''}` +
     `- Errors: (source, approximate lines, message)\n` +
     diagnostics
       .map(({ source, message, range }) => {
@@ -65,7 +75,10 @@ export function generateFilesTemplate(
   projectsFiles: { rootPath: string; files: string[] }[],
 ): string {
   return projectsFiles
-    .map(project => `**Workspace root:** ${project.rootPath}\n${project.files.join('\n')}`)
+    .map(
+      project =>
+        `${fileTreeHeader} ${project.rootPath}\n${project.files.join('\n')}\n${fileTreeEnd}\n`,
+    )
     .join('\n\n')
     .trim()
 }

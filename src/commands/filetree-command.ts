@@ -1,7 +1,7 @@
 import ignore from 'ignore'
-import { clipboardManager } from '../extension'
-import { generateFilesTemplate } from '../inquiry/inquiry-template'
-import { getFileList, getProjectRootPaths } from '../utils/file-utils'
+import { replaceFileListInClipboard } from '../clipboard'
+import { generateFilesTemplate } from '../inquiry'
+import { getFileList, getProjectRootPaths } from '../utils'
 
 export const getFileTree = async (): Promise<void> => {
   const rootPaths: string[] = getProjectRootPaths() ?? []
@@ -15,5 +15,5 @@ export const getFileTree = async (): Promise<void> => {
   const projectsFiles = await Promise.all(projectsFilesPromises)
   const template = generateFilesTemplate(projectsFiles)
 
-  await clipboardManager.copyToClipboard(template)
+  await replaceFileListInClipboard(template)
 }

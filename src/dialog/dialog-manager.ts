@@ -44,7 +44,7 @@ export class DialogComponentManager {
               return result
             })
             .catch(e => {
-              log.debug('Error during enqueueComponent:', e)
+              log.error('Error during enqueueComponent:', e)
               resolve(undefined)
               return undefined as string | undefined
             }),
@@ -153,7 +153,7 @@ export class DialogComponentManager {
         try {
           await nextTask()
         } catch (err) {
-          console.error('An error occurred while processing the queue:', err)
+          log.error('An error occurred while processing the queue:', err)
         }
       }
     }
@@ -179,18 +179,23 @@ export class DialogComponentManager {
   /**
    * Dispose of the currently active UI component and associated resources.
    */
-  public async dispose(): Promise<void> {
+  public dispose(): void {
+    this._onDidClose.dispose()
     this.disposable?.dispose()
-    this.component = undefined
+    this.component?.dispose()
+    this.queue.length = 0
     this.disposable = undefined
-    await this.processQueue()
+    this.component = undefined
   }
 
   /**
    * Reset the state of the manager, disposing of any active components and clearing the queue.
    */
-  public async reset(): Promise<void> {
-    await this.dispose()
+  public reset(): void {
+    this.disposable?.dispose()
+    this.component?.dispose()
     this.queue = []
+    this.disposable = undefined
+    this.component = undefined
   }
 }

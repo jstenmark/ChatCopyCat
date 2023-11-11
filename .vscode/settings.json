@@ -1,43 +1,19 @@
 {
   "files.exclude": {
     "out": true,
-    "node_modules": true,
+    "**/node_modules/**": true,
     "**/*.js": {
       "when": "$(basename).ts"
     },
     "**/.git": true,
   },
-  "[typescript][markdown]": {
-    "editor.formatOnPaste": false,
-    "editor.formatOnSaveMode": "modifications",
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true,
-      "source.organizeImports": "always",
-      "source.fixAll": true,
-    },
-    "files.trimTrailingWhitespace": true,
-    "diffEditor.ignoreTrimWhitespace": false,
+  "search.exclude": {
+    "out": true,
+    "**/node_modules/**": true,
+    "**/*.code-search": true,
   },
-  "eslint.validate": [
-    "typescript"
-  ],
-  "eslint.enable": true,
-  "eslint.problems.shortenToSingleLine": true,
-  "eslint.lintTask.enable": true,
-  "eslint.options": {
-    "overrideConfigFile": "./.eslintrc.json"
-  },
-  "[json][jsonc]": {
-    "editor.formatOnPaste": false,
-    "editor.formatOnSaveMode": "file",
-    "editor.defaultFormatter": "vscode.json-language-features",
-    "files.trimTrailingWhitespace": true,
-    "diffEditor.ignoreTrimWhitespace": false,
-    "editor.formatOnSave": true
-  },
-  "[markdown]": {
-    "diffEditor.ignoreTrimWhitespace": true,
-    "files.trimTrailingWhitespace": false,
-  },
+  "chatcopycat.enableClipboardResetHotkey": false,
+  "chatcopycat.inquiryType": false,
+  "chatcopycat.showLanguageInSnippets": false,
+  "chatcopycat.customDiagnosticsMessage": "- Please fix scripter typing for me plss :)"
 }

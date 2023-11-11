@@ -1,10 +1,13 @@
 import * as vscode from 'vscode'
 
 export class StatusBarManager implements vscode.Disposable {
-  private readonly statusBarItem: vscode.StatusBarItem
+  private statusBarItem: vscode.StatusBarItem
   private copyCount = 0
-  private purpleColor = '#800080'
-  private invertColor = '#7FFF7F'
+
+  private tooltip: vscode.MarkdownString = new vscode.MarkdownString(
+    `\n\n` + `$(settings) Click to open menu` + `\n\n`,
+    true,
+  )
 
   dispose() {
     this.statusBarItem.hide()
@@ -17,22 +20,35 @@ export class StatusBarManager implements vscode.Disposable {
       vscode.StatusBarAlignment.Left,
       100,
     )
-    this.statusBarItem.command = 'chatcopycat.showClipboardMenu'
-    this.statusBarItem.name = 'CopyCatCommandCenter'
-    this.updateCopyCount(0)
+    this.statusBarItem.command = 'chatcopycat.openMenu'
+    this.statusBarItem.name = '$(eye) CopyCatCommandCenter'
+    this.statusBarItem.tooltip = this.tooltip
+    this.statusBarItem.tooltip.isTrusted = true
+
+    this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground')
+
+    this.updateState()
   }
 
-  public updateCopyCount(count?: number) {
-    this.copyCount = count ?? this.copyCount + 1
+  public increaseCopyCount(): void {
+    this.copyCount = this.copyCount + 1
+    this.updateState()
+  }
+
+  public updateCopyCount(count: number) {
+    this.copyCount = count
     this.updateState()
   }
 
   private updateState() {
-    this.statusBarItem.color = this.copyCount > 1 ? this.invertColor : this.purpleColor
-    this.statusBarItem.tooltip = `CopyCats: ${this.copyCount} - Click to open menu`
-    this.statusBarItem.text = `$(clippy${this.copyCount > 1 ? '-spin' : ''}) CopyCats: ${
-      this.copyCount
-    }`
+    this.statusBarItem.text = `$(clippy) CopyCats: ${this.copyCount}`
+
+    if (this.copyCount > 0) {
+      this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground')
+    } else {
+      this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.defaultBackground')
+    }
+
     this.statusBarItem.show()
   }
 }

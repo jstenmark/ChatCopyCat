@@ -1,5 +1,5 @@
 import { OutputChannel } from 'vscode'
-import { Singleton } from '../common/singleton'
+import { Singleton } from '../common'
 
 export class LogManager extends Singleton {
   private static _instance: LogManager | null = null
@@ -7,7 +7,6 @@ export class LogManager extends Singleton {
 
   protected constructor() {
     super()
-    // initialization code
   }
   public static get instance(): LogManager {
     if (!this._instance) {

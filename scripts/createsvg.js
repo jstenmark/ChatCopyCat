@@ -8,7 +8,7 @@ const convertPngToSvg = async (inputPath, outputPath, color = 'black') => {
       .trim()
       .toBuffer();
 
-    const tempPath = color+'temp-trimmed.png';
+    const tempPath = `temp-${color}trimmed.png`;
     fs.writeFileSync(tempPath, trimmedBuffer);
 
     const potraceOpts = {
@@ -28,5 +28,5 @@ const convertPngToSvg = async (inputPath, outputPath, color = 'black') => {
   }
 };
 
-convertPngToSvg('../images/icon_in.png', '../images/chatcopycat_dark.svg', 'white');
-convertPngToSvg('../images/icon_in.png', '../images/chatcopycat_light.svg', 'black');
+convertPngToSvg('../assets/chatcopycat_icon.png', '../images/svg/chatcopycat_bubble_dark.svg', 'white');
+convertPngToSvg('../assets/chatcopycat_icon.png', '../images/svg/chatcopycat_bubble_light.svg', 'black');

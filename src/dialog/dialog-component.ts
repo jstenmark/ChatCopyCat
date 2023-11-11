@@ -1,9 +1,7 @@
 import * as vscode from 'vscode'
-import { questionContextExamples as inquiryTypeExamples } from '../common/consts'
-import { onDialogClose, onDialogOpen } from '../config/store-util'
-import { log } from '../logging'
+import { configStore } from '../extension'
 import { DialogComponentManager } from './dialog-manager'
-
+import { Semaphore } from '../config'
 export const quickPickManager = new DialogComponentManager()
 export const inputBoxManager = new DialogComponentManager()
 
@@ -29,10 +27,8 @@ async function getInquiryOptions(
       ...items.map(item => ({ label: item, description: `Select ${title}` })),
     ]
     quickPick.placeholder = `Select or Input ${title}`
-    log.debug('inside selectedOption ', quickPick.placeholder)
     return quickPick
   })
-  log.debug('returning from selectedOption -> quickPickManager=' + JSON.stringify(selectedOption))
 
   if (selectedOption) {
     if (selectedOption === customItem) {
@@ -46,21 +42,16 @@ async function getInquiryOptions(
       return [selectedOption]
     }
   }
-  log.debug('returning from getInquirytOptions')
   return []
 }
 
 export async function getInquiryType(): Promise<string[] | undefined> {
-  log.debug('[INQUIRY] OPEN')
-  await onDialogOpen()
-  const inquiryTypeEnabled = vscode.workspace
-    .getConfiguration('chatcopycat')
-    .get<boolean>('inquiryType')
-
+  await Semaphore.instance.setDialogState(true, 'getInquiryType')
+  const inquiryTypeEnabled = configStore.get('inquiryType')
   const res = inquiryTypeEnabled
-    ? await getInquiryOptions('Question Context', inquiryTypeExamples, 'Custom')
+    ? await getInquiryOptions('Question Context', configStore.get('customInquiryTypes'), 'Custom')
     : undefined
 
-  await onDialogClose()
+  await Semaphore.instance.setDialogState(false, 'getInquiryType')
   return res
 }

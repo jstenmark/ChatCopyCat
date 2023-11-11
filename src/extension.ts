@@ -1,19 +1,16 @@
 import * as vscode from 'vscode'
-import { ClipboardManager } from './clipboard/clipboard-manager'
-import { copy } from './commands/copy-command'
-import { getFileTree } from './commands/filetree-command'
-import { reloadWindow } from './commands/reload-command'
-import { resetClipboard } from './commands/resetclipboard-command'
-import { showClipboardMenu } from './commands/show-clipboard-menu-command'
-import { getChannel } from './config/output-channel'
-import { registerContext } from './config/store-util'
-import { close } from './dialog/dialog-utils'
-import { LogManager, log } from './logging'
-import { StatusBarManager } from './statusbar/statusbar-manager'
-import { watchForExtensionChanges } from './utils/file-utils'
+import { ClipboardManager } from './clipboard'
+import { copyCode, copyDefinitions, getFileTree, openMenu, openSettings } from './commands'
+import { Semaphore } from './config'
+import { closeDialog } from './dialog'
+import { LogManager, createChannel, log } from './logging'
+import { StatusBarManager } from './statusbar'
+import { watchForExtensionChanges } from './utils'
+import { ConfigStore } from './config'
 
 export let statusBarManager: StatusBarManager
 export let clipboardManager: ClipboardManager
+export let configStore: ConfigStore
 
 /**
  * This function is called when the extension is activated.
@@ -22,49 +19,54 @@ export let clipboardManager: ClipboardManager
  */
 export async function activate(context: vscode.ExtensionContext) {
   try {
-    const logChannel = getChannel('ChatCopyCat')
-    LogManager.instance.setChannel(logChannel)
-    await registerContext()
+    configStore = new ConfigStore('JStenmark', 'chatcopycat')
+    const _logChannel = createChannel('ChatCopyCat')
+    LogManager.instance.setChannel(_logChannel)
+    await Semaphore.instance.registerDialogContext()
+
     statusBarManager = new StatusBarManager()
     clipboardManager = new ClipboardManager(statusBarManager)
+    LogManager.instance.getChannel()?.show(true)
 
-    // commands
-    const copyCommand: vscode.Disposable = vscode.commands.registerCommand('chatcopycat.copy', copy)
-    const closeDialogCommand: vscode.Disposable = vscode.commands.registerCommand(
-      'chatcopycat.closeDialog',
-      close,
-    )
-    const projectFilesCommand: vscode.Disposable = vscode.commands.registerCommand(
-      'chatcopycat.getFileTree',
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    const handlers: Record<string, Function> = {
+      copyCode,
+      resetClipboard: clipboardManager.resetClipboard.bind(clipboardManager),
+      closeDialog,
       getFileTree,
-    )
-    const reloadWindowCommand: vscode.Disposable = vscode.commands.registerCommand(
-      'chatcopycat.reloadWindow',
-      reloadWindow,
-    )
-    const resetClipboardCommand: vscode.Disposable = vscode.commands.registerCommand(
-      'chatcopycat.resetClipboard',
-      resetClipboard,
-    )
-    const showClipboardMenuCommand: vscode.Disposable = vscode.commands.registerCommand(
-      'chatcopycat.showClipboardMenu',
-      showClipboardMenu,
-    )
-    const watcherDisposable: vscode.Disposable = watchForExtensionChanges()
+      copyDefinitions,
+      openMenu,
+      reloadWindow: async () =>
+        await vscode.commands.executeCommand('workbench.action.reloadWindow'),
+      openSettings,
+    }
 
-    context.subscriptions.push(
-      logChannel,
-      copyCommand,
-      closeDialogCommand,
-      projectFilesCommand,
-      resetClipboardCommand,
-      showClipboardMenuCommand,
-      reloadWindowCommand,
-      watcherDisposable,
-    )
+    // eslint-disable-next-line
+    context.extension.packageJSON.contributes.commands.forEach((cmd: { command: string }) => {
+      const [, action] = cmd.command.split('.')
+      const handler = handlers[action]
 
-    logChannel.show(true)
+      if (handler) {
+        context.subscriptions.push(
+          vscode.commands.registerCommand(cmd.command, async (...args) => {
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              await handler(...args)
+            } catch (error) {
+              console.error(`Error executing command ${cmd.command}:`, error)
+              log.error(`Error executing command ${cmd.command}:`, error)
+            }
+          }),
+        )
+      } else {
+        console.warn(`No handler found for command ${cmd.command}`)
+        log.warn(`No handler found for command ${cmd.command}`)
+      }
+    })
+
+    context.subscriptions.push(_logChannel, watchForExtensionChanges())
   } catch (error) {
+    console.error('Failed to activate extension:', error)
     log.error('Failed to activate extension:', error)
   }
 }

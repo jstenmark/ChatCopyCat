@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="/images/out.png" width="384"/>
+<img src="/images/png/logo.png" width="384"/>
 
 # ChatCopyCat
 

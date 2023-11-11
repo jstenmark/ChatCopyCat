@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import { AsyncLogDecorator, LogDecorator, log } from '../logging'
-import { LogLevel } from '../logging/log-mixin'
-import { StatusBarManager } from '../statusbar/statusbar-manager'
-import { copyDefinitions } from '../utils/lang-utils'
+import { AsyncLogDecorator, log } from '../logging'
+import { LogLevel } from '../logging'
+import { StatusBarManager } from '../statusbar'
+import { configStore } from '../extension'
 
 export class ClipboardManager implements vscode.Disposable {
   private statusBarManager: StatusBarManager
@@ -11,40 +11,62 @@ export class ClipboardManager implements vscode.Disposable {
     this.statusBarManager = StatusBarManager
   }
 
-  @LogDecorator(LogLevel.WARN, 'Disposing Clipboardmanager')
   dispose() {
     this.statusBarManager.dispose()
   }
 
-  @LogDecorator(LogLevel.INFO, 'Clipboard reset')
+  @AsyncLogDecorator(LogLevel.INFO, 'Clipboard reset')
   public async resetClipboard(): Promise<void> {
+    const resetHotkeyEnabled = configStore.get<boolean>('enableClipboardResetCombo')
+    if (!resetHotkeyEnabled) {
+      log.info('Reset clipboard hotkey is disabled.')
+      return
+    }
+
     await ClipboardManager.copyText('')
     this.statusBarManager.updateCopyCount(0)
   }
 
-  @LogDecorator(LogLevel.INFO, 'Copied to clipboard')
-  public async copyToClipboard(text: string): Promise<void> {
+  @AsyncLogDecorator(LogLevel.INFO, 'Copied to clipboard', { truncate: 20 })
+  public async copyToClipboard(text: string, resetCount?: boolean | undefined): Promise<void> {
     await ClipboardManager.copyText(text)
-    this.statusBarManager.updateCopyCount()
+    if (resetCount === true) {
+      this.statusBarManager.updateCopyCount(1)
+    }
   }
 
-  @LogDecorator(LogLevel.INFO, 'Reading from clipboard')
+  @AsyncLogDecorator(LogLevel.INFO, 'Reading from clipboard', { truncate: 20 })
   public async readFromClipboard(): Promise<string> {
     return await ClipboardManager.pasteText()
   }
 
-  @AsyncLogDecorator(LogLevel.INFO, 'Show clipboard menu')
-  public async showClipboardMenu(): Promise<void> {
-    const picks = [
-      { label: 'Reset Clipboard', action: this.resetClipboard.bind(this) },
-      { label: 'Show definitions', action: copyDefinitions },
-    ]
+  @AsyncLogDecorator(LogLevel.INFO, 'Prepending to clipboard', { truncate: 20 })
+  public async prependToClipboard(
+    textToPrepend: string,
+    clipboardContent?: string,
+    increaseCount?: boolean | undefined,
+  ): Promise<void> {
+    if (clipboardContent?.length === 0) {
+      clipboardContent = await ClipboardManager.pasteText()
+    }
+    await ClipboardManager.copyText(textToPrepend + clipboardContent)
+    if (increaseCount === true) {
+      this.statusBarManager.increaseCopyCount()
+    }
+  }
 
-    const pick = await vscode.window.showQuickPick(picks, {
-      placeHolder: 'ChatCopyCatCommandCenter ',
-    })
-    if (pick?.action) {
-      await pick.action()
+  @AsyncLogDecorator(LogLevel.INFO, 'Appending to clipboard', { truncate: 20 })
+  public async appendToClipboard(
+    textToAppend: string,
+    clipboardContent?: string,
+    increaseCount?: boolean,
+  ): Promise<void> {
+    if (clipboardContent?.length === 0) {
+      clipboardContent = await ClipboardManager.pasteText()
+    }
+    await ClipboardManager.copyText(clipboardContent + textToAppend)
+    if (increaseCount === true) {
+      this.statusBarManager.increaseCopyCount()
     }
   }
 

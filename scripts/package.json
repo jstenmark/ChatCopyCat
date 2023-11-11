@@ -1,0 +1,15 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "Script collection for ChatCopyCat",
+  "main": "createsvg.js",
+  "scripts": {
+    "createsvg": "node createsvg.js"
+  },
+  "author": "JSstenmark",
+  "license": "MIT",
+  "devDependencies": {
+    "potrace": "^2.1.8",
+    "sharp": "^0.32.6"
+  }
+}

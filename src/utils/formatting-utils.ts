@@ -1,8 +1,13 @@
-import { ILangOpts } from '../common/types'
+import { ILangOpts } from '../common'
 
 export const cleanQuotes = (input: string) => input.replace(/^["'](.+(?=["']$))["']$/, '$1')
 
-export function cleanCodeTsJs(_code: string, langOpts: ILangOpts): string {
+export function cleanCodeTsJs(
+  _code: string,
+  langOpts: ILangOpts,
+  removeComments: boolean,
+  enableTabify: boolean,
+): string {
   let inSingleLineComment = false
   let inMultiLineComment = false
   let inString = false
@@ -20,12 +25,21 @@ export function cleanCodeTsJs(_code: string, langOpts: ILangOpts): string {
     }
     if (!inString && !inMultiLineComment && code[i] === '/' && code[i + 1] === '/') {
       inSingleLineComment = true
+      if (!removeComments) {
+        newLine += code[i]
+      }
       i++
     } else if (!inString && !inSingleLineComment && code[i] === '/' && code[i + 1] === '*') {
       inMultiLineComment = true
+      if (!removeComments) {
+        newLine += code[i]
+      }
       i++
     } else if (inMultiLineComment && code[i] === '*' && code[i + 1] === '/') {
       inMultiLineComment = false
+      if (!removeComments) {
+        newLine += '*/'
+      }
       i++
     } else if (!inMultiLineComment) {
       if (inSingleLineComment && code[i] === '\n') {
@@ -37,18 +51,21 @@ export function cleanCodeTsJs(_code: string, langOpts: ILangOpts): string {
     }
     if (code[i] === '\n' && !inSingleLineComment && !inMultiLineComment) {
       if (newLine.trim() !== '') {
-        newCode += tabify(newLine, langOpts)
+        newCode += tabify(newLine, langOpts, enableTabify)
       }
       newLine = ''
     }
   }
   if (newLine.trim() !== '') {
-    newCode += tabify(newLine, langOpts)
+    newCode += tabify(newLine, langOpts, enableTabify)
   }
   return newCode.replace(/[ \t]+$/gm, '')
 }
 
-export const tabify = (line: string, { tabSize }: ILangOpts) => {
+export const tabify = (line: string, { tabSize }: ILangOpts, enableTabify: boolean) => {
+  if (!enableTabify) {
+    return line
+  }
   const matches = line.match(/^[\t ]*/)
   const match = matches ? matches[0] : ''
   const indentSize = match.replace(/\t/g, ' '.repeat(tabSize)).length

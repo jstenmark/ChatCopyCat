@@ -1,10 +1,10 @@
-out
 node_modules
+out
 docs
-.vscode-test/
 
+.vscode-test
 .vscode/*workspace
 .vscode/*-Completion.json
-.vsode/Python*
+.vscode/Python*
 *.vsix
 *.log

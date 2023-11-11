@@ -2,8 +2,8 @@ import * as fs from 'fs'
 import ignore from 'ignore'
 import * as path from 'path'
 import * as vscode from 'vscode'
-import { defaultIgnoreList } from '../common/consts'
 import { log } from '../logging'
+import { configStore } from '../extension'
 
 export function getRelativePathOrBasename(fileFsPath: string, workspaceFsPath?: string): string {
   if (workspaceFsPath) {
@@ -37,7 +37,7 @@ export async function getFileList(
   directory = __dirname,
   originalRoot = directory,
   ig = ignore(),
-  ignoreList: string[] = defaultIgnoreList,
+  ignoreList: string[] = configStore.get('projectTreeIgnoreList'),
 ): Promise<string[]> {
   ig.add(ignoreList)
   const files = await fs.promises.readdir(directory)
@@ -98,11 +98,15 @@ export const isFullFileSelected = (editor: vscode.TextEditor): boolean => {
 
 export function getAllDiagnostics(
   document: vscode.TextDocument,
-  selection: vscode.Selection,
+  selection: vscode.Selection | undefined,
 ): vscode.Diagnostic[] {
-  return vscode.languages.getDiagnostics(document.uri).filter(({ range }) => {
-    return selection.intersection(range)
-  })
+  if (typeof vscode.Selection !== 'undefined') {
+    return vscode.languages.getDiagnostics(document.uri).filter(({ range }) => {
+      return selection?.intersection(range)
+    })
+  } else {
+    return vscode.languages.getDiagnostics(document.uri)
+  }
 }
 
 export function watchForExtensionChanges(): vscode.Disposable {

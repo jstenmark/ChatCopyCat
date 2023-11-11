@@ -1,16 +1,20 @@
-.vscode/**
-.vscode-test/**
-out/test/**
-src/**
-scripts/**
+src
+scripts
+docs
+assets
+.github
+.vscode
+.vscode-test
+out/test
+
 .gitignore
+yarn-error.log
 .yarnrc
+
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map
 **/*.ts
 
 
-yarn-error.log
-docs
 

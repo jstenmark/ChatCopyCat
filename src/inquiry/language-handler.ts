@@ -1,22 +1,33 @@
-import { ILangOpts } from '../common/types'
-import { cleanCodeTsJs, tabify } from '../utils/formatting-utils'
+import { ILangOpts } from '../common'
+import { configStore } from '../extension'
+import { cleanCodeTsJs, tabify } from '../utils'
 
-export function handleTypeScriptFile(content: string, langOpts: ILangOpts): string {
-  const cleaned = cleanCodeTsJs(content, langOpts)
+function handleTypeScriptFile(content: string, langOpts: ILangOpts): string {
+  const cleaned = cleanCodeTsJs(
+    content,
+    langOpts,
+    configStore.get('enableCommentRemoval'),
+    configStore.get('convertSpacesToTabs'),
+  )
   return cleaned
 }
 
-export function handleJavaScriptFile(content: string, langOpts: ILangOpts): string {
-  const cleaned = cleanCodeTsJs(content, langOpts)
+function handleJavaScriptFile(content: string, langOpts: ILangOpts): string {
+  const cleaned = cleanCodeTsJs(
+    content,
+    langOpts,
+    configStore.get('enableCommentRemoval'),
+    configStore.get('convertSpacesToTabs'),
+  )
   return cleaned
 }
 
-export function handlePythonFile(content: string, langOpts: ILangOpts): string {
-  const tabified: string = tabify(content, langOpts)
+function handlePythonFile(content: string, langOpts: ILangOpts): string {
+  const tabified: string = tabify(content, langOpts, configStore.get('convertSpacesToTabs'))
   return tabified
 }
 
-export function defaultHandler(content: string): string {
+function defaultHandler(content: string): string {
   const trimmedContent = content.replace(/^\n+|\n+$/g, '')
   return trimmedContent
 }

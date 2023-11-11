@@ -17,7 +17,7 @@
     "Programming Languages",
     "Other"
   ],
-  "icon": "images/out.png",
+  "icon": "images/png/logo.png",
   "homepage": "https://github.com/jstenmark/ChatCopyCat/README.md",
   "activationEvents": [
     "onStartupFinished"
@@ -33,51 +33,152 @@
   "contributes": {
     "configuration": {
       "type": "object",
-      "title": "ChatCopyCat Settings",
+      "title": "ChatCopyCat",
       "properties": {
-        "chatcopycat.enableClipboardResetHotkey": {
+        "chatcopycat.enableClipboardResetCombo": {
           "type": "boolean",
           "default": true,
-          "description": "Enable clipoard reset hotkey"
+          "description": "Enable clipoard reset click combo"
         },
         "chatcopycat.inquiryType": {
           "type": "boolean",
           "default": true,
           "description": "Enable prompting of predefined question types"
+        },
+        "chatcopycat.enableDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable diagnostics."
+        },
+        "chatcopycat.enableCommentRemoval": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable comment removal."
+        },
+        "chatcopycat.convertSpacesToTabs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable conversion of spaces to tabs."
+        },
+        "chatcopycat.customInquiryTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "Optimization",
+            "Syntax",
+            "Logic",
+            "Debugging",
+            "Error Handling",
+            "Code Structure",
+            "Performance",
+            "Testing",
+            "Security",
+            "Documentation"
+          ],
+          "description": "Array of custom inquiry types."
+        },
+        "chatcopycat.projectTreeIgnoreList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/out/**",
+            "**/docs/**",
+            "**/.vscode/**",
+            "**/.git/**",
+            "**/node_modules/**",
+            "**/__pycache__/**",
+            "**/.vscode-test/**"
+          ],
+          "description": "Array of items to ignore in the project tree."
+        },
+        "chatcopycat.customDiagnosticsMessage": {
+          "type": "string",
+          "default": "",
+          "description": "Custom message to add to diagnostics."
+        },
+        "chatcopycat.enableForceFocusLastTrackedEditor": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable forcing focus on the last tracked editor."
+        },
+        "chatcopycat.logLevelInChannel": {
+          "type": "string",
+          "enum": ["DEBUG", "INFO", "WARN", "ERROR"],
+          "default": "DEBUG",
+          "description": "Set log level in the output channel."
+        },
+        "chatcopycat.defaultMessageTruncate": {
+          "type": "number",
+          "default": 200,
+          "description": "Default log message truncate length."
+        },
+        "chatcopycat.defaultDataTruncate": {
+          "type": "number",
+          "default": 500,
+          "description": "Default log data truncate length."
+        },
+        "chatcopycat.enableFolderWatchingForWindowReload": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable folder watching for window reload. Used for development"
+        },
+        "chatcopycat.showLanguageInSnippets": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable showing language per snippet"
         }
       }
     },
     "commands": [
       {
-        "command": "chatcopycat.closeDialog",
-        "title": "ChatCopyCat: Close em",
-        "group": "chatcopycat"
-      },
-      {
-        "command": "chatcopycat.copy",
-        "title": "ChatCopyCat: Snag & Tag",
+        "command": "chatcopycat.copyCode",
+        "title": "ChatCopyCat: COPY - Snag & Tag",
         "group": "chatcopycat"
       },
       {
         "command": "chatcopycat.getFileTree",
-        "title": "ChatCopyCat: Raid the File Cabinet",
+        "title": "ChatCopyCat: FILE-TREE - Raid the File Cabinet",
+        "group": "chatcopycat"
+      },
+      {
+        "command": "chatcopycat.copyDefinitions",
+        "title": "ChatCopyCat: COPY-DEFINITIONS - Copy functions from file",
         "group": "chatcopycat"
       },
       {
         "command": "chatcopycat.resetClipboard",
-        "title": "ChatCopyCat: Clipboard Makeover",
+        "title": "ChatCopyCat: RESET-CLIPBOARD - Clipboard Makeover",
         "group": "chatcopycat"
       },
       {
-        "command": "chatcopycat.showClipboardMenu",
-        "title": "ChatCopyCat: The Command Central",
+        "command": "chatcopycat.openMenu",
+        "title": "ChatCopyCat: MENU - Command overview",
         "group": "chatcopycat"
+      },
+      {
+        "command": "chatcopycat.openSettings",
+        "title": "ChatCopyCat: SETTINGS - The Command Center",
+        "group": "chatcopycat"
+      },
+      {
+        "command": "chatcopycat.closeDialog",
+        "title": "ChatCopyCat: CLOSE-INQUIRY - Close em",
+        "group": "devcat"
+      },
+      {
+        "command": "chatcopycat.reloadWindow",
+        "title": "DevCat: Reload Window",
+        "group": "devcat"
       }
     ],
     "keybindings": [
       {
         "key": "ctrl+shift+c",
-        "command": "chatcopycat.copy",
+        "command": "chatcopycat.copyCode",
         "when": "!terminalFocus && editorTextFocus && chatcopycat:semaphoreDialogOpen == false && !inQuickOpen"
       },
       {
@@ -85,20 +186,7 @@
         "command": "chatcopycat.closeDialog",
         "when": "!terminalFocus && chatcopycat:semaphoreDialogOpen == true"
       }
-    ],
-    "menus": {
-      "commandPalette": [
-        {
-          "command": "chatcopycat.showClipboardMenu"
-        }
-      ],
-      "editor/context": [
-        {
-          "command": "chatcopycat.showClipboardMenu",
-          "group": "chatcopycat"
-        }
-      ]
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "yarn compile",
@@ -136,7 +224,7 @@
     "prettier": "3.0.3",
     "ts-node": "^10.9.1",
     "typescript": "<=5.2.0",
-    "vm": "^0.1.0",
     "vsce": "^2.15.0"
-  }
+  },
+  "dependencies": {}
 }

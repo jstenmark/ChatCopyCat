@@ -1,87 +1,30 @@
 import * as vscode from 'vscode'
-import { IContentSection } from '../common/types'
-import { getInquiryType, inputBoxManager, quickPickManager } from '../dialog/dialog-component'
-import { getContentSection, getMetadataSection } from '../inquiry/inquiry-template'
+import { headersInClipboard, quickCopyManager, updateClipboardWithCopy } from '../clipboard'
+import { Semaphore } from '../config'
+import { getInquiryType, handleActiveDialogs } from '../dialog'
+import { generateSelectionSections } from '../inquiry'
+import { acitveEditorOrFocurLast, getLangOpts } from '../utils'
+import { ILangOpts } from '../common'
 
-import { metadataHeader } from '../common/consts'
-import { ILangOpts } from '../common/types'
-import { onDialogClose } from '../config/store-util'
-import { clipboardManager } from '../extension'
-import { log } from '../logging'
-import { getRelativePathOrBasename } from '../utils/file-utils'
-import { debounce, getLangOpts } from '../utils/lang-utils'
+export const copyCode = async (): Promise<void> => {
+  const editor: vscode.TextEditor | undefined = await acitveEditorOrFocurLast()
 
-let quickCopyCount = 0
-const quickCopyResetInterval = 500
-let lastCopyTimestamp: number = Date.now()
-const resetQuickCopy = debounce(() => {
-  quickCopyCount = 0
-  log.debug('reset quick copy')
-}, quickCopyResetInterval)
-
-export const copy = async (): Promise<void> => {
-  if (vscode.window.state?.focused === false) {
-    log.info('Window is not in focus! Cannot execute copy')
+  if (
+    handleActiveDialogs() ||
+    (await quickCopyManager.shouldResetClipboard(Date.now())) ||
+    !editor
+  ) {
     return
   }
-  const editor: vscode.TextEditor = vscode.window.activeTextEditor!
-  if (quickPickManager.isActive()) {
-    quickPickManager.close()
-    log.debug('closing inputBoxk')
-  } else if (inputBoxManager.isActive()) {
-    quickPickManager.close()
-    log.debug('closing quickPick')
-    return
-  } else {
-    log.debug('No active dialogs to close')
-  }
 
-  const now = Date.now()
-  if (now - lastCopyTimestamp < quickCopyResetInterval) {
-    quickCopyCount++
-    if (quickCopyCount >= 2) {
-      log.debug('Reset clipboard before reset quick copy clal')
-      await clipboardManager.resetClipboard()
-      resetQuickCopy()
-      return
-    }
-  } else {
-    quickCopyCount = 1
-  }
-  lastCopyTimestamp = now
-  const currentClipboardContent: string = await clipboardManager.readFromClipboard()
-  const headerIsInClipboard: boolean = currentClipboardContent.includes(metadataHeader)
-
-  const inquiryType: string[] | undefined = !headerIsInClipboard
+  const inquiryType: string[] | undefined = !(await headersInClipboard()).selectionHeaderPresent
     ? await getInquiryType()
     : undefined
-  log.debug('Got inquiryType dialog results ', inquiryType)
-
-  const resource: vscode.Uri = editor.document.uri
-  const fsPath: vscode.Uri['fsPath'] = resource.fsPath
-  const workspaceFolderFsPath = vscode.workspace.getWorkspaceFolder(resource)?.uri.fsPath
-  const relativePathOrBasename: string = getRelativePathOrBasename(fsPath, workspaceFolderFsPath)
 
   const langOpts: ILangOpts = getLangOpts(editor)
-  const selectionSections: string[] = editor.selections.map((selection: vscode.Selection) => {
-    const { selectionSection }: IContentSection = getContentSection(
-      selection,
-      editor,
-      langOpts,
-      relativePathOrBasename,
-    )
-    return selectionSection
-  })
-  const oldClipboardContent = `${
-    currentClipboardContent.length === 0 ? undefined : currentClipboardContent + '\n'
-  }`
-  const fileMetadataSection = getMetadataSection(inquiryType, headerIsInClipboard)
-  const trimmedOldClipboardContent =
-    oldClipboardContent && headerIsInClipboard ? oldClipboardContent.trim() : ''
 
-  const inquiry = `${trimmedOldClipboardContent}${fileMetadataSection}${selectionSections.join(
-    '\n',
-  )}`
-  await clipboardManager.copyToClipboard(inquiry)
-  await onDialogClose()
+  const selectionSections: string[] = generateSelectionSections(editor, langOpts)
+
+  await updateClipboardWithCopy(inquiryType, selectionSections, langOpts)
+  await Semaphore.instance.setDialogState(false, 'copyCode')
 }
