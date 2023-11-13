@@ -1,12 +1,13 @@
 import * as vscode from 'vscode'
 import { log } from '../logging'
 import { getRelativePathOrBasename } from './file-utils'
-import { configStore } from '../extension'
+import { configStore } from '../config'
 let lastTrackedTextEditor: vscode.TextEditor | undefined
 
 const validFileSchemes = new Set(['file', 'untitled'])
 
 export async function focusLastTrackedEditor(): Promise<vscode.TextEditor | undefined> {
+  await configStore.whenConfigReady()
   if (!configStore.get('enableForceFocusLastTrackedEditor')) {
     return undefined
   }

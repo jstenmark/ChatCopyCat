@@ -2,8 +2,10 @@ import ignore from 'ignore'
 import { replaceFileListInClipboard } from '../clipboard'
 import { generateFilesTemplate } from '../inquiry'
 import { getFileList, getProjectRootPaths } from '../utils'
+import { configStore } from '../config'
 
 export const getFileTree = async (): Promise<void> => {
+  await configStore.whenConfigReady()
   const rootPaths: string[] = getProjectRootPaths() ?? []
   const igInstance = ignore()
 

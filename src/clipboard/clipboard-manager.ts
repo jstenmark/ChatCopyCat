@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { AsyncLogDecorator, log } from '../logging'
 import { LogLevel } from '../logging'
 import { StatusBarManager } from '../statusbar'
-import { configStore } from '../extension'
 
 export class ClipboardManager implements vscode.Disposable {
   private statusBarManager: StatusBarManager
@@ -17,12 +16,6 @@ export class ClipboardManager implements vscode.Disposable {
 
   @AsyncLogDecorator(LogLevel.INFO, 'Clipboard reset')
   public async resetClipboard(): Promise<void> {
-    const resetHotkeyEnabled = configStore.get<boolean>('enableClipboardResetCombo')
-    if (!resetHotkeyEnabled) {
-      log.info('Reset clipboard hotkey is disabled.')
-      return
-    }
-
     await ClipboardManager.copyText('')
     this.statusBarManager.updateCopyCount(0)
   }

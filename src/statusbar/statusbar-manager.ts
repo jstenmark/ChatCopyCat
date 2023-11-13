@@ -5,7 +5,7 @@ export class StatusBarManager implements vscode.Disposable {
   private copyCount = 0
 
   private tooltip: vscode.MarkdownString = new vscode.MarkdownString(
-    `\n\n` + `$(settings) Click to open menu` + `\n\n`,
+    `$(settings) Click to open menu`,
     true,
   )
 

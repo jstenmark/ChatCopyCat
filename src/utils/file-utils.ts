@@ -3,7 +3,7 @@ import ignore from 'ignore'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { log } from '../logging'
-import { configStore } from '../extension'
+import { configStore } from '../config'
 
 export function getRelativePathOrBasename(fileFsPath: string, workspaceFsPath?: string): string {
   if (workspaceFsPath) {

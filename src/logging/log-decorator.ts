@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { performance } from 'perf_hooks'
 import { log } from './log-base'
-import { ILogMethods, ILogOpts, LogFunction, LogLevel } from './log-mixin'
+import { ILogMethods, ILogOpts, LogFunction } from './log-mixin'
 import { getTargetName, logResult } from './log-utils'
+
+enum localDecoratorLogLevel {
+  DEBUG = 'DEBUG',
+  INFO = 'INFO',
+  WARN = 'WARN',
+  ERROR = 'ERROR',
+}
 
 export type LogDecoratorType = <T extends (...args: any[]) => Promise<any>>(
   _target: object, //any
@@ -11,21 +18,24 @@ export type LogDecoratorType = <T extends (...args: any[]) => Promise<any>>(
 ) => TypedPropertyDescriptor<T> | void
 
 export function LogDecorator(
-  level: LogLevel,
+  level: localDecoratorLogLevel | string,
   message: string,
   logOpts?: ILogOpts,
 ): MethodDecorator {
   return function <T>(
-    _target: object, //any
+    _target: object,
     _propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<T>,
   ): TypedPropertyDescriptor<T> | void {
     if (typeof descriptor.value === 'function') {
       const originalMethod = descriptor.value as (...args: any[]) => any
       descriptor.value = function (this: typeof _target & ILogMethods, ...args: any[]): any {
-        const _logger = log[level.toLowerCase() as keyof typeof log] as LogFunction
-        if (typeof _logger === 'function') {
-          _logger(message, args, logOpts)
+        const typedLevel = getDecoratorLogLevel(level)
+        if (typedLevel !== undefined) {
+          const loggerMethod = getDecoratorLoggerMethod(log, typedLevel)
+          loggerMethod(message, args, logOpts)
+        } else {
+          console.warn(`Invalid log level: ${level}`)
         }
         return originalMethod.apply(this, args)
       } as unknown as T
@@ -35,7 +45,7 @@ export function LogDecorator(
 }
 
 export function AsyncLogDecorator(
-  level: LogLevel,
+  level: localDecoratorLogLevel | string,
   message: string,
   opts?: ILogOpts,
 ): LogDecoratorType {
@@ -65,7 +75,7 @@ export function AsyncLogDecorator(
           logResult(
             {
               message,
-              level: LogLevel.ERROR,
+              level: localDecoratorLogLevel.ERROR,
               opts,
             },
             {
@@ -83,5 +93,47 @@ export function AsyncLogDecorator(
       } as T
       return descriptor
     }
+  }
+}
+
+function getDecoratorLoggerMethod(
+  _logger: ILogMethods,
+  level: localDecoratorLogLevel,
+): LogFunction {
+  const fallBackLogger = typeof _logger === 'undefined' ? log : _logger
+  switch (level) {
+    case localDecoratorLogLevel.DEBUG:
+      return fallBackLogger.debug
+    case localDecoratorLogLevel.INFO:
+      return fallBackLogger.info
+    case localDecoratorLogLevel.WARN:
+      return fallBackLogger.warn
+    case localDecoratorLogLevel.ERROR:
+      return fallBackLogger.error
+    default:
+      throw new Error('Invalid log level')
+  }
+}
+
+function isKeyOfEnum(key: string, enumType: Record<string, string>): key is keyof typeof enumType {
+  return Object.keys(enumType).includes(key)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isInEnum(value: any, enumType: any): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return Object.values(enumType).includes(value)
+}
+
+function getDecoratorLogLevel(
+  level: string | localDecoratorLogLevel,
+): localDecoratorLogLevel | undefined {
+  if (typeof level === 'string') {
+    const upperCaseLevel = level.toUpperCase()
+    return isKeyOfEnum(upperCaseLevel, localDecoratorLogLevel)
+      ? localDecoratorLogLevel[upperCaseLevel as keyof typeof localDecoratorLogLevel]
+      : undefined
+  } else {
+    return isInEnum(level, localDecoratorLogLevel) ? level : undefined
   }
 }

@@ -1,23 +1,25 @@
-export abstract class Singleton {
-  private static instances = new Map<new () => Singleton, Singleton>()
+export abstract class SingletonBase {
+  private static instances = new Map<new () => SingletonBase, SingletonBase>()
 
   protected constructor() {
-    const ctor = this.constructor as new () => Singleton
-    if (Singleton.instances.has(ctor)) {
-      return Singleton.instances.get(ctor)! // Use non-null assertion
+    const ctor = this.constructor as new () => SingletonBase
+    if (SingletonBase.instances.has(ctor)) {
+      return SingletonBase.instances.get(ctor)! // Use non-null assertion
     }
-    Singleton.instances.set(ctor, this)
+    SingletonBase.instances.set(ctor, this)
   }
 
   // Generic method to enforce the correct instance type
-  protected static getInstance<T extends Singleton>(this: new () => T): T {
-    if (!Singleton.instances.has(this)) {
-      Singleton.instances.set(this, new this())
+  protected static getInstance<T extends SingletonBase>(this: new () => T): T {
+    if (!SingletonBase.instances.has(this)) {
+      SingletonBase.instances.set(this, new this())
     }
-    const instance = Singleton.instances.get(this)
+    const instance = SingletonBase.instances.get(this)
     if (!instance) {
-      throw new Error('Instance creation failed')
+      throw new Error('SINGLETON Instance creation failed')
     }
     return instance as T
   }
 }
+
+export const Snigel = SingletonBase

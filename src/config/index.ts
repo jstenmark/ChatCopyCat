@@ -1,2 +1,1 @@
-export { Semaphore } from './semaphore-store'
-export { ConfigStore } from './config-store'
+export { configStore } from './config-store'

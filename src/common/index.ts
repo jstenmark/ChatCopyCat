@@ -1,5 +1,4 @@
-export { Singleton } from './singleton'
-export { GetWorkspaceFolderFn, IProjectFile, ILangOpts, IContentSection } from './types'
+export { IProjectFile, ILangOpts, IContentSection } from './types'
 export {
   defaultTabSize,
   functionRegex,

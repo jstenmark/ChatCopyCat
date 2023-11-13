@@ -1,8 +1,7 @@
 import * as vscode from 'vscode'
-import { log } from '../logging'
-import { Singleton } from '../common'
+import { SingletonBase } from '../common/singleton'
 
-export class Semaphore extends Singleton {
+export class Semaphore extends SingletonBase {
   private static _instance: Semaphore | null = null
   private _isDialogOpen = false
   private dialog_context_key = 'chatcopycat:semaphoreDialogOpen'
@@ -17,21 +16,27 @@ export class Semaphore extends Singleton {
     return this._instance
   }
 
+  public static async initialize(): Promise<Semaphore> {
+    const instance = this.instance
+    await instance.setDialogState(false)
+    return instance
+  }
+
   public get isDialogOpen(): boolean {
     return this._isDialogOpen
   }
 
-  public async setDialogState(open: boolean, source?: string): Promise<void> {
-    log.info('Dialog state changed', { open, source })
-    await vscode.commands.executeCommand('setContext', this.dialog_context_key, open)
-    this._isDialogOpen = open
-  }
-
-  public async registerDialogContext(): Promise<void> {
+  public async setDialogState(open: boolean): Promise<boolean> {
     try {
-      await vscode.commands.executeCommand('setContext', this.dialog_context_key, false)
+      await vscode.commands.executeCommand('setContext', this.dialog_context_key, open)
+      this._isDialogOpen = open
+      return true
     } catch (error) {
-      log.error('Failed to set semaphore state', error)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.error(`Error setting dialog state: ${errorMessage}`)
+      throw error
     }
   }
 }
+
+export const semaphoreStore = Semaphore.instance

@@ -1,9 +1,10 @@
 import * as vscode from 'vscode'
-import { getFileTree, openSettings } from '../commands'
-import { iconDark, iconLight } from '../common'
+import { getFileTree } from './filetree-command'
 import { clipboardManager } from '../extension'
-import { log } from '../logging'
 import { copyDefinitions } from './definitions-command'
+import { openSettings } from './settings-command'
+import { iconDark, iconLight } from '../common'
+import { log } from '../logging'
 
 export const openMenu = async () => {
   const iconPath = {

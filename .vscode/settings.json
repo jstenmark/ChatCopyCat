@@ -11,9 +11,5 @@
     "out": true,
     "**/node_modules/**": true,
     "**/*.code-search": true,
-  },
-  "chatcopycat.enableClipboardResetHotkey": false,
-  "chatcopycat.inquiryType": false,
-  "chatcopycat.showLanguageInSnippets": false,
-  "chatcopycat.customDiagnosticsMessage": "- Please fix scripter typing for me plss :)"
+  }
 }

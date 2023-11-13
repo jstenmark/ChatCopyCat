@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { IContentSection, ILangOpts, fileTreeEnd, fileTreeHeader, generateHeader } from '../common'
 import { getAllDiagnostics } from '../utils'
 import { handleFileLanguageId } from './language-handler'
-import { configStore } from '../extension'
+import { configStore } from '../config'
 
 export function getMetadataSection(
   inquiryTypes: string[] | undefined,
@@ -51,9 +51,10 @@ export function getContentSection(
 
 export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[]): string => {
   const customMessage: string = configStore.get('customDiagnosticsMessage')
-  const _message: string | undefined = customMessage.length > 0 ? customMessage : undefined
+  const _message: string | undefined =
+    customMessage && customMessage.length > 0 ? customMessage : undefined
   return (
-    `${_message ? _message + '\n' : ''}` +
+    `${_message && _message?.length > 0 ? _message + '\n' : ''}` +
     `- Errors: (source, approximate lines, message)\n` +
     diagnostics
       .map(({ source, message, range }) => {

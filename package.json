@@ -1,9 +1,9 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
+  "publisher": "JStenmark",
   "description": "A VS Code extension to enhance coding workflows with chat assistants",
   "version": "0.0.1",
-  "publisher": "JStenmark",
   "main": "./out/extension.js",
   "engines": {
     "vscode": "^1.83.1"
@@ -107,9 +107,9 @@
         },
         "chatcopycat.logLevelInChannel": {
           "type": "string",
-          "enum": ["DEBUG", "INFO", "WARN", "ERROR"],
           "default": "DEBUG",
-          "description": "Set log level in the output channel."
+          "enum": ["DEBUG", "INFO", "WARN", "ERROR"],
+          "description": "Log level for the output channel"
         },
         "chatcopycat.defaultMessageTruncate": {
           "type": "number",

@@ -1,5 +1,5 @@
 import { ILangOpts } from '../common'
-import { configStore } from '../extension'
+import { configStore } from '../config'
 import { cleanCodeTsJs, tabify } from '../utils'
 
 function handleTypeScriptFile(content: string, langOpts: ILangOpts): string {

@@ -1,4 +1,4 @@
-import { configStore } from '../extension'
+import { configStore } from '../config'
 import { log } from './log-base'
 import { LogManager } from './log-manager'
 import { truncate } from './log-utils'
@@ -18,14 +18,18 @@ export enum LogLevelNumeric {
   WARN = 3,
   ERROR = 4,
 }
-
+export const LogLevelToNumeric: Record<LogLevel, LogLevelNumeric> = {
+  [LogLevel.DEBUG]: LogLevelNumeric.DEBUG,
+  [LogLevel.INFO]: LogLevelNumeric.INFO,
+  [LogLevel.WARN]: LogLevelNumeric.WARN,
+  [LogLevel.ERROR]: LogLevelNumeric.ERROR,
+}
 export interface ILogMethods {
-  [method: string]: LogFunction | LogManager | LogSink
+  [method: string]: LogFunction | LogSink
   debug: LogFunction
   info: LogFunction
   warn: LogFunction
   error: LogFunction
-  logManager: LogManager
 }
 export interface ILogOpts {
   truncate?: number
@@ -36,8 +40,7 @@ export type LogMixinConstructor = new (...args: any[]) => object
 
 export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
   return class Loggable extends Base implements ILogMethods {
-    [method: string]: LogFunction | LogManager | LogSink
-    logManager: LogManager = LogManager.instance
+    [method: string]: LogFunction | LogSink
 
     public debug: LogFunction = (message: string, data?: unknown, logOpts?: ILogOpts): void => {
       this._log(LogLevel.DEBUG, message, data, logOpts)
@@ -55,26 +58,28 @@ export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
       this._log(LogLevel.ERROR, message, data, logOpts)
     }
 
-    private _log: LogSink = (
+    private _log: LogSink = async (
       level: LogLevel,
       message: string,
       data?: unknown,
       logOpts?: ILogOpts,
-    ): void => {
-      const configuredLogLevelName = configStore.get<string>('logLevelInChannel')
-      const configuredLogLevel =
-        LogLevelNumeric[configuredLogLevelName as keyof typeof LogLevelNumeric]
+    ): Promise<void> => {
+      await configStore.whenConfigReady()
+      const configuredLogLevel = configStore.get<string>('logLevelInChannel')
+      const messageLogLevel = LogLevelToNumeric[level]
+      const isAllowedToLog =
+        messageLogLevel >= LogLevelToNumeric[configuredLogLevel as LogLevel] ? true : false
 
-      const _level = LogLevelNumeric[level as keyof typeof LogLevelNumeric]
-      if (_level >= configuredLogLevel) {
-        const dataString =
-          data !== undefined
-            ? truncate(
-                this.data2String(data),
-                logOpts?.truncate ?? configStore.get('defaultDataTruncate'),
-              )
-            : ''
-        this.logManager.log(
+      const dataString =
+        data !== undefined
+          ? truncate(
+              this.data2String(data),
+              logOpts?.truncate ?? configStore.get('defaultDataTruncate'),
+            )
+          : ''
+
+      if (isAllowedToLog) {
+        LogManager.instance.log(
           `${this._now()} [${level}]\t${truncate(
             message,
             logOpts?.truncate ?? configStore.get('defaultMessageTruncate'),

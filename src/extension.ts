@@ -1,16 +1,16 @@
 import * as vscode from 'vscode'
 import { ClipboardManager } from './clipboard'
 import { copyCode, copyDefinitions, getFileTree, openMenu, openSettings } from './commands'
-import { Semaphore } from './config'
+import { Semaphore } from './config/semaphore-store'
 import { closeDialog } from './dialog'
-import { LogManager, createChannel, log } from './logging'
 import { StatusBarManager } from './statusbar'
 import { watchForExtensionChanges } from './utils'
-import { ConfigStore } from './config'
+import { configStore } from './config'
+import { log, LogLevel } from './logging'
+import { LogManager } from './logging/log-manager'
 
 export let statusBarManager: StatusBarManager
 export let clipboardManager: ClipboardManager
-export let configStore: ConfigStore
 
 /**
  * This function is called when the extension is activated.
@@ -19,14 +19,14 @@ export let configStore: ConfigStore
  */
 export async function activate(context: vscode.ExtensionContext) {
   try {
-    configStore = new ConfigStore('JStenmark', 'chatcopycat')
-    const _logChannel = createChannel('ChatCopyCat')
-    LogManager.instance.setChannel(_logChannel)
-    await Semaphore.instance.registerDialogContext()
+    await configStore.whenConfigReady()
+    await Semaphore.initialize()
+
+    const _logChannel = vscode.window.createOutputChannel('ChatCopyCat', 'log')
+    LogManager.initialize(_logChannel, LogLevel.DEBUG)
 
     statusBarManager = new StatusBarManager()
     clipboardManager = new ClipboardManager(statusBarManager)
-    LogManager.instance.getChannel()?.show(true)
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     const handlers: Record<string, Function> = {
@@ -52,21 +52,19 @@ export async function activate(context: vscode.ExtensionContext) {
             try {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               await handler(...args)
-            } catch (error) {
-              console.error(`Error executing command ${cmd.command}:`, error)
-              log.error(`Error executing command ${cmd.command}:`, error)
+            } catch (err) {
+              log.error(`Couldnt register:${cmd.command}`, err)
+              await vscode.window.showErrorMessage('Couldnt do stuff:ERROR=' + JSON.stringify(err))
             }
           }),
         )
       } else {
-        console.warn(`No handler found for command ${cmd.command}`)
         log.warn(`No handler found for command ${cmd.command}`)
       }
     })
 
     context.subscriptions.push(_logChannel, watchForExtensionChanges())
   } catch (error) {
-    console.error('Failed to activate extension:', error)
     log.error('Failed to activate extension:', error)
   }
 }

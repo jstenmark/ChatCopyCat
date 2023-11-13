@@ -1,5 +1,5 @@
-import * as vscode from 'vscode'
 import { log } from './log-base'
+import { ILogMethods } from './log-mixin'
 import { ILogOpts, LogFunction, LogLevel } from './log-mixin'
 
 export const getTargetName = (_target: object): string =>
@@ -32,7 +32,7 @@ export interface ICallInfo {
   args: unknown[] // Methods args
 }
 export interface ILogInfo {
-  level: LogLevel // Defined loglevel
+  level: LogLevel | string // Defined loglevel
   message: string // Defined log message
   opts?: ILogOpts // Logger custom options
 }
@@ -71,22 +71,60 @@ export function truncate(str: string, maxLength: number | undefined = 300): stri
   return str.length > maxLength ? str.substring(0, maxLength) + '...' : str
 }
 
-export function logResult(logInfo: ILogInfo, traced: ITraceInfo, call: ICallInfo) {
-  const { message, level, opts } = logInfo
-  const formatted = formatMessages(traced, call)
-  const levelMethod: keyof typeof log = level.toLowerCase() as keyof typeof log
+enum localLogLevel {
+  DEBUG = 'DEBUG',
+  INFO = 'INFO',
+  WARN = 'WARN',
+  ERROR = 'ERROR',
+}
 
-  if (typeof log[levelMethod] === 'function') {
-    ;(log[levelMethod] as LogFunction)(
-      message,
-      traced.err === undefined ? formatted : { error: traced.err, ...formatted },
-      opts,
-    )
-  } else {
-    console.warn(`Log level method '${levelMethod}' is not a function.`)
+function getLoggerMethod(logger: ILogMethods, level: localLogLevel): LogFunction {
+  switch (level) {
+    case localLogLevel.DEBUG:
+      return logger.debug
+    case localLogLevel.INFO:
+      return logger.info
+    case localLogLevel.WARN:
+      return logger.warn
+    case localLogLevel.ERROR:
+      return logger.error
+    default:
+      throw new Error('Invalid log level')
   }
 }
 
-export function createChannel(name: string): vscode.OutputChannel {
-  return vscode.window.createOutputChannel(name, 'log')
+function isKeyOfEnum(key: string, enumType: Record<string, string>): key is keyof typeof enumType {
+  return Object.keys(enumType).includes(key)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isInEnum(value: any, enumType: any): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  return Object.values(enumType).includes(value)
+}
+
+function getLogLevel(level: string | localLogLevel): localLogLevel | undefined {
+  if (typeof level === 'string') {
+    const upperCaseLevel = level.toUpperCase()
+    return isKeyOfEnum(upperCaseLevel, localLogLevel)
+      ? localLogLevel[upperCaseLevel as keyof typeof localLogLevel]
+      : undefined
+  } else {
+    return isInEnum(level, localLogLevel) ? level : undefined
+  }
+}
+
+export function logResult(logInfo: ILogInfo, traced: ITraceInfo, call: ICallInfo) {
+  const { message, level, opts } = logInfo
+  const formatted = formatMessages(traced, call)
+
+  const typedLevel = getLogLevel(level)
+
+  if (typedLevel !== undefined) {
+    const loggerMethod = getLoggerMethod(log, typedLevel)
+    const logData = traced.err === undefined ? formatted : { error: traced.err, ...formatted }
+    loggerMethod(message, logData, opts)
+  } else {
+    console.warn(`Invalid log level: ${level}`)
+  }
 }
