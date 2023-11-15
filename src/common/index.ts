@@ -12,3 +12,4 @@ export {
   iconLightChill,
   generateHeader,
 } from './consts'
+export { SingletonBase } from './singleton'

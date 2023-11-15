@@ -63,9 +63,9 @@ export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
       message: string,
       data?: unknown,
       logOpts?: ILogOpts,
+      // eslint-disable-next-line @typescript-eslint/require-await
     ): Promise<void> => {
-      await configStore.whenConfigReady()
-      const configuredLogLevel = configStore.get<string>('logLevelInChannel')
+      const configuredLogLevel = configStore.get<string>('logLevelInChannel') || 'DEBUG'
       const messageLogLevel = LogLevelToNumeric[level]
       const isAllowedToLog =
         messageLogLevel >= LogLevelToNumeric[configuredLogLevel as LogLevel] ? true : false

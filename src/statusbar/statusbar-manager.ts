@@ -4,11 +4,6 @@ export class StatusBarManager implements vscode.Disposable {
   private statusBarItem: vscode.StatusBarItem
   private copyCount = 0
 
-  private tooltip: vscode.MarkdownString = new vscode.MarkdownString(
-    `$(settings) Click to open menu`,
-    true,
-  )
-
   dispose() {
     this.statusBarItem.hide()
     this.statusBarItem.dispose()
@@ -22,10 +17,8 @@ export class StatusBarManager implements vscode.Disposable {
     )
     this.statusBarItem.command = 'chatcopycat.openMenu'
     this.statusBarItem.name = '$(eye) CopyCatCommandCenter'
-    this.statusBarItem.tooltip = this.tooltip
+    this.statusBarItem.tooltip = new vscode.MarkdownString(`$(settings) Click to open menu`, true)
     this.statusBarItem.tooltip.isTrusted = true
-
-    this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground')
 
     this.updateState()
   }

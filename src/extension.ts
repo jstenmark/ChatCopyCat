@@ -1,12 +1,11 @@
 import * as vscode from 'vscode'
 import { ClipboardManager } from './clipboard'
 import { copyCode, copyDefinitions, getFileTree, openMenu, openSettings } from './commands'
-import { Semaphore } from './config/semaphore-store'
 import { closeDialog } from './dialog'
 import { StatusBarManager } from './statusbar'
-import { watchForExtensionChanges } from './utils'
-import { configStore } from './config'
-import { log, LogLevel } from './logging'
+import { watchForExtensionChanges, errorMessage } from './utils'
+import { ConfigStore, StateStore, SemaphoreStore } from './config'
+import { log } from './logging'
 import { LogManager } from './logging/log-manager'
 
 export let statusBarManager: StatusBarManager
@@ -19,17 +18,14 @@ export let clipboardManager: ClipboardManager
  */
 export async function activate(context: vscode.ExtensionContext) {
   try {
-    await configStore.whenConfigReady()
-    await Semaphore.initialize()
-
-    const _logChannel = vscode.window.createOutputChannel('ChatCopyCat', 'log')
-    LogManager.initialize(_logChannel, LogLevel.DEBUG)
+    await ConfigStore.initialize()
+    await SemaphoreStore.initialize()
 
     statusBarManager = new StatusBarManager()
     clipboardManager = new ClipboardManager(statusBarManager)
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    const handlers: Record<string, Function> = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handlers: Record<string, (...args: any[]) => Promise<void>> = {
       copyCode,
       resetClipboard: clipboardManager.resetClipboard.bind(clipboardManager),
       closeDialog,
@@ -42,28 +38,30 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     // eslint-disable-next-line
-    context.extension.packageJSON.contributes.commands.forEach((cmd: { command: string }) => {
+    context.extension.packageJSON.contributes.commands.forEach(async (cmd: { command: string }) => {
       const [, action] = cmd.command.split('.')
       const handler = handlers[action]
 
       if (handler) {
         context.subscriptions.push(
-          vscode.commands.registerCommand(cmd.command, async (...args) => {
-            try {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-              await handler(...args)
-            } catch (err) {
-              log.error(`Couldnt register:${cmd.command}`, err)
-              await vscode.window.showErrorMessage('Couldnt do stuff:ERROR=' + JSON.stringify(err))
-            }
-          }),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          vscode.commands.registerCommand(cmd.command, (...args: any[]) =>
+            executeCommandHandler(handler, args),
+          ),
         )
       } else {
-        log.warn(`No handler found for command ${cmd.command}`)
+        await vscode.window.showErrorMessage(`No handler found for command ${cmd.command}`)
+        log.error(`No handler found for command ${cmd.command}`)
       }
     })
 
-    context.subscriptions.push(_logChannel, watchForExtensionChanges())
+    context.subscriptions.push(
+      ConfigStore.instance,
+      StateStore.instance,
+      LogManager.instance,
+      SemaphoreStore.instance,
+      watchForExtensionChanges(),
+    )
   } catch (error) {
     log.error('Failed to activate extension:', error)
   }
@@ -71,4 +69,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() {
   //
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function executeCommandHandler(handler: (...args: any[]) => Promise<void>, args: any[]) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    return await handler(...args)
+  } catch (error) {
+    const message = errorMessage(error)
+    log.error(`Error executing handler=${message}`)
+    await vscode.window.showErrorMessage(`Error executing command:${message}`)
+  }
 }

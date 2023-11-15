@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
-import { configStore } from '../config'
+import { configStore, SemaphoreStore } from '../config'
 import { DialogComponentManager } from './dialog-manager'
-import { semaphoreStore } from '../config/semaphore-store'
 export const quickPickManager = new DialogComponentManager()
 export const inputBoxManager = new DialogComponentManager()
 
@@ -46,12 +45,13 @@ async function getInquiryOptions(
 }
 
 export async function getInquiryType(): Promise<string[] | undefined> {
-  await semaphoreStore.setDialogState(true)
+  await configStore.onConfigReady()
+  await SemaphoreStore.instance.setDialogState(true)
   const inquiryTypeEnabled = configStore.get('inquiryType')
   const res = inquiryTypeEnabled
     ? await getInquiryOptions('Question Context', configStore.get('customInquiryTypes'), 'Custom')
     : undefined
 
-  await semaphoreStore.setDialogState(false)
+  await SemaphoreStore.instance.setDialogState(false)
   return res
 }

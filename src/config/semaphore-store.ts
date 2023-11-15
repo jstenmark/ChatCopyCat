@@ -1,29 +1,33 @@
 import * as vscode from 'vscode'
 import { SingletonBase } from '../common/singleton'
+import { log } from '../logging'
 
-export class Semaphore extends SingletonBase {
-  private static _instance: Semaphore | null = null
+export class SemaphoreStore extends SingletonBase implements vscode.Disposable {
+  private static _instance: SemaphoreStore | null = null
   private _isDialogOpen = false
-  private dialog_context_key = 'chatcopycat:semaphoreDialogOpen'
+  private readonly dialog_context_key = 'chatcopycat:semaphoreDialogOpen'
 
   protected constructor() {
     super()
   }
-  public static get instance(): Semaphore {
+  public static get instance(): SemaphoreStore {
     if (!this._instance) {
-      this._instance = new Semaphore()
+      this._instance = new SemaphoreStore()
     }
     return this._instance
   }
-
-  public static async initialize(): Promise<Semaphore> {
-    const instance = this.instance
-    await instance.setDialogState(false)
-    return instance
-  }
-
   public get isDialogOpen(): boolean {
     return this._isDialogOpen
+  }
+  public static async initialize(): Promise<void> {
+    await this.instance.setDialogState(false)
+  }
+
+  public dispose(): void {
+    Promise.resolve(this.setDialogState(false)).catch(error => {
+      log.error(`Error resetting dialog state on dispose`, error)
+      throw error
+    })
   }
 
   public async setDialogState(open: boolean): Promise<boolean> {
@@ -32,11 +36,8 @@ export class Semaphore extends SingletonBase {
       this._isDialogOpen = open
       return true
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      console.error(`Error setting dialog state: ${errorMessage}`)
+      log.error(`Error setting dialog state:`, error)
       throw error
     }
   }
 }
-
-export const semaphoreStore = Semaphore.instance

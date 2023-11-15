@@ -1,7 +1,7 @@
 import { log } from '../logging'
 import { debounce } from '../utils'
 import { clipboardManager } from '../extension'
-import { configStore } from '../config'
+import { ConfigStore } from '../config'
 export class QuickCopyManager {
   count = 0
   lastTimestamp = Date.now()
@@ -12,15 +12,16 @@ export class QuickCopyManager {
   }
 
   async shouldResetClipboard(now: number): Promise<boolean> {
-    await configStore.whenConfigReady()
+    await ConfigStore.instance.onConfigReady()
 
-    const resetHotkeyEnabled = configStore.get<boolean>('enableClipboardResetCombo')
+    const resetHotkeyEnabled = ConfigStore.instance.get<boolean>('enableClipboardResetCombo')
     if (!resetHotkeyEnabled) {
       log.info('Reset clipboard hotkey is disabled.')
       false
     }
+    const _now = typeof now !== 'undefined' ? now : Date.now()
 
-    if (now - this.lastTimestamp < this.resetInterval) {
+    if (_now - this.lastTimestamp < this.resetInterval) {
       this.count++
       if (this.count >= 2) {
         this.resetCount()
@@ -30,7 +31,7 @@ export class QuickCopyManager {
     } else {
       this.count = 1
     }
-    this.lastTimestamp = now
+    this.lastTimestamp = _now
     return false
   }
 

@@ -1,20 +1,27 @@
-src
-scripts
-docs
-assets
-.github
-.vscode
-.vscode-test
-out/test
+# folders
+src/**
+scripts/**
+out/test/**
+docs/**
+assets/**
+.github/**
+.vscode/**
+.vscode-test/**
+.git/**
 
-.gitignore
-yarn-error.log
-.yarnrc
-
-**/tsconfig.json
-**/.eslintrc.json
+# filetypes
 **/*.map
 **/*.ts
+**/*.vsix
+**/*.log
 
+# files
+tsconfig.json
+package.json
+.yarnrc
+yarn.lock
+.gitignore
+.eslintrc.json
+yarn-error.log
 
 

@@ -7,7 +7,6 @@ let lastTrackedTextEditor: vscode.TextEditor | undefined
 const validFileSchemes = new Set(['file', 'untitled'])
 
 export async function focusLastTrackedEditor(): Promise<vscode.TextEditor | undefined> {
-  await configStore.whenConfigReady()
   if (!configStore.get('enableForceFocusLastTrackedEditor')) {
     return undefined
   }
@@ -65,4 +64,19 @@ export function getDocumentPath(editor: vscode.TextEditor): string {
   return getRelativePathOrBasename(resource.fsPath, workspaceFolder?.uri.fsPath)
 }
 
-// Where getRelativePathOrBasename is your existing function.
+export const errorMessage = (error: unknown, defaultMessage?: string) => {
+  return error instanceof Error
+    ? `${defaultMessage ? defaultMessage : ''}${error.message}`
+    : String(error)
+}
+
+export const errorTypeCoerce = (error: unknown, customErrorMessage?: string): Error => {
+  if (error instanceof Error) {
+    error.message = errorMessage(`${customErrorMessage}. ${error.message}`)
+    return error
+  }
+  if (typeof error === 'string') {
+    return new Error(`${error}. ${customErrorMessage}`)
+  }
+  return new Error(customErrorMessage)
+}

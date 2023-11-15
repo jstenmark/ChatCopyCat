@@ -6,7 +6,7 @@ import { IProperty, PropertyType } from '../config/config-utils'
 import { log } from '../logging'
 
 export const openSettings = async (): Promise<void> => {
-  await configStore.whenConfigReady()
+  await configStore.onConfigReady()
   const settingsByType: Record<PropertyType, IQuickPickItem[]> = {
     boolean: [] as IQuickPickItem[],
     string: [] as IQuickPickItem[],
@@ -14,7 +14,7 @@ export const openSettings = async (): Promise<void> => {
     array: [] as IQuickPickItem[],
     text: [] as IQuickPickItem[],
   }
-  const configurationProperties: Properties = configStore.getConfigObjects()
+  const configurationProperties: Properties = configStore.getPkgJsonProps()
   for (const [_key, _value] of Object.entries(configurationProperties)) {
     const key: string = _key
     const value: IProperty = _value
@@ -158,6 +158,7 @@ async function handleArraySetting(setting: IQuickPickItem) {
   await configStore.update(setting.settingKey, updatedArray)
 }
 
+// TODO: import from utils
 interface IQuickPickItem {
   label: string
   detail?: string

@@ -3,6 +3,8 @@ export {
   getActiveEditor,
   acitveEditorOrFocurLast,
   getDocumentPath,
+  errorMessage,
+  errorTypeCoerce,
 } from './editor-utils'
 export { getLangOpts, debounce } from './lang-utils'
 export {

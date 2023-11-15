@@ -3,7 +3,6 @@ import ignore from 'ignore'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { log } from '../logging'
-import { configStore } from '../config'
 
 export function getRelativePathOrBasename(fileFsPath: string, workspaceFsPath?: string): string {
   if (workspaceFsPath) {
@@ -37,7 +36,7 @@ export async function getFileList(
   directory = __dirname,
   originalRoot = directory,
   ig = ignore(),
-  ignoreList: string[] = configStore.get('projectTreeIgnoreList'),
+  ignoreList: string[],
 ): Promise<string[]> {
   ig.add(ignoreList)
   const files = await fs.promises.readdir(directory)
@@ -54,7 +53,7 @@ export async function getFileList(
     const stat = await fs.promises.stat(fullPath)
 
     if (stat.isDirectory()) {
-      fileList.push(...(await getFileList(fullPath, originalRoot, ig)))
+      fileList.push(...(await getFileList(fullPath, originalRoot, ig, ignoreList)))
     } else if (stat.isFile()) {
       if (fullPath.endsWith('.gitignore')) {
         const gitignoreContent = await fs.promises.readFile(fullPath, 'utf8')

@@ -1,14 +1,15 @@
 import * as vscode from 'vscode'
 import { headersInClipboard, quickCopyManager, updateClipboardWithCopy } from '../clipboard'
-import { configStore } from '../config/config-store'
-import { semaphoreStore } from '../config/semaphore-store'
 import { getInquiryType, handleActiveDialogs } from '../dialog'
 import { generateSelectionSections } from '../inquiry'
 import { acitveEditorOrFocurLast, getLangOpts } from '../utils'
 import { ILangOpts } from '../common'
 
+import { ConfigStore } from '../config/config-store'
+import { SemaphoreStore } from '../config/semaphore-store'
+
 export const copyCode = async (): Promise<void> => {
-  await configStore.whenConfigReady()
+  await ConfigStore.instance.onConfigReady()
   const editor: vscode.TextEditor | undefined = await acitveEditorOrFocurLast()
 
   if (
@@ -24,9 +25,8 @@ export const copyCode = async (): Promise<void> => {
     : undefined
 
   const langOpts: ILangOpts = getLangOpts(editor)
-
   const selectionSections: string[] = generateSelectionSections(editor, langOpts)
 
   await updateClipboardWithCopy(inquiryType, selectionSections, langOpts)
-  await semaphoreStore.setDialogState(false)
+  await SemaphoreStore.instance.setDialogState(false)
 }

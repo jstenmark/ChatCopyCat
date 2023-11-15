@@ -3,6 +3,7 @@ import { getFileTree } from './filetree-command'
 import { clipboardManager } from '../extension'
 import { copyDefinitions } from './definitions-command'
 import { openSettings } from './settings-command'
+
 import { iconDark, iconLight } from '../common'
 import { log } from '../logging'
 
