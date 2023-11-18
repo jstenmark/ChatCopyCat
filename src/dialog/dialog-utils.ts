@@ -1,8 +1,7 @@
 import * as vscode from 'vscode'
-import { inputBoxManager, quickPickManager } from './dialog-component'
+import { inputBoxManager, quickPickManager } from './dialog-manager'
 import { log } from '../logging'
-
-export type DialogComponent = vscode.QuickPick<vscode.QuickPickItem> | vscode.InputBox
+import { DialogComponent } from '../common'
 
 export const isQuickPick = (
   component: DialogComponent,

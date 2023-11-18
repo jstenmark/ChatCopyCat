@@ -1,21 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { performance } from 'perf_hooks'
 import { log } from './log-base'
-import { ILogMethods, ILogOpts, LogFunction } from './log-mixin'
+import {
+  ILogMethods,
+  ILogOpts,
+  LogFunction,
+  localDecoratorLogLevel,
+  LogDecoratorType,
+} from '../common'
 import { getTargetName, logResult } from './log-utils'
-
-enum localDecoratorLogLevel {
-  DEBUG = 'DEBUG',
-  INFO = 'INFO',
-  WARN = 'WARN',
-  ERROR = 'ERROR',
-}
-
-export type LogDecoratorType = <T extends (...args: any[]) => Promise<any>>(
-  _target: object, //any
-  _propertyKey: string | symbol,
-  descriptor: TypedPropertyDescriptor<T>,
-) => TypedPropertyDescriptor<T> | void
 
 export function LogDecorator(
   level: localDecoratorLogLevel | string,

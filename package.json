@@ -2,34 +2,22 @@
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
   "publisher": "JStenmark",
-  "description": "A VS Code extension to enhance coding workflows with chat assistants",
+  "description": "AI assistant development workflow uitlity",
+  "author": {"name": "Johannes Stenmark"},
   "version": "0.0.1",
   "main": "./out/extension.js",
-  "engines": {
-    "vscode": "^1.83.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jstenmark/ChatCopyCat"
-  },
-  "categories": [
-    "Snippets",
-    "Programming Languages",
-    "Other"
-  ],
-  "icon": "images/png/logo.png",
-  "homepage": "https://github.com/jstenmark/ChatCopyCat/README.md",
-  "activationEvents": [
-    "onStartupFinished"
-  ],
-  "bugs": {
-    "url": "https://github.com/jstenmark/ChatCopyCat/issues"
-  },
-  "galleryBanner": {
-    "color": "#5c2d91",
-    "theme": "dark"
-  },
+  "engines": {"vscode": "^1.83.1"},
+  "repository": {"type": "git", "url": "https://github.com/jstenmark/ChatCopyCat.git"},
+  "categories": ["Snippets", "Programming Languages", "Other"],
+  "icon": "images/png/logo_128.png",
+  "homepage": "https://github.com/jstenmark/ChatCopyCat",
+  "activationEvents": ["onStartupFinished", "onLanguage:typescript"],
+  "bugs": {"url": "https://github.com/jstenmark/ChatCopyCat/issues"},
+  "pricing": "Free",
+  "galleryBanner": {"color": "#5c2d91", "theme": "dark"},
+  "preview": true,
   "license": "MIT",
+  "keywords": ["prompt", "ai", "openai", "assistant", "chatbot"],
   "contributes": {
     "configuration": {
       "type": "object",
@@ -62,42 +50,37 @@
         },
         "chatcopycat.customInquiryTypes": {
           "type": "array",
-          "items": {
-            "type": "string"
-          },
+          "items": {"type": "string"},
           "default": [
-            "Optimization",
-            "Syntax",
-            "Logic",
-            "Debugging",
-            "Error Handling",
-            "Code Structure",
-            "Performance",
-            "Testing",
-            "Security",
-            "Documentation"
+            "Optimization"  , "Syntax"        , "Logic"         , "Debugging"     , "Error Handling", "Code Structure",
+            "Performance"   , "Testing"       , "Security"      , "Documentation"
           ],
           "description": "Array of custom inquiry types."
         },
         "chatcopycat.projectTreeIgnoreList": {
           "type": "array",
-          "items": {
-            "type": "string"
-          },
+          "items": {"type": "string"},
           "default": [
-            "**/out/**",
-            "**/docs/**",
-            "**/.vscode/**",
-            "**/.git/**",
-            "**/node_modules/**",
-            "**/__pycache__/**",
-            "**/.vscode-test/**"
+            "out"         , "docs"        , ".vscode"     , ".git"        ,
+            "__pycache__" , ".vscode-test", "*.log", ".github"
           ],
           "description": "Array of items to ignore in the project tree."
         },
+        "chatcopycat.definitionsAllowList": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": [],
+          "description": "Array of extensions supported by copy files definitions. eg. ['.ts', '.js']"
+        },
+        "chatcopycat.definitionsIgnoreList": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": ["assets","images","node_modules","*.test.*","test","index.ts","index.js","*.json", "*.svg","*.md", "*.yml","*.txt"],
+          "description": "Paths and extensions ignored by copy files definitions. eg. ['*.ts', 'dist']"
+        },
         "chatcopycat.customDiagnosticsMessage": {
-          "type": "string",
-          "default": "",
+          "type"       : "string"                               ,
+          "default"    : ""                                     ,
           "description": "Custom message to add to diagnostics."
         },
         "chatcopycat.enableForceFocusLastTrackedEditor": {
@@ -134,57 +117,46 @@
       }
     },
     "commands": [
+      {"command": "chatcopycat.copyCode", "title": "ChatCopyCat: COPY - Snag & Tag", "group": "chatcopycat"},
       {
-        "command": "chatcopycat.copyCode",
-        "title": "ChatCopyCat: COPY - Snag & Tag",
-        "group": "chatcopycat"
+        "command": "chatcopycat.getFileTree"                       ,
+        "title"  : "ChatCopyCat: FILE-TREE - Raid the File Cabinet",
+        "group"  : "chatcopycat"
       },
       {
-        "command": "chatcopycat.getFileTree",
-        "title": "ChatCopyCat: FILE-TREE - Raid the File Cabinet",
-        "group": "chatcopycat"
+        "command": "chatcopycat.copyDefinitions"                         ,
+        "title"  : "ChatCopyCat: COPY-DEFINITIONS - Copy file defintions",
+        "group"  : "chatcopycat"
       },
       {
-        "command": "chatcopycat.copyDefinitions",
-        "title": "ChatCopyCat: COPY-DEFINITIONS - Copy functions from file",
-        "group": "chatcopycat"
+        "command": "chatcopycat.copyDefinitionsFromFiles"                               ,
+        "title"  : "ChatCopyCat: COPY-WORKSPACE-DEFINITIONS - Copy workspace defintions",
+        "group"  : "chatcopycat"
       },
       {
-        "command": "chatcopycat.resetClipboard",
-        "title": "ChatCopyCat: RESET-CLIPBOARD - Clipboard Makeover",
-        "group": "chatcopycat"
+        "command": "chatcopycat.resetClipboard"                       ,
+        "title"  : "ChatCopyCat: RESET-CLIPBOARD - Clipboard Makeover",
+        "group"  : "chatcopycat"
       },
+      {"command": "chatcopycat.openMenu", "title": "ChatCopyCat: MENU - Command overview", "group": "chatcopycat"},
       {
-        "command": "chatcopycat.openMenu",
-        "title": "ChatCopyCat: MENU - Command overview",
-        "group": "chatcopycat"
+        "command": "chatcopycat.openSettings"                  ,
+        "title"  : "ChatCopyCat: SETTINGS - The Command Center",
+        "group"  : "chatcopycat"
       },
-      {
-        "command": "chatcopycat.openSettings",
-        "title": "ChatCopyCat: SETTINGS - The Command Center",
-        "group": "chatcopycat"
-      },
-      {
-        "command": "chatcopycat.closeDialog",
-        "title": "ChatCopyCat: CLOSE-INQUIRY - Close em",
-        "group": "devcat"
-      },
-      {
-        "command": "chatcopycat.reloadWindow",
-        "title": "DevCat: Reload Window",
-        "group": "devcat"
-      }
+      {"command": "chatcopycat.closeDialog", "title": "ChatCopyCat: CLOSE-INQUIRY - Close em", "group": "devcat"},
+      {"command": "chatcopycat.reloadWindow", "title": "DevCat: Reload Window", "group": "devcat"}
     ],
     "keybindings": [
       {
-        "key": "ctrl+shift+c",
-        "command": "chatcopycat.copyCode",
-        "when": "!terminalFocus && editorTextFocus && chatcopycat:semaphoreDialogOpen == false && !inQuickOpen"
+        "key"    : "ctrl+shift+c"                                                                                 ,
+        "command": "chatcopycat.copyCode"                                                                         ,
+        "when"   : "!terminalFocus && editorTextFocus && chatcopycat:semaphoreDialogOpen == false && !inQuickOpen"
       },
       {
-        "key": "ctrl+shift+c",
-        "command": "chatcopycat.closeDialog",
-        "when": "!terminalFocus && chatcopycat:semaphoreDialogOpen == true"
+        "key"    : "ctrl+shift+c"                                             ,
+        "command": "chatcopycat.closeDialog"                                  ,
+        "when"   : "!terminalFocus && chatcopycat:semaphoreDialogOpen == true"
       }
     ]
   },
@@ -198,33 +170,38 @@
     "lint:config": "eslint --print-config .eslintrc.json",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
-    "pkg": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt"
+    "pkg": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt",
+    "vsce:package": "vsce package --yarn",
+    "vsce:package:pre": "yavscern package --yarn --pre-release",
+    "vsce:publish": "vsce publish",
+    "vsce:publish:pre": "vsce publish --pre-release"
   },
   "devDependencies": {
-    "@types/eslint": "^8.0.0",
-    "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.3",
-    "@types/node": "^17.0.0",
-    "@types/vscode": "^1.83.1",
-    "@typescript-eslint/eslint-plugin": "^6.9.1",
-    "@typescript-eslint/experimental-utils": "^5.0.0",
-    "@typescript-eslint/parser": "^6.9.1",
-    "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.6",
-    "@vscode/vsce": "^2.21.1",
-    "electron": "^27.0.2",
-    "eslint": "^8.0.0",
-    "eslint-config-prettier": "^5.0.1",
-    "eslint-plugin-local-rules": "^2.0.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-regexp": "^2.1.1",
-    "glob": "^8.1.0",
-    "ignore": "^5.2.4",
-    "mocha": "^10.2.0",
-    "prettier": "3.0.3",
-    "ts-node": "^10.9.1",
-    "typescript": "<=5.2.0",
-    "vsce": "^2.15.0"
+    "@types/eslint"                        : "^8.0.0" ,
+    "@types/glob"                          : "^8.1.0" ,
+    "@types/mocha"                         : "^10.0.3",
+    "@types/node"                          : "^17.0.0",
+    "@types/vscode"                        : "^1.83.1",
+    "@typescript-eslint/eslint-plugin"     : "^6.9.1" ,
+    "@typescript-eslint/experimental-utils": "^5.0.0" ,
+    "@typescript-eslint/parser"            : "^6.9.1" ,
+    "@vscode/test-cli"                     : "^0.0.4" ,
+    "@vscode/test-electron"                : "^2.3.6" ,
+    "@vscode/vsce"                         : "^2.21.1",
+    "electron"                             : "^27.0.2",
+    "eslint"                               : "^8.0.0" ,
+    "eslint-config-prettier"               : "^5.0.1" ,
+    "eslint-plugin-local-rules"            : "^2.0.0" ,
+    "eslint-plugin-prettier"               : "^5.0.1" ,
+    "eslint-plugin-regexp"                 : "^2.1.1" ,
+    "glob"                                 : "^8.1.0" ,
+    "ignore"                               : "^5.2.4" ,
+    "mocha"                                : "^10.2.0",
+    "prettier"                             : "3.0.3"  ,
+    "tree-sitter-typescript"               : "^0.20.3",
+    "ts-node"                              : "^10.9.1",
+    "typescript"                           : "<=5.2.0",
+    "vsce"                                 : "^2.15.0"
   },
-  "dependencies": {}
+  "extensionDependencies": ["pokey.parse-tree"]
 }

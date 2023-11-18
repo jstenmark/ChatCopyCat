@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { SingletonBase } from '../common/singleton'
+import { SingletonBase } from '../common'
 import { log } from '../logging'
 
 export class SemaphoreStore extends SingletonBase implements vscode.Disposable {

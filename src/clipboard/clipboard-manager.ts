@@ -1,8 +1,7 @@
 import * as vscode from 'vscode'
 import { AsyncLogDecorator, log } from '../logging'
-import { LogLevel } from '../logging'
-import { StatusBarManager } from '../statusbar'
-
+import { StatusBarManager, statusBarManager } from '../statusbar'
+import { LogLevel } from '../common'
 export class ClipboardManager implements vscode.Disposable {
   private statusBarManager: StatusBarManager
 
@@ -28,7 +27,7 @@ export class ClipboardManager implements vscode.Disposable {
     }
   }
 
-  @AsyncLogDecorator(LogLevel.INFO, 'Reading from clipboard', { truncate: 20 })
+  @AsyncLogDecorator(LogLevel.DEBUG, 'Reading from clipboard', { truncate: 20 })
   public async readFromClipboard(): Promise<string> {
     return await ClipboardManager.pasteText()
   }
@@ -80,3 +79,5 @@ export class ClipboardManager implements vscode.Disposable {
     }
   }
 }
+
+export const clipboardManager = new ClipboardManager(statusBarManager)

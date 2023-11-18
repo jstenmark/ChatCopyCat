@@ -1,21 +1,21 @@
-import * as vscode from 'vscode'
+import { TextEditor, window, workspace } from 'vscode'
 import { log } from '../logging'
 import { getRelativePathOrBasename } from './file-utils'
 import { configStore } from '../config'
-let lastTrackedTextEditor: vscode.TextEditor | undefined
+import * as vscode from 'vscode'
+import { IContentSection, ILangOpts, validFileSchemes } from '../common'
+import { getContentSection } from '../inquiry'
 
-const validFileSchemes = new Set(['file', 'untitled'])
+export let lastTrackedTextEditor: TextEditor | undefined
 
-export async function focusLastTrackedEditor(): Promise<vscode.TextEditor | undefined> {
+export async function focusLastTrackedEditor(): Promise<TextEditor | undefined> {
   if (!configStore.get('enableForceFocusLastTrackedEditor')) {
     return undefined
   }
   if (lastTrackedTextEditor) {
-    await vscode.window.showTextDocument(lastTrackedTextEditor.document, {
-      // Preserve focus
+    await window.showTextDocument(lastTrackedTextEditor.document, {
       viewColumn: lastTrackedTextEditor.viewColumn,
       preserveFocus: false,
-      // Try to preserve selection
       selection: lastTrackedTextEditor.selection,
     })
     return lastTrackedTextEditor
@@ -23,8 +23,9 @@ export async function focusLastTrackedEditor(): Promise<vscode.TextEditor | unde
   return undefined
 }
 
-export function getActiveEditor(): vscode.TextEditor | undefined {
-  const { activeTextEditor, visibleTextEditors } = vscode.window
+export async function getActiveEditor(): Promise<TextEditor | undefined> {
+  await new Promise(resolve => setTimeout(resolve, 100))
+  const { activeTextEditor, visibleTextEditors } = window
 
   if (!visibleTextEditors.length) {
     log.warn('No visible texteditor', { getActiveEditor, visibleTextEditors }, { truncate: 0 })
@@ -39,18 +40,13 @@ export function getActiveEditor(): vscode.TextEditor | undefined {
 }
 
 export async function acitveEditorOrFocurLast() {
-  const activeTextEditor: vscode.TextEditor | undefined =
-    getActiveEditor() ?? (await focusLastTrackedEditor())
+  const activeTextEditor = await getActiveEditor()
 
-  if (vscode.window.state?.focused === false || !activeTextEditor) {
-    log.info('Cannot execute copy', {
-      focus: vscode.window.state?.focused,
-      editor: !!activeTextEditor,
-    })
-    return undefined
+  if (activeTextEditor) {
+    return activeTextEditor
   }
 
-  return activeTextEditor
+  return focusLastTrackedEditor()
 }
 
 /**
@@ -58,9 +54,9 @@ export async function acitveEditorOrFocurLast() {
  * @param editor The text editor containing the document.
  * @returns The relative path or basename of the document.
  */
-export function getDocumentPath(editor: vscode.TextEditor): string {
+export function getDocumentPath(editor: TextEditor): string {
   const resource = editor.document.uri
-  const workspaceFolder = vscode.workspace.getWorkspaceFolder(resource)
+  const workspaceFolder = workspace.getWorkspaceFolder(resource)
   return getRelativePathOrBasename(resource.fsPath, workspaceFolder?.uri.fsPath)
 }
 
@@ -79,4 +75,37 @@ export const errorTypeCoerce = (error: unknown, customErrorMessage?: string): Er
     return new Error(`${error}. ${customErrorMessage}`)
   }
   return new Error(customErrorMessage)
+}
+
+/**
+ * Generates content sections from the selections in a text editor.
+ * If there are no selections, it uses the entire content of the editor.
+ *
+ * @param editor The text editor.
+ * @param langOpts Language options for the editor.
+ * @param relativePathOrBasename The relative path or basename of the file in the editor.
+ * @returns An array of content sections.
+ */
+
+export function generateSelectionSections(
+  editor: vscode.TextEditor,
+  langOpts: ILangOpts,
+): string[] {
+  const relativePathOrBasename: string = getDocumentPath(editor)
+
+  if (editor.selections.some(selection => !selection.isEmpty)) {
+    return editor.selections
+      .filter(selection => !selection.isEmpty)
+      .map(selection => getContentSection(selection, editor, langOpts, relativePathOrBasename))
+      .filter(section => section.selectionSection.length > 0)
+      .map(section => section.selectionSection)
+  } else {
+    const { selectionSection }: IContentSection = getContentSection(
+      undefined,
+      editor,
+      langOpts,
+      relativePathOrBasename,
+    )
+    return [selectionSection]
+  }
 }

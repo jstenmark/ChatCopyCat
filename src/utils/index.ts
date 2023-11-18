@@ -5,6 +5,7 @@ export {
   getDocumentPath,
   errorMessage,
   errorTypeCoerce,
+  generateSelectionSections,
 } from './editor-utils'
 export { getLangOpts, debounce } from './lang-utils'
 export {
@@ -13,5 +14,7 @@ export {
   getFileList,
   getAllDiagnostics,
   watchForExtensionChanges,
+  showFolderTreeQuickPick,
+  getUriFromFileTree,
 } from './file-utils'
-export { cleanQuotes, cleanCodeTsJs, tabify } from './formatting-utils'
+export { generateHeader, cleanQuotes, cleanCodeTsJs, tabify } from './formatting-utils'

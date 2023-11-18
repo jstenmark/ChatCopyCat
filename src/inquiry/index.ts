@@ -1,4 +1,3 @@
-export { generateSelectionSections } from './inquiry-utils'
 export {
   getMetadataSection,
   getContentSection,

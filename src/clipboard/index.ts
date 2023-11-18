@@ -5,4 +5,4 @@ export {
   updateClipboardWithCopy,
 } from './clipboard-utils'
 export { quickCopyManager } from './quickcopy-manager'
-export { ClipboardManager } from './clipboard-manager'
+export { clipboardManager } from './clipboard-manager'

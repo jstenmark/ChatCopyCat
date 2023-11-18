@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
-import { IContentSection, ILangOpts, fileTreeEnd, fileTreeHeader, generateHeader } from '../common'
-import { getAllDiagnostics } from '../utils'
+import { IContentSection, ILangOpts, fileTreeEnd, fileTreeHeader } from '../common'
+import { getAllDiagnostics, generateHeader } from '../utils'
 import { handleFileLanguageId } from './language-handler'
 import { configStore } from '../config'
 

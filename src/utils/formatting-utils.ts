@@ -1,6 +1,11 @@
-import { ILangOpts } from '../common'
+import { ILangOpts, selectionHeader } from '../common'
 
 export const cleanQuotes = (input: string) => input.replace(/^["'](.+(?=["']$))["']$/, '$1')
+
+export const generateHeader = (inquiryType?: string, language?: string) =>
+  inquiryType
+    ? `${selectionHeader}: ${inquiryType} - ${language}]`
+    : `${selectionHeader} - ${language}]`
 
 export function cleanCodeTsJs(
   _code: string,

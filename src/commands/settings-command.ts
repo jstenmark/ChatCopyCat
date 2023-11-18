@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as vscode from 'vscode'
-import { iconLightChill, iconDarkChill } from '../common'
 import { configStore } from '../config'
-import { IProperty, PropertyType } from '../config/config-utils'
 import { log } from '../logging'
+import {
+  IProperty,
+  PropertyType,
+  IQuickPickItem,
+  Properties,
+  ISpecialQuickPickItem,
+} from '../common'
 
 export const openSettings = async (): Promise<void> => {
   await configStore.onConfigReady()
@@ -29,7 +34,6 @@ export const openSettings = async (): Promise<void> => {
     label: setting.label,
     detail: setting.settingDetails?.description,
     setting,
-    iconPath: { dark: iconDarkChill, light: iconLightChill },
   }))
 
   picks.sort((a, b) => {
@@ -157,18 +161,3 @@ async function handleArraySetting(setting: IQuickPickItem) {
   const updatedArray = await modifyArray()
   await configStore.update(setting.settingKey, updatedArray)
 }
-
-// TODO: import from utils
-interface IQuickPickItem {
-  label: string
-  detail?: string
-  settingKey: string
-  settingDetails?: IProperty
-}
-
-interface ISpecialQuickPickItem {
-  label: string
-  picked?: boolean
-  special: boolean
-}
-type Properties = Record<string, IProperty>

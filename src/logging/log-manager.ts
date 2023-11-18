@@ -1,18 +1,7 @@
-import { OutputChannel } from 'vscode'
-import { SingletonBase } from '../common/singleton'
-import { LogLevelNumeric, LogLevel } from './log-mixin'
-import * as vscode from 'vscode'
-
-export interface ILogManager {
-  setChannel(channel: OutputChannel): void
-  getChannel(): OutputChannel | null
-  log(message: string): void
-  getLogLevel(): LogLevelNumeric
-  setLogLevel(logLevel: LogLevel): void
-}
-
+import { OutputChannel, window, Disposable } from 'vscode'
+import { SingletonBase, LogLevel } from '../common'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export class LogManager extends SingletonBase implements vscode.Disposable {
+export class LogManager extends SingletonBase implements Disposable {
   private static _instance: LogManager | null = null
   private outputChannel: OutputChannel | null = null
   private LogLevel: LogLevel = LogLevel.DEBUG
@@ -28,7 +17,7 @@ export class LogManager extends SingletonBase implements vscode.Disposable {
   public static get instance(): LogManager {
     if (!this._instance) {
       this._instance = new LogManager()
-      this._instance.setChannel(vscode.window.createOutputChannel('ChatCopyCat', 'log'))
+      this._instance.setChannel(window.createOutputChannel('ChatCopyCat', 'log'))
       this._instance.setLogLevel(LogLevel.DEBUG)
     }
     return this._instance

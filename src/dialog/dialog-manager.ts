@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { log } from '../logging'
-import { DialogComponent, disposeAllEventHandlers, isInputBox, isQuickPick } from './dialog-utils'
-
+import { disposeAllEventHandlers, isInputBox, isQuickPick } from './dialog-utils'
+import { DialogComponent } from '../common'
 /**
  * Manages UI dialog components for a Visual Studio Code extension.
  * Ensures that only one component is active at a given time and handles
@@ -199,3 +199,6 @@ export class DialogComponentManager {
     this.component = undefined
   }
 }
+
+export const quickPickManager = new DialogComponentManager()
+export const inputBoxManager = new DialogComponentManager()

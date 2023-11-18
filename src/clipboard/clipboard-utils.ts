@@ -1,21 +1,13 @@
-import { ILangOpts, fileTreeEnd, fileTreeHeader, selectionHeader } from '../common'
-import { clipboardManager } from '../extension'
+import {
+  ILangOpts,
+  fileTreeEnd,
+  fileTreeHeader,
+  selectionHeader,
+  IHeadersPresent,
+  IHeaderIndex,
+} from '../common'
+import { clipboardManager } from '../clipboard'
 import { getMetadataSection } from '../inquiry'
-
-interface IHeadersPresent {
-  selectionHeaderPresent: boolean
-  fileTreeHeaderPresent: boolean
-  fileTreeEndPresent: boolean
-  clipboardContent: string
-}
-
-interface IHeaderIndex {
-  selectionHeaderIndex: number
-  selectionHeaderEnd: number
-  fileTreeHeaderIndex: number
-  fileTreeEndIndex: number
-  clipboardContent: string
-}
 
 export async function headersInClipboard(content?: string): Promise<IHeadersPresent> {
   if (!content || content.length !== 0) {

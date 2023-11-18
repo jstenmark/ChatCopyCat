@@ -1,6 +1,5 @@
 import { log } from './log-base'
-import { ILogMethods } from './log-mixin'
-import { ILogOpts, LogFunction, LogLevel } from './log-mixin'
+import { ILogMethods, LogFunction, ICallInfo, ITraceInfo, ILogInfo, localLogLevel } from '../common'
 
 export const getTargetName = (_target: object): string =>
   _target?.constructor ? _target.constructor.name : ''
@@ -24,23 +23,6 @@ export function safeStringify(value: unknown): string {
     default:
       return '[unknown type]'
   }
-}
-
-export interface ICallInfo {
-  targetType: string // Class name
-  name: string // Method
-  args: unknown[] // Methods args
-}
-export interface ILogInfo {
-  level: LogLevel | string // Defined loglevel
-  message: string // Defined log message
-  opts?: ILogOpts // Logger custom options
-}
-
-export interface ITraceInfo {
-  elapsed: number // Call exectution time
-  returnValue?: unknown // Call result, err undefined
-  err?: Error // Call error, returnValue undefined
 }
 
 function normalizeCall(call: ICallInfo): ICallInfo {
@@ -69,13 +51,6 @@ export function truncate(str: string, maxLength: number | undefined = 300): stri
     return str
   }
   return str.length > maxLength ? str.substring(0, maxLength) + '...' : str
-}
-
-enum localLogLevel {
-  DEBUG = 'DEBUG',
-  INFO = 'INFO',
-  WARN = 'WARN',
-  ERROR = 'ERROR',
 }
 
 function getLoggerMethod(logger: ILogMethods, level: localLogLevel): LogFunction {

@@ -7,10 +7,9 @@ import {
   workspace,
 } from 'vscode'
 
-import { SingletonBase } from '../common'
+import { SingletonBase, IConfigurationProperties, IExtension, IProperty } from '../common'
 import { log } from '../logging'
 import { errorMessage, errorTypeCoerce } from '../utils'
-import { IConfigurationProperties, IExtension, IProperty } from './config-utils'
 
 export class ConfigStore extends SingletonBase implements Disposable {
   private static _instance: ConfigStore
@@ -144,9 +143,8 @@ export class ConfigStore extends SingletonBase implements Disposable {
   // eslint-disable-next-line @typescript-eslint/require-await
   private async listenForConfigurationChanges(): Promise<void> {
     workspace.onDidChangeConfiguration(async e => {
-      log.info('Config change detected', e)
       if (e.affectsConfiguration(this.extensionId)) {
-        log.info('Config change detected on workspace', e)
+        log.info('Config change affecting extension, triggering update ', e)
         await this.updateConfigCache()
       }
     })

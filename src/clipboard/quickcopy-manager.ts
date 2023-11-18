@@ -1,7 +1,8 @@
 import { log } from '../logging'
 import { debounce } from '../utils'
-import { clipboardManager } from '../extension'
+import { clipboardManager } from '../clipboard'
 import { ConfigStore } from '../config'
+
 export class QuickCopyManager {
   count = 0
   lastTimestamp = Date.now()

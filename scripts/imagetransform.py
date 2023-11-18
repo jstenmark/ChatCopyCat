@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw
 
-def make_circle_transparent_and_resize(img_path, output_path, size=(512, 512)):
+def make_circle_transparent_and_resize(img_path, output_path, size=(128, 128)):
     img = Image.open(img_path).convert("RGBA")
     img = img.resize(size, Image.Resampling.LANCZOS)  # Updated line
 
@@ -16,4 +16,4 @@ def make_circle_transparent_and_resize(img_path, output_path, size=(512, 512)):
 
     result.save(output_path, "PNG")
 
-make_circle_transparent_and_resize("cat.png", "cat_out.png")
+make_circle_transparent_and_resize("assets/logo.png", "images/png/logo_128.png")

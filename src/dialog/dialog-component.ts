@@ -1,10 +1,8 @@
 import * as vscode from 'vscode'
 import { configStore, SemaphoreStore } from '../config'
-import { DialogComponentManager } from './dialog-manager'
-export const quickPickManager = new DialogComponentManager()
-export const inputBoxManager = new DialogComponentManager()
+import { quickPickManager, inputBoxManager } from './dialog-manager'
 
-/**
+/*
  * Prompts the user with a quick pick selection of predefined options along with an option to input a custom value.
  *
  * @param title - A descriptive title representing the nature of the options.

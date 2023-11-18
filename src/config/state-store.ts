@@ -1,4 +1,4 @@
-import { SingletonBase } from '../common/singleton'
+import { SingletonBase } from '../common'
 import * as vscode from 'vscode'
 
 export class StateStore extends SingletonBase implements vscode.Disposable {

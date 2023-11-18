@@ -1,21 +1,12 @@
-import ignore from 'ignore'
-import { replaceFileListInClipboard } from '../clipboard'
-import { generateFilesTemplate } from '../inquiry'
-import { getFileList, getProjectRootPaths } from '../utils'
-import { ConfigStore, configStore } from '../config'
+//import { replaceFileListInClipboard } from '../clipboard'
+//import { generateFilesTemplate } from '../inquiry'
+import { ConfigStore } from '../config'
+//import { getUriFromFileTree } from '../utils'
 
 export const getFileTree = async (): Promise<void> => {
   await ConfigStore.instance.onConfigReady()
-  const rootPaths: string[] = getProjectRootPaths() ?? []
-  const igInstance = ignore()
-  const igList = configStore.get<string[]>('projectTreeIgnoreList')
-  const projectsFilesPromises = rootPaths.map(async rootPath => {
-    const files = await getFileList(rootPath, rootPath, igInstance, igList)
-    return { rootPath, files }
-  })
+  //  const fileUris = await getUriFromFileTree()
+  // const template = generateFilesTemplate(fileUris)
 
-  const projectsFiles = await Promise.all(projectsFilesPromises)
-  const template = generateFilesTemplate(projectsFiles)
-
-  await replaceFileListInClipboard(template)
+  //await replaceFileListInClipboard(template)
 }

@@ -8,13 +8,13 @@
 
 #### VSCode AI prompt workflow utility
 
-Dive into the prompts with a side of sly with ChatCopyCat for VS Code.
+Effortlessly utilize AI prompts in your coding workflow with ChatCopyCat, the subtle yet powerful VS Code companion.
 
 </div>
 
 
 ## Just Code and Chill 🛋️
-*Coding cruise control*
+*ChatCopyCat - where a laid-back approach meets powerful coding efficiency.*
 
 ChatCopyCat isn’t about hype. It's your coding sidekick that respects your space and enhances your workflow without fanfare or intrusion, sliding into the chatter with a "do your thing" attitude. No sales pitch, just a nifty tool that's there when you need it, invisible when you don't. It's about keeping things real and your code flowing.
 
@@ -25,8 +25,17 @@ ChatCopyCat isn’t about hype. It's your coding sidekick that respects your spa
 Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 
 ## Chilled-Out Features
+
+### Workflow Efficiency
+
+### Customization at Your Fingertips
+
+### Coding Made Simpler
+
+### UX Candy
+
 - **Paste & Relax**: Get your code prompt-ready, or don't. No pressure.
-- **Harmonic Clipboard**: Compile your code snippets in a symphony of productivity.
+- **Harmonize your clipboard for streamlined coding sessions**: Compile your code snippets in a symphony of productivity.
 - **Versatile Selection**: Select one, select all—diagnostics included for free.
 - **Trim the fat**: Minify? Sure, if your window calls for it. (.py .ts .js)
 - **On-Demand Context**: It's there, but only if you call for it.
@@ -34,7 +43,7 @@ Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 - **You Do You**: Customize if you want, or go with the flow. This cat's not judging.
 
 ## Keybindings - No Overload, Promise
->`Ctrl+Shift+C` That’s it, no key combo craziness. We like to keep it simple.
+>`Ctrl+Shift+C` That’s it, no key combo craziness. Whether copying code, silencing suggestions, or starting afresh, this keybinding adjusts to your context
 
 - **Quick Copy**: `Ctrl+Shift+C` -  Snag your code, style it up, make it prompt-ready.
 
@@ -47,7 +56,7 @@ Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 ## Settings? Sure, If You Want
 For those who like to fiddle:
 
-- **`chatcopycat.inquiryType`** - Toggle for a prefatory Q&A session for tailored functionality.
+- **`chatcopycat.inquiryType`** - Sets the prompt context by customizing the inquiry header.
 
 You'll find these in the usual VS Code settings spot. Just look for "ChatCopyCat" and tweak away.
 
@@ -62,8 +71,10 @@ For now, whether it's a snippet or the whole shebang, we're keeping it casual an
 ## Open-Source Love 💚
 ChatCopyCat is yours, free and easy, under the [MIT License](LICENSE.md). Share, tweak, be yourself, do your thing.
 
+
+
 ## Alley-Oop!
-Got ideas or just wanna help out? [GitHub](https://github.com/jstenmark/ChatCopyCat) is where the party's at. Bugs, brainwaves, PRs—all welcome.
+Join the ChatCopyCat community on [GitHub](https://github.com/jstenmark/ChatCopyCat). Share your experience, suggest features, or contribute to the project. Bugs, brainwaves, PRs—all welcome. Your insights make us better!
 
 Keep it laid-back, coders. 🐾
 

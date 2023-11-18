@@ -1,16 +1,14 @@
-import * as vscode from 'vscode'
+import { TextEditor } from 'vscode'
+
 import { headersInClipboard, quickCopyManager, updateClipboardWithCopy } from '../clipboard'
 import { getInquiryType, handleActiveDialogs } from '../dialog'
-import { generateSelectionSections } from '../inquiry'
-import { acitveEditorOrFocurLast, getLangOpts } from '../utils'
+import { acitveEditorOrFocurLast, generateSelectionSections, getLangOpts } from '../utils'
 import { ILangOpts } from '../common'
-
-import { ConfigStore } from '../config/config-store'
-import { SemaphoreStore } from '../config/semaphore-store'
+import { SemaphoreStore, ConfigStore } from '../config'
 
 export const copyCode = async (): Promise<void> => {
   await ConfigStore.instance.onConfigReady()
-  const editor: vscode.TextEditor | undefined = await acitveEditorOrFocurLast()
+  const editor: TextEditor | undefined = await acitveEditorOrFocurLast()
 
   if (
     handleActiveDialogs() ||

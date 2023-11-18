@@ -45,3 +45,5 @@ export class StatusBarManager implements vscode.Disposable {
     this.statusBarItem.show()
   }
 }
+
+export const statusBarManager = new StatusBarManager()
