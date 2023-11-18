@@ -202,6 +202,5 @@
     "ts-node"                              : "^10.9.1",
     "typescript"                           : "<=5.2.0",
     "vsce"                                 : "^2.15.0"
-  },
-  "extensionDependencies": ["pokey.parse-tree"]
+  }
 }

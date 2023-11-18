@@ -98,7 +98,6 @@ export const getUriFromFileTree = async (
   })
 
   const projectsFiles = await Promise.all(projectsFilesPromises)
-  log.debug('PF', projectsFiles, { truncate: 0 })
   return projectsFiles
 }
 
@@ -150,66 +149,52 @@ interface IFileTreeNode {
   path: string
   isFolder: boolean
   children?: IFileTreeNode[]
+  rootPath: string
 }
 
 function convertToFileTreeNode(rootPath: string, fileList: IFileListItem[]): IFileTreeNode {
   const rootNode: IFileTreeNode = {
-    path: rootPath,
+    path: '.',
     isFolder: true,
     children: [],
+    rootPath,
   }
-
   const pathToNodeMap = new Map<string, IFileTreeNode>()
-  pathToNodeMap.set(rootPath, rootNode)
+  pathToNodeMap.set('.', rootNode)
 
   for (const fileItem of fileList) {
-    const fullItemPath = path.join(rootPath, fileItem.path) // Full path
-    const normalizedItemPath = path.normalize(fullItemPath) // Normalize the full path
-    const relativeItemPath = path.relative(rootPath, normalizedItemPath) // Convert to relative path
+    const fullItemPath = path.join(rootPath, fileItem.path)
+    const normalizedItemPath = path.normalize(fullItemPath)
+    const relativeItemPath = path.relative(rootPath, normalizedItemPath)
 
     const currentNode: IFileTreeNode = {
       path: relativeItemPath,
       isFolder: fileItem.isFolder,
       children: fileItem.isFolder ? [] : undefined,
+      rootPath,
     }
 
-    let parentPath: string
-    if (fileItem.isFolder && relativeItemPath !== '.') {
-      // For folders (except the root), the parent is one level up
-      parentPath = path.relative(rootPath, path.dirname(normalizedItemPath))
-    } else if (!fileItem.isFolder) {
-      // For files, the parent is the folder they are in
-      parentPath = path.relative(rootPath, path.dirname(normalizedItemPath))
-    } else {
-      // Root folder
+    let parentPath = path.dirname(relativeItemPath)
+    if (parentPath === '.') {
       parentPath = '.'
     }
 
     if (!pathToNodeMap.has(parentPath)) {
       pathToNodeMap.set(parentPath, {
-        path: parentPath === '' ? '.' : parentPath,
+        path: parentPath,
         isFolder: true,
         children: [],
+        rootPath,
       })
     }
 
     const parentNode = pathToNodeMap.get(parentPath)
-    if (parentNode && !parentNode.children?.find(child => child.path === currentNode.path)) {
+    if (parentNode && !parentNode.children?.find(child => child.path === relativeItemPath)) {
       parentNode.children?.push(currentNode)
     }
 
     pathToNodeMap.set(relativeItemPath, currentNode)
   }
-
-  pathToNodeMap.forEach((node, _path) => {
-    if (_path !== '.') {
-      const parentPath = path.relative(rootPath, path.dirname(path.join(rootPath, _path)))
-      const parentNode = pathToNodeMap.get(parentPath)
-      if (parentNode && !parentNode.children?.includes(node)) {
-        parentNode.children?.push(node)
-      }
-    }
-  })
   return rootNode
 }
 
@@ -224,12 +209,22 @@ export async function showFolderTreeQuickPick(fileTree: IFileTreeNode[]): Promis
     return []
   }
 
-  const selectedFileTree: IFileListItem[] = selectedItems.map(item => ({
-    path: item.filePath,
-    isFolder: item.isFolder,
-    rootPath: item.rootPath,
-  }))
-
+  const selectedFileTree: IFileListItem[] = []
+  selectedItems.forEach(item => {
+    if (item.isFolder) {
+      // If the item is a folder, include all its contents recursively
+      const folderNode = findNodeByPath(fileTree, item.filePath)
+      if (folderNode) {
+        selectedFileTree.push(...extractAllFiles(folderNode))
+      }
+    } else {
+      selectedFileTree.push({
+        path: item.filePath,
+        isFolder: item.isFolder,
+        rootPath: item.rootPath,
+      })
+    }
+  })
   return selectedFileTree
 }
 export interface IQuickPickFileTreeItem extends vscode.QuickPickItem {
@@ -239,7 +234,7 @@ export interface IQuickPickFileTreeItem extends vscode.QuickPickItem {
 }
 function formatFileTreeNode(node: IFileTreeNode, indent = 0): vscode.QuickPickItem[] {
   const items: vscode.QuickPickItem[] = []
-  const prefix = '  '.repeat(indent * 2) // Indentation for sub-items
+  const prefix = '  '.repeat(indent * 2)
 
   const label = node.isFolder
     ? `${prefix} $(folder) ${path.basename(node.path)}`
@@ -251,10 +246,13 @@ function formatFileTreeNode(node: IFileTreeNode, indent = 0): vscode.QuickPickIt
       description: '$(indent)'.repeat(indent),
       kind: vscode.QuickPickItemKind.Separator,
     })
-    items.push({ label })
-  } else {
-    items.push({ label, detail: node.path })
   }
+  items.push({
+    label,
+    filePath: node.path,
+    isFolder: node.isFolder,
+    rootPath: node.rootPath,
+  } as vscode.QuickPickItem)
 
   if (node.children) {
     node.children.forEach(child => {
@@ -263,4 +261,35 @@ function formatFileTreeNode(node: IFileTreeNode, indent = 0): vscode.QuickPickIt
   }
 
   return items
+}
+
+function findNodeByPath(nodes: IFileTreeNode[], path: string): IFileTreeNode | undefined {
+  for (const node of nodes) {
+    if (node.path === path) {
+      return node
+    }
+    if (node.isFolder && node.children) {
+      const found = findNodeByPath(node.children, path)
+      if (found) {
+        return found
+      }
+    }
+  }
+  return undefined
+}
+
+function extractAllFiles(node: IFileTreeNode): IFileListItem[] {
+  let files: IFileListItem[] = []
+  if (node.isFolder && node.children) {
+    node.children.forEach(child => {
+      files = files.concat(extractAllFiles(child))
+    })
+  } else {
+    files.push({
+      path: node.path,
+      isFolder: node.isFolder,
+      rootPath: node.rootPath,
+    })
+  }
+  return files
 }
