@@ -6,7 +6,7 @@ export const functionRegex = /function\s+[a-zA-Z_]\w*\s*\(|\([\w\s,]*\)\s*=>/g
 export const classRegex = /class\s+[a-zA-Z_]\w*\s*\{/
 
 export const selectionHeader = '[Code Inquiry'
-export const fileTreeHeader = '[File Tree] // Root path:'
+export const fileTreeHeader = '[File Tree] Root:'
 export const fileTreeEnd = '[File Tree End]'
 
 export const validFileSchemes = new Set(['file', 'untitled'])

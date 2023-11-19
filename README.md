@@ -26,14 +26,6 @@ Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 
 ## Chilled-Out Features
 
-### Workflow Efficiency
-
-### Customization at Your Fingertips
-
-### Coding Made Simpler
-
-### UX Candy
-
 - **Paste & Relax**: Get your code prompt-ready, or don't. No pressure.
 - **Harmonize your clipboard for streamlined coding sessions**: Compile your code snippets in a symphony of productivity.
 - **Versatile Selection**: Select one, select all—diagnostics included for free.

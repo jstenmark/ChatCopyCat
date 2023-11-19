@@ -1,10 +1,10 @@
 import { TextEditor, window, workspace } from 'vscode'
 import { log } from '../logging'
-import { getRelativePathOrBasename } from './file-utils'
+import { getRelativePathOrBasename } from './file-handling'
 import { configStore } from '../config'
-import * as vscode from 'vscode'
 import { IContentSection, ILangOpts, validFileSchemes } from '../common'
 import { getContentSection } from '../inquiry'
+import * as vscode from 'vscode'
 
 export let lastTrackedTextEditor: TextEditor | undefined
 
@@ -60,23 +60,6 @@ export function getDocumentPath(editor: TextEditor): string {
   return getRelativePathOrBasename(resource.fsPath, workspaceFolder?.uri.fsPath)
 }
 
-export const errorMessage = (error: unknown, defaultMessage?: string) => {
-  return error instanceof Error
-    ? `${defaultMessage ? defaultMessage : ''}${error.message}`
-    : String(error)
-}
-
-export const errorTypeCoerce = (error: unknown, customErrorMessage?: string): Error => {
-  if (error instanceof Error) {
-    error.message = errorMessage(`${customErrorMessage}. ${error.message}`)
-    return error
-  }
-  if (typeof error === 'string') {
-    return new Error(`${error}. ${customErrorMessage}`)
-  }
-  return new Error(customErrorMessage)
-}
-
 /**
  * Generates content sections from the selections in a text editor.
  * If there are no selections, it uses the entire content of the editor.
@@ -107,5 +90,29 @@ export function generateSelectionSections(
       relativePathOrBasename,
     )
     return [selectionSection]
+  }
+}
+export const isFullFileSelected = (editor: vscode.TextEditor): boolean => {
+  return (
+    editor.selection.start.isEqual(new vscode.Position(0, 0)) &&
+    editor.selection.end.isEqual(editor.document.lineAt(editor.document.lineCount - 1).range.end)
+  )
+} /**
+ * Get diagnostics (problems) for a given document or a specific selection range.
+ * @param {vscode.TextDocument} document The VSCode document to retrieve diagnostics from.
+ * @param {vscode.Range} selection (Optional) The selection range to filter diagnostics. If not provided, diagnostics for the entire document will be returned.
+ * @returns An array of diagnostic objects.
+ */
+
+export function getAllDiagnostics(
+  document: vscode.TextDocument,
+  selection: vscode.Selection | undefined,
+): vscode.Diagnostic[] {
+  if (typeof vscode.Selection !== 'undefined') {
+    return vscode.languages.getDiagnostics(document.uri).filter(({ range }) => {
+      return selection?.intersection(range)
+    })
+  } else {
+    return vscode.languages.getDiagnostics(document.uri)
   }
 }

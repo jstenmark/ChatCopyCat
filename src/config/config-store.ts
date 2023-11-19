@@ -136,6 +136,12 @@ export class ConfigStore extends SingletonBase implements Disposable {
     this.configChangeEmitter.fire({ key, value })
   }
 
+  public async reset(key: string, global = false): Promise<void> {
+    const value = this.defaultConfig[key]
+    await this.getConfiguration().update(key, value, global)
+    this.configChangeEmitter.fire({ key, value })
+  }
+
   public getPkgJsonProps(): IConfigurationProperties {
     return this.pkgJsonProps
   }

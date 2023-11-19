@@ -3,18 +3,18 @@ export {
   getActiveEditor,
   acitveEditorOrFocurLast,
   getDocumentPath,
+  generateSelectionSections,
+  getAllDiagnostics,
+} from './editor-utils'
+export { getLangOpts, debounce, getCustomSupportedFileExtensions, codeBlock } from './lang-utils'
+export { getRelativePathOrBasename, getProjectRootPaths, getFileList } from './file-handling'
+export {
+  generateHeader,
+  cleanQuotes,
+  cleanCodeTsJs,
+  tabify,
   errorMessage,
   errorTypeCoerce,
-  generateSelectionSections,
-} from './editor-utils'
-export { getLangOpts, debounce } from './lang-utils'
-export {
-  getRelativePathOrBasename,
-  getProjectRootPaths,
-  getFileList,
-  getAllDiagnostics,
-  watchForExtensionChanges,
-  showFolderTreeQuickPick,
-  getUriFromFileTree,
-} from './file-utils'
-export { generateHeader, cleanQuotes, cleanCodeTsJs, tabify } from './formatting-utils'
+} from './formatting-utils'
+export { watchForExtensionChanges } from './extension-development'
+export { getFlatFileList, getFileTree } from './tree-transform'

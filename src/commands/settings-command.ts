@@ -5,19 +5,19 @@ import { log } from '../logging'
 import {
   IProperty,
   PropertyType,
-  IQuickPickItem,
+  ISettingsItem,
   Properties,
   ISpecialQuickPickItem,
 } from '../common'
 
 export const openSettings = async (): Promise<void> => {
   await configStore.onConfigReady()
-  const settingsByType: Record<PropertyType, IQuickPickItem[]> = {
-    boolean: [] as IQuickPickItem[],
-    string: [] as IQuickPickItem[],
-    enum: [] as IQuickPickItem[],
-    array: [] as IQuickPickItem[],
-    text: [] as IQuickPickItem[],
+  const settingsByType: Record<PropertyType, ISettingsItem[]> = {
+    boolean: [] as ISettingsItem[],
+    string: [] as ISettingsItem[],
+    enum: [] as ISettingsItem[],
+    array: [] as ISettingsItem[],
+    text: [] as ISettingsItem[],
   }
   const configurationProperties: Properties = configStore.getPkgJsonProps()
   for (const [_key, _value] of Object.entries(configurationProperties)) {
@@ -30,7 +30,7 @@ export const openSettings = async (): Promise<void> => {
       settingDetails: value,
     })
   }
-  const picks = ([] as IQuickPickItem[]).concat(...Object.values(settingsByType)).map(setting => ({
+  const picks = ([] as ISettingsItem[]).concat(...Object.values(settingsByType)).map(setting => ({
     label: setting.label,
     detail: setting.settingDetails?.description,
     setting,
@@ -130,7 +130,7 @@ async function chooseEnumSetting(key: string, property: IProperty | undefined) {
   }
 }
 
-async function handleArraySetting(setting: IQuickPickItem) {
+async function handleArraySetting(setting: ISettingsItem) {
   const arrayValue: string[] = configStore.get<string[]>(setting.settingKey) ?? []
   const modifyArray = async () => {
     const arrayItems: (vscode.QuickPickItem | ISpecialQuickPickItem)[] = arrayValue.map(item => ({

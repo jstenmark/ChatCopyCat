@@ -9,7 +9,7 @@ export {
   PropertyType,
   IHeadersPresent,
   IHeaderIndex,
-  IQuickPickItem,
+  ISettingsItem,
   Properties,
   ISpecialQuickPickItem,
   ILogManager,

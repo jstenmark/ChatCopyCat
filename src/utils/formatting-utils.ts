@@ -78,3 +78,20 @@ export const tabify = (line: string, { tabSize }: ILangOpts, enableTabify: boole
   const spacesLeft = indentSize % tabSize
   return `${'\t'.repeat(numTabs)}${' '.repeat(spacesLeft)}${line.trimStart()}`
 }
+
+export const errorMessage = (error: unknown, defaultMessage?: string) => {
+  return error instanceof Error
+    ? `${defaultMessage ? defaultMessage : ''}${error.message}`
+    : String(error)
+}
+
+export const errorTypeCoerce = (error: unknown, customErrorMessage?: string): Error => {
+  if (error instanceof Error) {
+    error.message = errorMessage(`${customErrorMessage}. ${error.message}`)
+    return error
+  }
+  if (typeof error === 'string') {
+    return new Error(`${error}. ${customErrorMessage}`)
+  }
+  return new Error(customErrorMessage)
+}

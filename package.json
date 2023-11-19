@@ -61,8 +61,8 @@
           "type": "array",
           "items": {"type": "string"},
           "default": [
-            "out"         , "docs"        , ".vscode"     , ".git"        ,
-            "__pycache__" , ".vscode-test", "*.log", ".github"
+            "out"         , "docs"        , ".vscode"     , ".git"        , "node_modules",
+            "__pycache__" , ".vscode-test", "*.log", ".github", "*.lock", "dist"
           ],
           "description": "Array of items to ignore in the project tree."
         },
@@ -75,7 +75,7 @@
         "chatcopycat.definitionsIgnoreList": {
           "type": "array",
           "items": {"type": "string"},
-          "default": ["assets","images","node_modules","*.test.*","test","index.ts","index.js","*.json", "*.svg","*.md", "*.yml","*.txt"],
+          "default": ["assets","images","*.test.*","test","index.ts","index.js","*.json", "*.svg","*.md", "*.yml","*.txt"],
           "description": "Paths and extensions ignored by copy files definitions. eg. ['*.ts', 'dist']"
         },
         "chatcopycat.customDiagnosticsMessage": {
@@ -120,32 +120,32 @@
       {"command": "chatcopycat.copyCode", "title": "ChatCopyCat: COPY - Snag & Tag", "group": "chatcopycat"},
       {
         "command": "chatcopycat.getFileTree"                       ,
-        "title"  : "ChatCopyCat: FILE-TREE - Raid the File Cabinet",
+        "title"  : "CCCat: FILE-TREE - Raid the File Cabinet",
         "group"  : "chatcopycat"
       },
       {
         "command": "chatcopycat.copyDefinitions"                         ,
-        "title"  : "ChatCopyCat: COPY-DEFINITIONS - Copy file defintions",
+        "title"  : "CCCat: COPY-DEFINITIONS - Copy file defintions",
         "group"  : "chatcopycat"
       },
       {
         "command": "chatcopycat.copyDefinitionsFromFiles"                               ,
-        "title"  : "ChatCopyCat: COPY-WORKSPACE-DEFINITIONS - Copy workspace defintions",
+        "title"  : "CCCat: COPY-WORKSPACE-DEFINITIONS - Copy workspace defintions",
         "group"  : "chatcopycat"
       },
       {
         "command": "chatcopycat.resetClipboard"                       ,
-        "title"  : "ChatCopyCat: RESET-CLIPBOARD - Clipboard Makeover",
+        "title"  : "CCCat: RESET-CLIPBOARD - Clipboard Makeover",
         "group"  : "chatcopycat"
       },
       {"command": "chatcopycat.openMenu", "title": "ChatCopyCat: MENU - Command overview", "group": "chatcopycat"},
       {
         "command": "chatcopycat.openSettings"                  ,
-        "title"  : "ChatCopyCat: SETTINGS - The Command Center",
+        "title"  : "CCCat: SETTINGS - The Command Center",
         "group"  : "chatcopycat"
       },
-      {"command": "chatcopycat.closeDialog", "title": "ChatCopyCat: CLOSE-INQUIRY - Close em", "group": "devcat"},
-      {"command": "chatcopycat.reloadWindow", "title": "DevCat: Reload Window", "group": "devcat"}
+      {"command": "chatcopycat.closeDialog", "title": "CCCat: CLOSE-INQUIRY - Close em", "group": "devcat"},
+      {"command": "chatcopycat.reloadWindow", "title": "CCCat: Reload Window", "group": "devcat"}
     ],
     "keybindings": [
       {
@@ -172,7 +172,7 @@
     "package": "vsce package --yarn",
     "pkg": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt",
     "vsce:package": "vsce package --yarn",
-    "vsce:package:pre": "yavscern package --yarn --pre-release",
+    "vsce:package:pre": "vsce package --yarn --pre-release",
     "vsce:publish": "vsce publish",
     "vsce:publish:pre": "vsce publish --pre-release"
   },
@@ -200,7 +200,6 @@
     "prettier"                             : "3.0.3"  ,
     "tree-sitter-typescript"               : "^0.20.3",
     "ts-node"                              : "^10.9.1",
-    "typescript"                           : "<=5.2.0",
-    "vsce"                                 : "^2.15.0"
+    "typescript"                           : "<=5.2.0"
   }
 }

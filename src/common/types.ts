@@ -77,7 +77,7 @@ export interface IHeaderIndex {
   selectionHeaderEnd: number
   selectionHeaderIndex: number
 }
-export interface IQuickPickItem {
+export interface ISettingsItem {
   detail?: string
   label: string
   settingDetails?: IProperty
