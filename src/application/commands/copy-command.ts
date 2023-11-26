@@ -11,7 +11,7 @@ import {ConfigStore, SemaphoreStore} from '../../infra/config'
 import {ILangOpts} from '../../shared/types/types'
 import {getInquiryType} from '../../adapters/ui/dialog/inquiry-dialog'
 import {handleActiveDialogs} from '../../adapters/ui/dialog/dialog-utils'
-import {processSymbolsWithComments} from './references-definitions'
+import {processSymbolsWithComments} from './process-symbols-comments'
 import {acitveEditorOrFocurLast} from '../../infra/vscode/editor'
 
 export const copyCode = async (): Promise<void> => {

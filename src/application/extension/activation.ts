@@ -13,7 +13,7 @@ import {getFileTree} from '../commands/filetree-command'
 import {openMenu} from '../commands/openmenu-command'
 import {openSettings} from '../commands/settings-command'
 import {closeDialog} from '../../adapters/ui/dialog/dialog-utils'
-import {getSymbolReferences} from '../../application/commands/references-definitions'
+import {getSymbolReferences} from '../commands/references-command'
 
 
 
@@ -22,7 +22,7 @@ export const initExtension = async () => {
   await SemaphoreStore.initialize()
 }
 
-export const devCommands = ["chatcopycat.reloadWindow"]
+export const devCommands: string[] =  [] // ["chatcopycat.reloadWindow"]
 
 export const handlers: Record<string, () => Promise<void>> = {
   copyCode,
