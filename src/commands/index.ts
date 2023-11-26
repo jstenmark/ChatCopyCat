@@ -1,6 +1,0 @@
-export { copyCode } from './copy-command'
-export { openMenu } from './openmenu-command'
-export { copyDefinitions } from './definitions-command'
-export { getFileTree } from './filetree-command'
-export { openSettings } from './settings-command'
-export { copyDefinitionsFromFiles } from './definitionsfromfiles-command'

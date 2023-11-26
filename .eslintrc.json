@@ -1,26 +1,55 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module",
-    "project": true
-  },
   "plugins": [
     "@typescript-eslint",
-    "prettier",
-    "regexp"
+    "@stylistic/ts"
+  ],
+  "parserOptions": {
+    "tsconfigRootDir": "./",
+
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project":  "./tsconfig.json",
+    "emitDecoratorMetaData": true,
+    "lib": [
+      "ES2022",
+      "ESNext.AsyncIterable"
+    ]
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked"
+  ],
+  "ignorePatterns": [
+    "src/test/",
+    "out/",
+    "node_modules/",
+    "scripts/",
+    "docs/",
+    "**/*.d.ts"
   ],
   "rules": {
-    "brace-style": [
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": true,
+        "caughtErrors": "none"
+      }
+    ],
+    "@stylistic/ts/brace-style": [
       "error",
       "1tbs",
       {
         "allowSingleLine": true
       }
     ],
-    "no-underscore-dangle": "off",
-    "curly": "warn",
+    "@stylistic/ts/no-underscore-dangle": "off",
+    "@stylistic/ts/object-curly-spacing": "warn",
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -34,28 +63,11 @@
         }
       }
     ],
-    "@typescript-eslint/semi": [
+    "@stylistic/ts/semi": [
       "error",
       "never"
     ],
-    "@typescript-eslint/no-floating-promises": "warn",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "argsIgnorePattern": "^_",
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": true,
-        "caughtErrors": "none"
-      }
-    ],
-    "@typescript-eslint/no-misused-promises": [
-      "warn",
-      {
-        "checksConditionals": false
-      }
-    ],
-    "comma-dangle": [
+    "@stylistic/ts/comma-dangle": [
       "error",
       {
         "arrays": "only-multiline",
@@ -64,43 +76,6 @@
         "exports": "ignore",
         "functions": "only-multiline"
       }
-    ],
-    "prettier/prettier": [
-      "error",
-      {
-        "trailingComma": "all",
-        "tabWidth": 2,
-        "semi": false,
-        "singleQuote": true,
-        "printWidth": 100,
-        "bracketSpacing": true,
-        "bracketSameLine": true,
-        "arrowParens": "avoid",
-        "htmlWhitespaceSensitivity": "strict",
-        "endOfLine": "lf",
-        "openingBraceNewLine": false,
-        "ignorePatterns": [
-          "/**/*",
-          "!/*/*/src/**/*.ts"
-        ]
-      },
-      {
-        "usePrettierrc": false
-      }
     ]
-  },
-  "ignorePatterns": [
-    "out",
-    "docs",
-    "node_modules",
-    "**/*.d.ts",
-    "**/*.js"
-  ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
-    "plugin:regexp/recommended",
-    "plugin:prettier/recommended"
-  ]
+  }
 }

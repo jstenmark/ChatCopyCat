@@ -6,14 +6,42 @@
       "script": "watch",
       "problemMatcher": "$tsc-watch",
       "isBackground": true,
-      "presentation": {"reveal": "never"},
-      "group": {"kind": "build", "isDefault": false}
+      "presentation": {
+        "reveal": "never"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
     },
     {
       "type": "npm",
       "script": "compile",
-      "group": {"kind": "build", "isDefault": true}
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
-    { "type": "npm", "script": "lint", "problemMatcher": ["$tsc"] }
+    {
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": [
+        "$tsc"
+      ]
+    },
+    {
+      "type": "eslint",
+      "problemMatcher": [
+        "$eslint-stylish"
+      ],
+      "label": "eslint: lint whole folder"
+    },
+    {
+      "type": "npm",
+      "script": "pkg",
+      "problemMatcher": [],
+      "label": "npm: pkg",
+      "detail": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt"
+    }
   ]
 }

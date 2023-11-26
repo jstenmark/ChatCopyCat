@@ -48,7 +48,7 @@ Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 ## Settings? Sure, If You Want
 For those who like to fiddle:
 
-- **`chatcopycat.inquiryType`** - Sets the prompt context by customizing the inquiry header.
+- **`chatcopycat.enableInquiryType`** - Sets the prompt context by customizing the inquiry header.
 
 You'll find these in the usual VS Code settings spot. Just look for "ChatCopyCat" and tweak away.
 

@@ -1,13 +1,13 @@
 # folders
-src/**
-scripts/**
-out/test/**
-docs/**
-assets/**
-.github/**
-.vscode/**
-.vscode-test/**
-.git/**
+src/
+scripts/
+out/test/
+docs/
+assets/
+.github/
+.vscode
+.vscode-test
+.git/
 
 # filetypes
 **/*.map

@@ -13,7 +13,7 @@ export const run = (): Promise<void> => {
   let files: string[] = []
 
   return new Promise<void>((resolve, reject) => {
-    glob('**/**.test.js', { cwd: testsRoot }, (error: Error | null, result: string[]) => {
+    glob('**/**.test.js', {cwd: testsRoot}, (error: Error | null, result: string[]) => {
       err = error
       files = result
 
