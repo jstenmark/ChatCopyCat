@@ -3,46 +3,31 @@ name: CI/CD
 on: [push,pull_request]
 
 env:
-  SNYK_TOKEN: ${{secrets.SNYK_TOKEN}}
+  NODE_VERSION: '20'
 
 jobs:
-  build:
+  build-and-lint:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-      - name: Install Yarn
-        run: npm install -g yarn
-      - name: Install dependencies
-        run: yarn install
-      - name: Run headless test
-        uses: coactions/setup-xvfb@v1
+      - uses: ./.github/workflows/setup-node-yarn-cache.yml
         with:
-          run: yarn test
-          working-directory: ./ # optional
-          options: # optional
+          os: ${{ matrix.os }}
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Run Tests and Lint
+        run: yarn test && yarn lint
 
-  lint:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  snyk-security:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-      - name: Install Yarn
-        run: npm install -g yarn
-      - name: Install dependencies
-        run: yarn install
-      - name: Run lint
-        run: yarn lint
+      - uses: ./.github/workflows/setup-node-yarn-cache.yml
+        with:
+          os: ubuntu-latest
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Run Snyk to check for vulnerabilities
+        run: npx snyk test --all-projects
 
   # run from github ui
   #analyze:
@@ -60,19 +45,6 @@ jobs:
   #  - name: Perform CodeQL Analysis
   #    uses: github/codeql-action/analyze@v1
 
-  snyk-security:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-      - name: Install Yarn
-        run: npm install -g yarn
-      - name: Install dependencies
-        run: yarn install
-      - name: Run Snyk to check for vulnerabilities
-        run: npx snyk test --all-projects
 
   #release:
   #  runs-on: ubuntu-latest
