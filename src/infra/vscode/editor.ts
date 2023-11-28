@@ -1,8 +1,9 @@
-
 import * as vscode from 'vscode'
-import {validFileSchemes} from '../../shared/constants/consts'
 import {configStore} from '../config'
+import {ILangOpts} from '../../shared/types/types'
 import {log} from '../../infra/logging/log-base'
+import {validFileSchemes} from '../../shared/constants/consts'
+
 
 export let lastTrackedTextEditor: vscode.TextEditor | undefined
 
@@ -45,5 +46,15 @@ export async function acitveEditorOrFocurLast() {
   }
 
   return focusLastTrackedEditor()
+}
+
+export const getLangOpts = (editor: vscode.TextEditor): ILangOpts => {
+  const {tabSize: _tabSize, insertSpaces: _insertSpaces}: vscode.TextEditorOptions = editor.options
+  const {languageId: language}: vscode.TextDocument = editor.document
+
+  const tabSize: number = typeof _tabSize === 'number' ? _tabSize : 2
+  const insertSpaces = !!_insertSpaces
+
+  return {tabSize, language, insertSpaces}
 }
 

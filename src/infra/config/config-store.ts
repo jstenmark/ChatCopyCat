@@ -1,9 +1,11 @@
-import {Disposable, EventEmitter, WorkspaceConfiguration, extensions, workspace} from 'vscode'
+import {Disposable, EventEmitter, TextDocument, WorkspaceConfiguration, extensions, workspace} from 'vscode'
 import {Notify} from '../vscode/notification'
 import {IConfigurationProperties, IExtension, IProperty} from './types'
 import {log} from '../logging/log-base'
 import {SingletonBase} from '../../shared/utils/singleton'
 import {errorMessage, errorTypeCoerce} from '../../shared/utils/validate'
+import {ILangOpts} from '../../shared/types/types'
+import {defaultTabSize} from '../../shared/constants/consts'
 
 /**
  * Manages the configuration settings of the extension.
@@ -127,7 +129,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
     )?.packageJSON?.contributes?.configuration?.properties
 
     if (!properties) {
-      Notify.error(`Extension not found in config store`, true, true)
+      Notify.error('Extension not found in config store', true, true)
       return
     }
 
@@ -152,6 +154,16 @@ export class ConfigStore extends SingletonBase implements Disposable {
       },
       {} as Record<string, IProperty['default']>,
     )
+  }
+
+  public getLangOpts(document: TextDocument): ILangOpts {
+    const editorConfig = workspace.getConfiguration('editor', document.uri)
+
+    const tabSize = editorConfig.get<number>('tabSize', defaultTabSize)
+    const insertSpaces = editorConfig.get<boolean>('insertSpaces', true)
+    const language = document.languageId
+
+    return {tabSize,insertSpaces,language}
   }
 
   /**
@@ -209,7 +221,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   private async listenForConfigurationChanges(): Promise<void> {
     workspace.onDidChangeConfiguration(async e => {
       if (e.affectsConfiguration(this.extensionId)) {
-        Notify.temporaryStatus(`Config change detected, updating config`)
+        Notify.temporaryStatus('Config change detected, updating config')
         await this.updateConfigCache()
       }
     })

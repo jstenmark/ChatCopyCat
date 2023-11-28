@@ -32,6 +32,7 @@ export interface IPackageJson {
     }
   }
 }
+
 export interface ISettingsItem<T = unknown> {
   detail?: string
   label: string

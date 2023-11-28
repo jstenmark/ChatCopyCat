@@ -1,8 +1,8 @@
-import * as fs from "fs"
-import * as vscode from "vscode"
+import * as fs from 'fs'
+import * as vscode from 'vscode'
 import {getProjectRootPaths} from '../../../infra/system/file-utils'
 import {dialogResultValidator} from '../../../shared/utils/validate'
-import {Notify} from "../../../infra/vscode/notification"
+import {Notify} from '../../../infra/vscode/notification'
 
 
 

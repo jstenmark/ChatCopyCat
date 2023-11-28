@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import {Ignore} from 'ignore'
 import * as path from 'path'
-import {IFileListItem} from '../../domain/models/definition-types'
+import {IFileListItem} from '../../domain/models/filetree-types'
 import {isDirectoryOrFile} from '../system/file-utils'
 
 export async function getFileList(

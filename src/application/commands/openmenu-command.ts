@@ -7,10 +7,11 @@ import {
   handleIgnoreResetButton,
 } from '../../domain/services/definitions-utils'
 import {executeCommand} from '../../infra/system/exec'
-import {showQuickPick} from '../../adapters/ui/dialog/dialog-components'
+import {showQuickPick} from '../../adapters/ui/components/window-components'
 import {openSettings} from './settings-command'
 import {clipboardManager} from '../../infra/clipboard'
 import {getProjectRootPaths} from '../../infra/system/file-utils'
+import {ConfigStore} from '../../infra/config'
 
 export const openMenu = async () => {
   const picks = [
@@ -37,15 +38,22 @@ export const openMenu = async () => {
     },
     {kind: vscode.QuickPickItemKind.Separator, label: 'Configuration'},
     {label: '$(settings) Open Settings', action: async () => openSettings()},
-    {kind: vscode.QuickPickItemKind.Separator, label: 'Development'},
-    {
-      label: '$(terminal-bash) yarn pkg',
-      action: async () => {
-        (await executeCommand(getProjectRootPaths()![0], 'yarn pkg')) &&
-          (await vscode.commands.executeCommand('workbench.action.reloadWindow'))
-      },
-    },
+
   ]
+
+  if(ConfigStore.instance.get<boolean>('enableDevelopmentMode')) {
+    const devItems = [
+      {kind: vscode.QuickPickItemKind.Separator, label: 'Development'},
+      {
+        label: '$(terminal-bash) yarn pkg',
+        action: async () => {
+          (await executeCommand(getProjectRootPaths()![0], 'yarn pkg')) &&
+          (await vscode.commands.executeCommand('workbench.action.reloadWindow'))
+        },
+      }
+    ]
+    picks.push(...devItems)
+  }
 
   await showQuickPick(picks, {
     placeHolder: 'ChatCopyCat Command Center',

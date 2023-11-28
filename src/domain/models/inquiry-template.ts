@@ -1,11 +1,11 @@
 import * as vscode from 'vscode'
-
-import {generateHeader} from '../services/inquiry-utils'
-import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
 import {configStore} from '../../infra/config'
-import {fileTreeHeader, fileTreeEnd} from '../../shared/constants/consts'
-import {handleFileLanguageId} from '../services/language-handler'
-import {ILangOpts, IContentSection} from '../../shared/types/types'
+import {fileTreeEnd, fileTreeHeader} from '../../shared/constants/consts'
+import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
+import {handleFileLanguageId} from '../services/language-processing-service'
+import {IContentSection, ILangOpts} from '../../shared/types/types'
+import {selectionHeader} from '../../shared/constants/consts'
+
 
 export function getMetadataSection(
   inquiryTypes: string[] | undefined,
@@ -13,7 +13,7 @@ export function getMetadataSection(
   langOpts: ILangOpts,
   isMultipleSelections: boolean,
 ): string {
-  const inquiryTypeEnabled = configStore.get('enableInquiryType')
+  const inquiryTypeEnabled = configStore.get<boolean>('enableInquiryType')
   const multipleSelectionns = isMultipleSelections ? ' // Multiple Selections from file' : undefined
   const inquiryTypeSection =
     inquiryTypeEnabled && inquiryTypes && inquiryTypes.length > 0
@@ -36,17 +36,19 @@ export function getContentSection(
 ): IContentSection {
   const textContent = editor.document.getText(selection)
   const textSection = handleFileLanguageId(textContent, langOpts).trimEnd()
-
-  const selectionDiagnostics: vscode.Diagnostic[] = getAllDiagnostics(editor.document, selection)
-  const diagnosticsSection = getDiagnosticsSection(selectionDiagnostics)
+  const enableDiagnostics = configStore.get<boolean>('enableDiagnostics')
   const showLangInPerSnippet: boolean = configStore.get('showLanguageInSnippets')
+
+
+  const selectionDiagnostics = enableDiagnostics ? getAllDiagnostics(editor.document, selection) : []
+  const diagnosticsSection = getDiagnosticsSection(selectionDiagnostics) || ''
 
   const selectionSection = codeBlock(
     textSection,
     relativePathOrBasename,
     showLangInPerSnippet ? langOpts.language : '',
     selection?.start.line ? selection?.start.line + 1 : undefined
-  ) + (selectionDiagnostics.length > 0 ? `\n${diagnosticsSection}` : '\n')
+  ) + `\n${diagnosticsSection}`
 
   return {selectionSection, selectionDiagnostics}
 }
@@ -62,22 +64,15 @@ export const codeBlock = (
   return `\n\`\`\`${lang} ${path}${lineInfo}\n${codeText}\n\`\`\``
 }
 
-export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[]): string => {
-  const customMessage: string = configStore.get('customDiagnosticsMessage')
-  const _message: string | undefined =
-    customMessage && customMessage.length > 0 ? customMessage : undefined
-  return (
-    `${_message && _message?.length > 0 ? _message + '\n' : ''}` +
-    `- Errors: (source, approximate lines, message)\n` +
-    diagnostics
-      .map(({source, message, range, severity}) => {
-        const rangeStr = `${range.start.line + 1}:${range.start.character + 1}-${range.end.line + 1}:${range.end.character + 1}`
-        return `[${source}]\tLn:${rangeStr}\tSeverity:${vscode.DiagnosticSeverity[severity]}\n${message}`
-      })
-      .join('\n')
-      .trimEnd()
-  )
-}
+const getCodeRange = (range:vscode.Range) =>
+  `${range.start.line + 1}:${range.start.character + 1}-`
+  + `${range.end.line + 1}:${range.end.character + 1}`
+
+export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[]): string => diagnostics.length === 0 ? '' :
+  `\n${configStore.get<string>('customDiagnosticsMessage')}` || '' +
+  '\n[Selection problems] (reporter ~location~ error)\n' + diagnostics.map(({source, severity, range, message}) =>
+    `[${source}] ${vscode.DiagnosticSeverity[severity]}\tLn:${getCodeRange(range)}\n${message}`).join('\n').trim()
+
 
 /**
  * Generates a template string that lists the root path and files for each project in the input array.
@@ -91,8 +86,15 @@ export function generateFilesTemplate(
   return projectsFiles
     .map(
       project =>
-        `${fileTreeHeader} ${project.rootPath}\n${project.files.join('\n')}\n${fileTreeEnd}\n`,
+        `${fileTreeHeader} ${project.rootPath}\n` +
+        `${project.files.join('\n')}\n` +
+        `${fileTreeEnd}\n`,
     )
     .join('\n\n')
     .trim()
 }
+
+const generateHeader = (inquiryType?: string, language?: string) =>
+  inquiryType
+    ? `${selectionHeader}: ${inquiryType} - ${language}]`
+    : `${selectionHeader} - ${language}]`

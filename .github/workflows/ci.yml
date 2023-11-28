@@ -21,7 +21,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
       - name: Install Yarn
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn install --frozen-lockfile
+          yarn config list
       - name: Run headless test
         uses: coactions/setup-xvfb@v1
         with:
@@ -30,10 +32,7 @@ jobs:
           options: # optional
 
   lint:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2

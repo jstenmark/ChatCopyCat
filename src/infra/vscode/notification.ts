@@ -110,12 +110,12 @@ export class Notify extends vscode.Disposable {
 
   static temporaryStatus(message: string, durationMs = 3000, dispose?: boolean): void {
     if (this.currentProgressToken) {
-        this.currentProgressToken.cancel()
-        this.currentProgressToken.dispose()
+      this.currentProgressToken.cancel()
+      this.currentProgressToken.dispose()
     } else
-    if(dispose) {
-      return
-    }
+      if(dispose) {
+        return
+      }
 
     const progressToken = new vscode.CancellationTokenSource()
     this.currentProgressToken = progressToken
@@ -149,7 +149,7 @@ export class Notify extends vscode.Disposable {
     }
   }
 
- /**
+  /**
    * Execute a task with a progress indicator for processing files.
    * @param title - The title of the progress indicator.
    * @param fileUris - The file URIs to process.
@@ -196,32 +196,23 @@ export class Notify extends vscode.Disposable {
     return results
   }
 
-
   static dispose() {
     Notify.temporaryStatus('',undefined,true)
   }
 }
-
 
 interface IProgressReport {
   increment: number;
   message: string;
 }
 
-
 export enum NotificationOptions {
   ERROR = 'error',
   INFO = 'info',
   WARN = 'warn'
-}
-export interface IShowNotificationOptions {
-  type?: NotificationOptions.ERROR | NotificationOptions.WARN | NotificationOptions.INFO
-  message: string
 }
 
 export interface IPathAndUri {
   uri: vscode.Uri;
   path: string;
 }
-
-

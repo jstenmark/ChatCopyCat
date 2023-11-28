@@ -31,6 +31,8 @@
     "**/*.d.ts"
   ],
   "rules": {
+    "@stylistic/ts/indent": ["error", 2],
+    "@stylistic/ts/quotes": ["error", "single"],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {

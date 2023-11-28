@@ -1,10 +1,9 @@
 import path from 'path'
 import * as vscode from 'vscode'
-import {selectFileTreeDialogItem} from '../../adapters/ui/definitions/definitions-components'
-import {IFileTreeNode, IFileTreeDialogItem, IFileListItem} from '../models/definition-types'
-import {refreshDialog} from '../../adapters/ui/definitions/definitions-picker'
+import {selectFileTreeDialogItem} from '../../adapters/ui/components/filetree-dialog'
+import {IFileTreeNode, IFileTreeDialogItem, IFileListItem} from '../models/filetree-types'
+import {refreshDialog} from '../../adapters/ui/filetree-handler'
 import {configStore, StateStore} from '../../infra/config'
-import {log} from '../../infra/logging/log-base'
 import {languageExtensionMap} from '../../shared/constants/consts'
 import {Notify} from '../../infra/vscode/notification'
 
@@ -134,7 +133,7 @@ export async function handleIgnoreResetButton(quickPick?: vscode.QuickPick<IFile
 export async function handleSelectionResetButton(
   quickPick?: vscode.QuickPick<IFileTreeDialogItem>,
 ) {
-  StateStore.instance.setState<string[]>('definitionsAutoSelect', [])
+  StateStore.setState<string[]>('definitionsAutoSelect', [])
   if (quickPick) {
     await refreshDialog(quickPick)
   }
@@ -146,13 +145,14 @@ export async function handleIgnoreItemButton(
   item: IFileTreeDialogItem,
 ) {
   if (path.basename(item.filePath) === '.') {
-    log.warn('Cannot add project root to ignore list')
-    await vscode.window.showWarningMessage('Cannot add project root to ignore list')
+    Notify.warn('Cannot add Workspace root to ignore config',false,true)
   } else {
-    const igList = [...configStore.get<string[]>('definitionsIgnoreList'), item.filePath]
-    await configStore.update('definitionsIgnoreList', igList)
+    await configStore.update('definitionsIgnoreList', [
+      ...configStore.get<string[]>('definitionsIgnoreList'),
+      item.filePath
+    ])
+    Notify.info(`add to ignore definitions ignore config:${item.filePath}`,true,true)
     await refreshDialog(quickPick)
-    log.info('add to ignore:', item.filePath)
   }
 }
 
@@ -169,3 +169,4 @@ export async function getCustomSupportedFileExtensions(): Promise<Set<string>> {
   configStore.get<string[]>('definitionsAllowList').forEach(ext => extensionsSet.add(ext))
   return extensionsSet
 }
+

@@ -1,9 +1,10 @@
 import * as vscode from 'vscode'
-import {log} from "../logging/log-base"
+import {configStore} from '../config'
+import {log} from '../logging/log-base'
 
 
 export class SymbolProvider {
-  static async getSymbolsFromSelection(
+  static async getSymbolRefsFromSelection(
     editor: vscode.TextEditor,
   ): Promise<vscode.Location[]> {
     return (
@@ -15,28 +16,123 @@ export class SymbolProvider {
     ) ?? []
   }
 
+  static async getSymbolsFromResource(
+    uri: vscode.Uri,
+  ): Promise<vscode.DocumentSymbol[] | undefined> {
+    return await vscode.commands.executeCommand<vscode.DocumentSymbol[]>('vscode.executeDocumentSymbolProvider',uri)
+  }
+
+
   static findEnclosingSymbol(
     symbols: vscode.DocumentSymbol[],
     position: vscode.Position,
     symbolKindBlacklist: Set<number>,
-    symbolKindEncloseChild: Set<number>
+    symbolKindEncloseChild: Set<number>,
+    parentKind?: vscode.SymbolKind,
   ): vscode.DocumentSymbol | undefined {
     for (const symbol of symbols) {
       if (symbol.range.contains(position)) {
-        if (symbolKindBlacklist.has(symbol.kind)) {
-          continue
-        }
+        const action = SymbolProvider.determineAction(symbolKindBlacklist, symbolKindEncloseChild, symbol, parentKind)
+        let childSymbol = undefined
 
-        const childSymbol = SymbolProvider.findEnclosingSymbol(symbol.children, position, symbolKindBlacklist,symbolKindEncloseChild)
-        if (childSymbol && symbolKindEncloseChild.has(childSymbol.kind)) {
-          log.info(`Child:${childSymbol.name} Kind:${childSymbol.kind}`,symbol.detail)
-            return childSymbol
+        log.info(`SYMBOL:${symbol.name}\t KIND:${vscode.SymbolKind[symbol.kind]}\t`+
+        ` PARENTKIND:${parentKind ? vscode.SymbolKind[parentKind] : ''}` )
+
+        switch (action) {
+          case Action.Skip:
+            log.info('Skip')
+            continue
+          case Action.Copy:
+            log.info('Copy')
+            return symbol
+          case Action.CopySignature:
+            log.info('CopySignature')
+            return symbol
+          case Action.CopyWithChildren:
+            childSymbol = SymbolProvider.findEnclosingSymbol(symbol.children, position, symbolKindBlacklist, symbolKindEncloseChild, symbol.kind)
+            if (childSymbol) {
+              log.info('CopyWithChildren')
+              return childSymbol
+            } else {
+              log.info('CopyWithChildren didnt find more children')
+              return symbol
+            }
+            break
         }
-        log.info(`Default:${symbol.name} Kind:${symbol.kind}`,symbol.detail)
-        return symbol
       }
     }
     return undefined
+  }
+
+  static determineAction(symbolKindBlacklist: Set<number>, symbolKindEncloseChild: Set<number>, symbol: vscode.DocumentSymbol, parentKind?: vscode.SymbolKind): Action {
+    // Property Handling
+    if (symbol.kind === vscode.SymbolKind.Property) {
+      if (parentKind === vscode.SymbolKind.Class) {
+        return Action.Copy
+      }
+      if (parentKind === vscode.SymbolKind.Interface) {
+        return Action.Skip
+      }
+    }
+
+    // TypeParameter Handling
+    // TODO: check
+    if (symbol.kind === vscode.SymbolKind.TypeParameter) {
+      if(parentKind === vscode.SymbolKind.Class) {
+        return Action.Copy
+      } else {
+        return Action.Copy
+      }
+    }
+
+    // Interface Handling
+    if (symbol.kind === vscode.SymbolKind.Interface) {
+      if(parentKind === vscode.SymbolKind.Class) {
+        return Action.Copy
+      }
+    }
+
+    // Class Handling
+    if (symbol.kind === vscode.SymbolKind.Class) {
+      if (!parentKind) {
+        return Action.CopyWithChildren
+      }
+
+      if(parentKind === vscode.SymbolKind.Function) {
+        return Action.CopyWithChildren
+      }
+
+      if(![vscode.SymbolKind.Class, vscode.SymbolKind.Function].includes(parentKind)) {
+        return Action.CopyWithChildren
+      }
+    }
+
+    // Method Handling
+    if (symbol.kind === vscode.SymbolKind.Method) {
+      // TODO: Implement more sophisticated logic for overloaded methods
+      if (parentKind === vscode.SymbolKind.Class) {
+        return Action.Copy
+      } //CopyWithChildren
+    }
+
+    // Function Handling
+    if (symbol.kind === vscode.SymbolKind.Function) {
+      if(symbol.children.some(childSymbol => childSymbol.kind === vscode.SymbolKind.Class)) {
+        return Action.CopyWithChildren
+      }
+      log.info('Function:'+symbol.name, symbol.children)
+    }
+
+
+    // Default actions
+    if (symbolKindBlacklist.has(symbol.kind)) {
+      return Action.Skip
+    }
+    if (symbolKindEncloseChild.has(symbol.kind)) {
+      return Action.CopyWithChildren
+    }
+
+    return Action.Copy
   }
 
   static extendRangeToIncludeDecoratorsAndComments(
@@ -45,23 +141,28 @@ export class SymbolProvider {
     symbolKind: vscode.SymbolKind,
   ): vscode.Range {
     let startLine = range.start.line
-    if ([vscode.SymbolKind.Method, vscode.SymbolKind.Property, vscode.SymbolKind.Class].includes(symbolKind)) {
-      while (startLine > 0) {
-        const lineText = document.lineAt(startLine - 1).text.trim()
-        if (lineText.startsWith('@')) {
-          startLine--
-        } else {
-          break
+
+    if(configStore.get<boolean>('includeDecoratorsInReferences')) {
+      if ([vscode.SymbolKind.Method, vscode.SymbolKind.Property, vscode.SymbolKind.Class].includes(symbolKind)) {
+        while (startLine > 0) {
+          const lineText = document.lineAt(startLine - 1).text.trim()
+          if (lineText.startsWith('@')) {
+            startLine--
+          } else {
+            break
+          }
         }
       }
     }
 
-    while (startLine > 0) {
-      const lineText = document.lineAt(startLine - 1).text.trim()
-      if (lineText.startsWith('//') || lineText.startsWith('*') || lineText.startsWith('/*')) {
-        startLine--
-      } else {
-        break
+    if(!configStore.get<boolean>('enableCommentRemoval')) {
+      while (startLine > 0) {
+        const lineText = document.lineAt(startLine - 1).text.trim()
+        if (lineText.startsWith('//') || lineText.startsWith('*') || lineText.startsWith('/*')) {
+          startLine--
+        } else {
+          break
+        }
       }
     }
 
@@ -71,4 +172,65 @@ export class SymbolProvider {
   static createSymbolIdentifier(uri: vscode.Uri, symbol: vscode.DocumentSymbol): string {
     return `${uri.toString()}-${symbol.kind}-${symbol.name}-${symbol.range.start.line}:${symbol.range.start.character}-${symbol.range.end.line}:${symbol.range.end.character}`
   }
+
+  static getClassSignature(document: vscode.TextDocument, classSymbol: vscode.DocumentSymbol): string {
+    const startLine = classSymbol.range.start.line
+    const startCharacter = classSymbol.range.start.character
+
+    let endLine = classSymbol.range.end.line
+    let endCharacter = classSymbol.range.end.character
+
+    // If the class has children, use the start of the first child as the end of the signature
+    if (classSymbol.children.length > 0) {
+      endLine = classSymbol.children[0].range.start.line
+      endCharacter = classSymbol.children[0].range.start.character
+    }
+
+    const signatureRange = new vscode.Range(
+      new vscode.Position(startLine, startCharacter),
+      new vscode.Position(endLine, endCharacter)
+    )
+
+    return document.getText(signatureRange).trim()
+  }
+
+
 }
+
+
+enum Action {
+  Copy,
+  Skip,
+  CopyWithChildren,
+  CopySignature
+}
+
+
+/**
+1.  File - The 'File' symbol kind.
+2.  Module - The 'Module' symbol kind.
+3.  Namespace - The 'Namespace' symbol kind.
+4.  Package - The 'Package' symbol kind.
+5.  Class - The 'Class' symbol kind.
+6.  Method - The 'Method' symbol kind.
+7.  Property - The 'Property' symbol kind.
+8.  Field - The 'Field' symbol kind.
+9.  Constructor - The 'Constructor' symbol kind.
+10. Enum - The 'Enum' symbol kind.
+11. Interface - The 'Interface' symbol kind.
+12. Function - The 'Function' symbol kind.
+13. Variable - The 'Variable' symbol kind.
+14. Constant - The 'Constant' symbol kind.
+15. String - The 'String' symbol kind.
+16. Number - The 'Number' symbol kind.
+17. Boolean - The 'Boolean' symbol kind.
+18. Array - The 'Array' symbol kind.
+19. Object - The 'Object' symbol kind.
+20. Key - The 'Key' symbol kind.
+21. Null - The 'Null' symbol kind.
+22. EnumMember - The 'EnumMember' symbol kind.
+23. Struct - The 'Struct' symbol kind.
+24. Event - The 'Event' symbol kind.
+25. Operator - The 'Operator' symbol kind.
+26. TypeParameter - The 'TypeParameter' symbol kind.
+ */

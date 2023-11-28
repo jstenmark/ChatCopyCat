@@ -30,7 +30,7 @@ export class StatusBarManager implements vscode.Disposable {
     this.statusBarItem.command = 'chatcopycat.openMenu'
     this.statusBarItem.name = 'ChatCopyCat status'
     this.statusBarItem.tooltip = new vscode.MarkdownString(
-      `$(settings) $(comment-discussion) $(comment-draft) $(comment-unresolved) $(comment) Click to open menu`,
+      '$(settings) $(comment-discussion) $(comment-draft) $(comment-unresolved) $(comment) Click to open menu',
       true, // TODO: change depending on content
     )
     this.statusBarItem.tooltip.isTrusted = true

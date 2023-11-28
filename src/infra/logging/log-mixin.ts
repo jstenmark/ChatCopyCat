@@ -4,6 +4,7 @@ import {log} from './log-base'
 import {LogManager} from './log-manager'
 import {truncate} from './log-utils'
 import {LogLevelToNumeric} from './consts'
+import {defaultTabSize} from '../../shared/constants/consts'
 
 /**
  * Creates a loggable mixin class that extends a base class with logging methods (debug, info, warn, error).
@@ -46,14 +47,14 @@ export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
       const dataString =
         data !== undefined
           ? truncate(
-              this.data2String(data),
-              logOpts?.truncate ?? configStore.get('defaultDataTruncate'),
-            )
+            this.data2String(data),
+            logOpts?.truncate ?? configStore.get('defaultDataTruncate'),
+          )
           : ''
 
       if (isAllowedToLog) {
         LogManager.instance.log(
-          `${this._now()} [${level}]\t${truncate(
+          `${this._now()} [${level}]${level.length === 4 ? ' ' : ''}\t${truncate(
             message,
             logOpts?.truncate ?? configStore.get('defaultMessageTruncate'),
           )} ${dataString}`,
@@ -66,7 +67,7 @@ export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
         return data.stack ?? data.message
       }
       try {
-        return typeof data === 'string' ? data : JSON.stringify(data, null, 2)
+        return typeof data === 'string' ? data : JSON.stringify(data, null, defaultTabSize)
       } catch (error) {
         log.error(`Failed to stringify data: ${(error as Error).message}`)
         return `Failed to stringify data: ${(error as Error).message}`

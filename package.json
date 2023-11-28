@@ -23,8 +23,7 @@
   "icon": "images/png/logo_128.png",
   "homepage": "https://github.com/jstenmark/ChatCopyCat",
   "activationEvents": [
-    "onStartupFinished",
-    "onLanguage:typescript"
+    "onStartupFinished"
   ],
   "bugs": {
     "url": "https://github.com/jstenmark/ChatCopyCat/issues"
@@ -51,32 +50,42 @@
         "chatcopycat.enableClipboardResetCombo": {
           "type": "boolean",
           "default": true,
-          "description": "Reset clipboard macro(double tap copy)"
+          "description": "Clipboard: Enables the double-tap reset feature for the clipboard, allowing for quick clearing with a simple key combo."
         },
         "chatcopycat.enableInquiryType": {
           "type": "boolean",
           "default": true,
-          "description": "Prompt for the inqiry type"
+          "description": "Clipboard: Toggle to always prompt for the type of inquiry with each copy action for customized context setting."
         },
-        "chatcopycat.enableReferenceCopy": {
+        "chatcopycat.enableReferenceWithCopy": {
           "type": "boolean",
           "default": false,
-          "description": "Prompt for the inqiry type"
+          "description": "Clipboard: Optionality append references to copied selection"
+        },
+        "chatcopycat.includeDecoratorsInReferences": {
+          "type": "boolean",
+          "default": "true",
+          "description": "References: Include Class/Method/Property-decorators with references ('@'-decorator)"
         },
         "chatcopycat.enableDiagnostics": {
           "type": "boolean",
           "default": true,
-          "description": "Include code problem output with code inquiry."
+          "description": "Clipboard: Include code errors for each selection."
         },
         "chatcopycat.enableCommentRemoval": {
           "type": "boolean",
           "default": true,
-          "description": "Remove single and multiline comments (if supported)"
+          "description": "Clipboard: Remove comments (if possible)"
         },
         "chatcopycat.convertSpacesToTabs": {
           "type": "boolean",
           "default": true,
-          "description": "Convert spaces to tabs in code blocks"
+          "description": "Clipboard: Indent content using tabs (save tokens)"
+        },
+        "chatcopycat.enableSpacesTabsNewlinesRemoval": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clipboard: Remove leading/trailing newlines, remove trailing spaces and tabs per row"
         },
         "chatcopycat.customInquiryTypes": {
           "type": "array",
@@ -93,9 +102,9 @@
             "Add unit-tests",
             "Generate docstrings"
           ],
-          "description": "Customize inquiry types."
+          "description": "Clipboard: Inquiry types"
         },
-        "chatcopycat.projectTreeIgnoreList": {
+        "chatcopycat.fileTreeIgnoreList": {
           "type": "array",
           "items": {
             "type": "string"
@@ -113,7 +122,7 @@
             "*.lock",
             "dist"
           ],
-          "description": "Ignored URI's in the project tree. (gitignore syntax)"
+          "description": "FileTree: Paths to ignore in filetree dialog. (gitignore syntax)"
         },
         "chatcopycat.definitionsAllowList": {
           "type": "array",
@@ -121,7 +130,7 @@
             "type": "string"
           },
           "default": [],
-          "description": "Custom file extension support for copy file definitions. eg. ['.ts', '.js']"
+          "description": "DefinitionsFiles: Add support for custom extensions (['.ts', '.js'])"
         },
         "chatcopycat.definitionsIgnoreList": {
           "type": "array",
@@ -141,100 +150,106 @@
             "*.yml",
             "*.txt"
           ],
-          "description": "Ignored URI's for copy file definition. eg. ['*.logs', 'dist']"
+          "description": "DefinitionsFiles: Paths to ignore in select dialog. (gitignore syntax)"
         },
         "chatcopycat.customDiagnosticsMessage": {
           "type": "string",
           "default": "",
-          "description": "Custom diagonstics message"
+          "description": "Clipboard: Add a text to the diagnostics section"
         },
         "chatcopycat.customDefaultInquiryMessage": {
           "type": "string",
           "default": "",
-          "description": "Set a default inquiry message"
+          "description": "Clipboard: Set a default message that automatically populates during each fresh clipboard"
         },
         "chatcopycat.enableForceFocusLastTrackedEditor": {
           "type": "boolean",
           "default": true,
-          "description": "Force document focus for the copy command."
+          "description": "Clipboard: Force document focus (when focus is locked outside of document)."
+        },
+        "chatcopycat.showLanguageInSnippets": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clipboard: Add languageId in code blocks"
         },
         "chatcopycat.logLevelInChannel": {
           "type": "string",
-          "default": "DEBUG",
+          "default": "INFO",
           "enum": [
             "DEBUG",
             "INFO",
             "WARN",
             "ERROR"
           ],
-          "description": "Output channel LOGLEVEL"
+          "description": "Extension: Set log level"
         },
         "chatcopycat.defaultMessageTruncate": {
           "type": "number",
           "default": 200,
-          "description": "Log message max char length. 0 = disabled"
+          "description": "Extension: Log message max length (0 = no limit)"
         },
         "chatcopycat.defaultDataTruncate": {
           "type": "number",
           "default": 500,
-          "description": "Log data object max char length. 0 = disabled"
+          "description": "Extension: Log data object max length (0 = no limit)"
         },
         "chatcopycat.enableFolderWatchingForWindowReload": {
           "type": "boolean",
-          "default": true,
-          "description": "Development - Reload window on pkg build + install detection"
-        },
-        "chatcopycat.showLanguageInSnippets": {
-          "type": "boolean",
           "default": false,
-          "description": "Show code language in code blocks"
+          "description": "Development: Reload window after completed build and install (file watcher)"
         },
         "chatcopycat.enableDevelopmentMode": {
           "type": "boolean",
           "default": false,
-          "description": "Enabled dev functions"
+          "description": "Development: Enabled dev functionality"
         }
       }
     },
     "commands": [
       {
         "command": "chatcopycat.copyCode",
-        "title": "CCCat: Copy selection or document",
-        "group": "chatcopycat"
+        "title": "CCCat: Copy selection or document (or append to clipboard)",
+        "group": "chatcopycat",
+        "description": "Copies if no previous content, appends if filetree or previous content exists in clipboard (and diagnostics/references/inquirty type). Can close inquiry dialog with copy key binding"
       },
       {
         "command": "chatcopycat.getFileTree",
-        "title": "CCCat: Copy file tree",
-        "group": "chatcopycat"
+        "title": "CCCat: Copy filetree (or append to clipboard)",
+        "group": "chatcopycat",
+        "description": "Copies if no previous content, replaces previous filetree in clipboard, prepends if inquiry is present in clipboard"
+
       },
       {
         "command": "chatcopycat.copyDefinitions",
-        "title": "CCCat: Copy document defintions",
+        "title": "CCCat: Copy defintions from current document (to clipboard)",
         "group": "chatcopycat"
       },
       {
         "command": "chatcopycat.copyDefinitionsFromFiles",
-        "title": "CCCat: Copy workspace defintions",
-        "group": "chatcopycat"
+        "title": "CCCat: Copy defintions from selected workspace files (to clipboard)",
+        "group": "chatcopycat",
+        "description": "Open a dialog and select which files or folders to copy definitions from, preserves selection. Can add paths to the ignorelist from dialog or reset selection cache"
       },
       {
         "command": "chatcopycat.getSymbolReferences",
-        "title": "CCCat: Copy symbol references",
-        "group": "chatcopycat"
+        "title": "CCCat: Copy symbol references (to clipboard)",
+        "group": "chatcopycat",
+        "description": "Copies references from selected symbol or if present in selection"
       },
       {
         "command": "chatcopycat.resetClipboard",
         "title": "CCCat: Clear/reset clipboard",
-        "group": "chatcopycat"
+        "group": "chatcopycat",
+        "description": "Clear the clipboard. Default: double tap copy key binding to clear (within 0.5sec)"
       },
       {
         "command": "chatcopycat.openMenu",
-        "title": "CCCat: Menu",
+        "title": "CCCat: Menu/Command Center",
         "group": "chatcopycat"
       },
       {
         "command": "chatcopycat.openSettings",
-        "title": "CCCat: Configuration",
+        "title": "CCCat: Configuration/Extension settings",
         "group": "chatcopycat"
       },
       {
@@ -265,7 +280,8 @@
       {
         "key": "ctrl+shift+c",
         "command": "chatcopycat.closeDialog",
-        "when": "!terminalFocus && chatcopycat:semaphoreDialogOpen == true"
+        "when": "!terminalFocus && chatcopycat:semaphoreDialogOpen == true",
+        "description": "Shortcut to close the inquiry dialog"
       }
     ]
   },
@@ -274,9 +290,10 @@
     "compile": "tsc --experimentalDecorators -p ./",
     "watch": "tsc --experimentalDecorators --watch",
     "pretest": "yarn compile && yarn lint",
-    "lint": "eslint src --ext .ts",
-    "lint:local": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache --cache-location ~/.cache/eslint/ --color --fix src --ext .ts",
-    "lint:debug": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --debug src --ext .ts",
+    "lint": "eslint --ext.ts src",
+    "lint:fix": "eslint --fix --ext.ts src",
+    "lint:local": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache --cache-location ~/.cache/eslint/ --color --fix --ext .ts src",
+    "lint:debug": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --debug --ext .ts src",
     "lint:config": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --print-config .eslintrc.json",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",

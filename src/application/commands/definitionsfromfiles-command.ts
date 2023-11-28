@@ -5,8 +5,8 @@ import {
 import * as vscode from 'vscode'
 import * as path from 'path'
 
-import {showFolderTreeDialog} from '../../adapters/ui/definitions/definitions-picker'
-import {IFileListItem, IFileTreeNode, IPathAndUri} from '../../domain/models/definition-types'
+import {showFolderTreeDialog} from '../../adapters/ui/components/filetree-dialog'
+import {IFileListItem, IFileTreeNode, IPathAndUri} from '../../domain/models/filetree-types'
 import {
   getCustomSupportedFileExtensions,
 } from '../../domain/services/definitions-utils'

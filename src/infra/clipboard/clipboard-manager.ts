@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import {StatusBarManager, statusBarManager} from '../../interfaces/statusbar'
 import {log} from '../../infra/logging/log-base'
 import {AsyncLogDecorator} from '../../infra/logging/log-decorator'
 import {LogLevel} from '../../infra/logging/types'
+import {StatusBarManager, statusBarManager} from '../vscode/statusbar-manager'
 /**
  * Manages clipboard operations for the ChatCopyCat extension, including copying, reading,
  * appending, and prepending text to the clipboard. It also interacts with the StatusBarManager

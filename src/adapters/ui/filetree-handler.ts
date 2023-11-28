@@ -2,64 +2,21 @@ import * as vscode from 'vscode'
 import {
   IFileTreeNode,
   IFileListItem,
-  IFileTreeDialogItem,
-} from '../../../domain/models/definition-types'
+  IFileTreeDialogItem
+} from '../../domain/models/filetree-types'
 import {
   convertFileTreeNodeToItem,
   findNodeByPath,
   extractAllFiles,
-  getCustomSupportedFileExtensions,
   handleIgnoreItemButton,
   handleIgnoreResetButton,
   handleSelectionResetButton,
-} from '../../../domain/services/definitions-utils'
-import {StateStore, configStore} from '../../../infra/config'
-import {getFileTree} from '../../../infra/file-tree/tree-transform'
-import {log} from '../../../infra/logging/log-base'
-import {createQuickPick, initQuickPick} from '../dialog/dialog-components'
-import {ignoreButton, ignoreResetButton, cacheResetButton} from './definitions-components'
-
-/**
- * Displays a Quick Pick interface with a tree structure of files and folders.
- * Allows users to select multiple items for processing definitions.
- *
- * @param fileTree - Array of file tree nodes representing files and folders.
- * @returns A Promise that resolves to an array of selected file list items.
- */
-export async function showFolderTreeDialog(fileTree: IFileTreeNode[]): Promise<IFileListItem[]> {
-  const quickPickItems = fileTree.flatMap(node => convertFileTreeNodeToItem(node))
-  const definitionsAutoSelect =
-    StateStore.instance.getState<string[]>('definitionsAutoSelect') ?? []
-  const initialAutoSelect = new Set(definitionsAutoSelect)
-  const selectedItems: IFileTreeDialogItem[] = []
-  quickPickItems.forEach(item => {
-    if (initialAutoSelect.has(item.filePath)) {
-      selectedItems.push(item)
-    }
-  })
-
-  const quickPick = createQuickPick<IFileTreeDialogItem>(
-    quickPickItems,
-    selectedItems,
-    'Copy Definition from Files',
-    'Select files or folders to copy definitions from',
-    true,
-  )
-  quickPick.onDidTriggerItemButton(
-    async (e: vscode.QuickPickItemButtonEvent<IFileTreeDialogItem>) =>
-      await handleButtonAction(e.button, e.item, quickPick),
-  )
-
-  const result = await initQuickPick<IFileTreeDialogItem>(quickPick)
-
-  if (!result) {
-    return []
-  }
-
-  const mutableResult = [...result]
-  updateDialogAutoselect(mutableResult, definitionsAutoSelect)
-  return processSelectionResults(mutableResult, fileTree)
-}
+} from '../../domain/services/definitions-utils'
+import {StateStore, configStore} from '../../infra/config'
+import {getFileTree} from '../../infra/file-tree/tree-transform'
+import {log} from '../../infra/logging/log-base'
+import {ignoreButton, ignoreResetButton, cacheResetButton} from './components/filetree-dialog'
+import {LanguageService} from '../../domain/services/language-service'
 
 /**
  * Updates the auto select state based on the user's selections in the Quick Pick.
@@ -67,7 +24,7 @@ export async function showFolderTreeDialog(fileTree: IFileTreeNode[]): Promise<I
  * @param result - Array of selected items from the Quick Pick.
  * @param definitionsAutoSelect - Array of paths that are auto-selected.
  */
-function updateDialogAutoselect(
+export function updateDefinitionsDialogAutoselect(
   result: IFileTreeDialogItem[],
   definitionsAutoSelect: string[],
 ) {
@@ -81,7 +38,7 @@ function updateDialogAutoselect(
     path => result.some(item => item.filePath === path) ?? true,
   )
 
-  StateStore.instance.setState<string[]>('definitionsAutoSelect', updatedAutoSelect)
+  StateStore.setState<string[]>('definitionsAutoSelect', updatedAutoSelect)
 }
 
 /**
@@ -92,7 +49,7 @@ function updateDialogAutoselect(
  * @param fileTree - Array of file tree nodes to search for files.
  * @returns An array of file list items based on the selected items.
  */
-function processSelectionResults(
+export function processSelectionResults(
   result: IFileTreeDialogItem[],
   fileTree: IFileTreeNode[],
 ): IFileListItem[] {
@@ -133,7 +90,7 @@ function processSelectionResults(
  */
 export async function refreshDialog(quickPick: vscode.QuickPick<IFileTreeDialogItem>) {
   const currentPickedItemsPaths = new Set(quickPick.selectedItems.map(item => item.filePath))
-  const allowExtList = await getCustomSupportedFileExtensions()
+  const allowExtList = await LanguageService.getCustomSupportedFileExtensions()
   const customIgnoreList = configStore.get<string[]>('definitionsIgnoreList')
   const fileTree = await getFileTree(customIgnoreList, allowExtList)
   const quickPickItems = fileTree.flatMap(node => convertFileTreeNodeToItem(node))

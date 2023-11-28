@@ -4,7 +4,7 @@ import {
   initQuickPick,
   showQuickPick,
   IQuickPickItemAction
-} from '../../adapters/ui/dialog/dialog-components'
+} from '../../adapters/ui/components/window-components'
 import {
   configStore,
   settingsByTypeObject,

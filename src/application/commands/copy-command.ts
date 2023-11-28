@@ -1,18 +1,18 @@
+import {acitveEditorOrFocurLast} from '../../infra/vscode/editor'
+import {ConfigStore, SemaphoreService} from '../../infra/config'
+import {generateReferenceSections, generateSelectionSections} from '../../adapters/ui/editor-utils'
+import {getInquiryType} from '../../adapters/ui/components/inquiry-dialog'
+import {getLangOpts} from '../../infra/vscode/editor'
+import {handleActiveDialogs} from '../../adapters/ui/dialog/dialog-utils'
+import {ILangOpts} from '../../shared/types/types'
+import {processSymbolsWithComments} from './process-symbols-comments'
 import {TextEditor} from 'vscode'
 
-import {getLangOpts} from '../../domain/services/inquiry-utils'
-import {generateReferenceSections, generateSelectionSections} from '../../adapters/ui/editor-utils'
 import {
   quickCopyManager,
   headersInClipboard,
   updateClipboardWithCopy,
 } from '../../infra/clipboard'
-import {ConfigStore, SemaphoreStore} from '../../infra/config'
-import {ILangOpts} from '../../shared/types/types'
-import {getInquiryType} from '../../adapters/ui/dialog/inquiry-dialog'
-import {handleActiveDialogs} from '../../adapters/ui/dialog/dialog-utils'
-import {processSymbolsWithComments} from './process-symbols-comments'
-import {acitveEditorOrFocurLast} from '../../infra/vscode/editor'
 
 export const copyCode = async (): Promise<void> => {
   await ConfigStore.instance.onConfigReady()
@@ -34,11 +34,11 @@ export const copyCode = async (): Promise<void> => {
   const selectionSections: string[] = generateSelectionSections(editor, langOpts)
 
   let referenceSections = undefined
-  if(ConfigStore.instance.get('enableReferenceCopy')) {
+  if(ConfigStore.instance.get('enableReferenceWithCopy')) {
     const references = await processSymbolsWithComments(editor) ?? []
     referenceSections = generateReferenceSections(references)
   }
 
   await updateClipboardWithCopy(inquiryType, selectionSections, referenceSections, langOpts)
-  await SemaphoreStore.instance.setDialogState(false)
+  await SemaphoreService.setDialogState(false)
 }

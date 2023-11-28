@@ -25,4 +25,4 @@ def resize_and_crop_center(img_path, output_path, resize_size=(192, 192), crop_s
 
     result.save(output_path, "PNG")
 
-resize_and_crop_center("assets/logo.png", "images/png/logo_128.png")
+resize_and_crop_center("assets/128.png", "images/png/profile_128.png")

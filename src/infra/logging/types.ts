@@ -58,3 +58,4 @@ export interface ITraceInfo {
   err?: Error
   returnValue?: unknown
 }
+

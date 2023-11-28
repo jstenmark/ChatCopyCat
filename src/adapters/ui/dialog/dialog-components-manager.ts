@@ -8,7 +8,7 @@ import {isQuickPick, isInputBox, disposeAllEventHandlers} from './dialog-utils'
  * Ensures that only one component is active at a given time and handles
  * the queue of components to be displayed.
  */
-export class DialogComponentManager {
+export class DialogComponentManager implements vscode.Disposable {
   private _onDidClose = new vscode.EventEmitter<void>()
   public readonly onDidClose = this._onDidClose.event
 
