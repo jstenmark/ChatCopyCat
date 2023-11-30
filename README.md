@@ -46,7 +46,7 @@ Whether copying code, silencing suggestions,<br> or starting fresh, this command
 **Clipboard Do-Over**: Double-tap <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Made a mess? Clean slate in under half a second.
 
 
-> **:warning: WARNING** 
+> **WARNING** 
 > `copyCode` have the same key bind as `open new terminal`
 
 ### Key Binds
@@ -126,11 +126,11 @@ List of commands defined in the extension, you will find them in the command pal
 ---
 ## Language support 
 
-> **:writing_hand: NOTE** 
+> **NOTE** 
 > Configure settings per use-case, feature compatability migh lack for some languages
 
 
-> **:peace_symbol: Symbols** 
+> **Symbols** 
 > Check if your language supports symbols or definitions by looking at the`languageExtensionMap` in `src/shared/constants/consts.ts`. But you could add more languages too, hopefully they got the necessary providers registered in VSCode to handle all features
 >
 >
@@ -165,7 +165,7 @@ List of commands defined in the extension, you will find them in the command pal
 *..or just tweak settings in the usual VS Code settings area under "ChatCopyCat"*
 
 
-> **:writing_hand: NOTE**:  Configure settings per use-case, feature compatability migh lack for some languages
+> **NOTE**:  Configure settings per use-case, feature compatability migh lack for some languages
 
 
 
