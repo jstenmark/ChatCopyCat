@@ -24,7 +24,7 @@ Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 
 ---
 ## Chilled-Out Features 
-- **Paste & Relax**: Just do a few :scissors: to get prompt-ready, or don't. No pressure. 
+- **Paste & Relax**: Just do a few copies to get prompt-ready, or don't. No pressure. 
 - **Clipboard Harmony**: Appends your code snippets or project context in a symphony of productivity.
 - **Versatile Selection**: Select one, select all—bring some diagnostics, references included for free.
 - **Trim the fat**: *Minify*? *Tabify*? *Cleanify*? Sure, if your context window calls for it.
@@ -33,17 +33,17 @@ Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 - **You Do You**: Customize if you want, however you want, or go with the flow. This cat's not judging.
 
 ---
-## Keybindings - No Overload, Promise :smirk_cat:
+## Keybindings - No Overload, Promise
 > <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> That’s it, no key combo craziness.<br>
  
 Whether copying code, silencing suggestions,<br> or starting fresh, this command adjusts to your context
 
 
-:zap: **Quick Copy**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> -  Snag your code, style it up, make it prompt-ready.
+**Quick Copy**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> -  Snag your code, style it up, make it prompt-ready.
 
-:scream: **Silence Suggestions**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Quiets down those pesky suggestions instantly.
+**Silence Suggestions**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Quiets down those pesky suggestions instantly.
 
-:skull_and_crossbones: **Clipboard Do-Over**: Double-tap <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Made a mess? Clean slate in under half a second.
+**Clipboard Do-Over**: Double-tap <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Made a mess? Clean slate in under half a second.
 
 
 > **:warning: WARNING** 
@@ -55,7 +55,7 @@ Whether copying code, silencing suggestions,<br> or starting fresh, this command
    - **When**: Active when focus is not in the terminal, and the editor has text focus without any open dialog or Quick Open menu.
    - **Description**: This keybinding is the heart of ChatCopyCat, handling multiple actions based on context. It copies the current selection or the entire document, appends to existing clipboard content, and interacts with various features like file tree, diagnostics, and inquiry dialogs. It's a versatile shortcut that adapts to the user's current focus and clipboard content.
 
-:heavy_multiplication_x: **Close Dialog Keybinding** 
+**Close Dialog Keybinding** 
    - **Key**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
    - **When**: Active when a dialog is open, and the focus is not in the terminal.
    - **Description**: A convenient shortcut to close open inquiry dialogs within the extension. This keybinding ensures that users can quickly dismiss dialogs without disrupting their workflow, maintaining the efficiency and fluidity of the coding process.
@@ -66,7 +66,7 @@ Whether copying code, silencing suggestions,<br> or starting fresh, this command
   - **Description**: Adds an option in the editor's context menu to copy symbol references. This feature allows users to right-click on a symbol (like a function or method) in the editor and quickly copy all its references to the clipboard, enhancing code navigation and analysis.
 
 
-### :atom_symbol: Commands 
+### Commands 
 List of commands defined in the extension, you will find them in the command palette under the  `CCCat: .. ` -namespace. Or some of them in the ChatCopyCat Menu.
 
 
@@ -124,7 +124,7 @@ List of commands defined in the extension, you will find them in the command pal
   - **Usage**: Chained through an watchfile event listener that listens for a filewrite after the extension is installed, see the package.json-script `yarn pkg`.
 
 ---
-## :hotsprings: Language support 
+## Language support 
 
 > **:writing_hand: NOTE** 
 > Configure settings per use-case, feature compatability migh lack for some languages
@@ -142,7 +142,7 @@ List of commands defined in the extension, you will find them in the command pal
   - Minification and tabification etc is using a default handler, it's not *that* bad.
   - Langugages with similar syntax (comments, decoratos) should have support as well.
 
-> **:writing_hand: NOTE**: 
+> **NOTE**: 
 > Extension adhere to the vscode languages api on best effor, some functionalities are built with TypeScript in mind.
 
 - **Decorator identifiers**: `@` 
@@ -157,8 +157,8 @@ List of commands defined in the extension, you will find them in the command pal
   - *Language independent* - configurable
 
 
-## :infinity: Settings? Sure, If You Want
-> :airplane: ***In a hurry?*** 
+## Settings? Sure, If You Want
+> ***In a hurry?*** 
 > Open the command pallete or extension menu and look for `CCCat: Config..` <br>
 > Psst.. *You can also reset to defauls here*
 
@@ -187,7 +187,7 @@ List of commands defined in the extension, you will find them in the command pal
 
 - **`logLevelInChannel`**: Adjust the log level for debugging.
 
-### :gear: All settings
+### All settings
 
 <details>
 <summary>Clipboard</summary>
@@ -279,18 +279,18 @@ List of commands defined in the extension, you will find them in the command pal
 </details>
 
 
-## :medical_symbol: Staying Fresh
+## Staying Fresh
 Right now, ChatCopyCat is all about choice—grab what you need, tag it if you feel like it, and keep it simple.
 
 - **[Future Brainwaves](ROADMAP.md)**: We’re all about evolving without complicating.
 
 For now, whether it's a snippet or the whole shebang, we're keeping it casual and integrated.
 
-## :kissing_cat: Open Source Love 
+## Open Source Love 
 ChatCopyCat is yours, free and easy, under the [MIT License](LICENSE.md). Share, tweak, be yourself, do your thing.
 
 
-## :sunny: Alley-Oop!
+## Alley-Oop!
 Join the ChatCopyCat community on [GitHub](https://github.com/jstenmark/ChatCopyCat). Share your experience, suggest features, or contribute to the project. Bugs, brainwaves, PRs—all welcome. Your insights make us better!
 
 - Need support or want ot get in contact? Check out the git repo or the vscode market page 
