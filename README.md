@@ -8,7 +8,7 @@
 
 #### VSCode AI prompt workflow utility 
 
-Effortlessly utilize AI prompts in your coding workflow with ChatCopyCat :cat: - the subtle yet powerful VS Code extension 
+Effortlessly utilize AI prompts in your coding workflow with ChatCopyCat - the subtle yet powerful VS Code extension 
 
 </div>
 
