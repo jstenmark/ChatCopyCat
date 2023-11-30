@@ -34,7 +34,7 @@ export function getContentSection(
   langOpts: ILangOpts,
   relativePathOrBasename: string,
 ): IContentSection {
-  const textContent = editor.document.getText(selection)
+  const textContent = selection ? editor.document.getText(selection) : editor.document.getText()
   const textSection = handleFileLanguageId(textContent, langOpts).trimEnd()
   const enableDiagnostics = configStore.get<boolean>('enableDiagnostics')
   const showLangInPerSnippet: boolean = configStore.get('showLanguageInSnippets')

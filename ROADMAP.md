@@ -1,11 +1,9 @@
 
 # Wishlist
-- anonymization of inquirys to aid privacy issues
+- clipboard token count
+- anonymization of inquirys to aid privacy concerns
 - further token window opimizations
 - improved clipboard management/context store
-- include syntax/code problmes from the UI
-- customizable question types eg. `Add docstrings to the code`
-- clipboard preview
 - take more inspiration from latest cursor blogpost, codeium got some good stuff too
 
 

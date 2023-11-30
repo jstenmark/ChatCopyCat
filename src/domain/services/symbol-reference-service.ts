@@ -53,6 +53,7 @@ export class SymbolReferenceService {
     if(symbol.kind === vscode.SymbolKind.Class) {
       return  SymbolProvider.getClassSignature(document,symbol)
     }
+
     return document.getText(rangeDecoratorsComments)
   }
 

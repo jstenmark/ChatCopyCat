@@ -1,8 +1,9 @@
 import * as vscode from 'vscode'
-import {getContentSection,codeBlock} from '../../domain/models/inquiry-template'
-import {ISymbolReference} from '../../domain/models/lang-types'
-import {ILangOpts, IContentSection} from '../../shared/types/types'
+import {codeBlock, getContentSection} from '../../domain/models/inquiry-template'
 import {getRelativePathOrBasename} from '../../infra/system/file-utils'
+import {IContentSection, ILangOpts} from '../../shared/types/types'
+import {ISymbolReference} from '../../domain/models/lang-types'
+import {log} from '../../infra/logging/log-base'
 
 /**
  * Generates content sections from the selections in a text editor.
@@ -26,6 +27,7 @@ export function generateSelectionSections(
       .filter(section => section.selectionSection.length > 0)
       .map(section => section.selectionSection)
   } else {
+    log.debug('empty selection')
     const {selectionSection}: IContentSection = getContentSection(
       undefined,
       editor,

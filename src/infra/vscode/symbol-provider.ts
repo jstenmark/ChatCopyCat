@@ -109,7 +109,6 @@ export class SymbolProvider {
 
     // Method Handling
     if (symbol.kind === vscode.SymbolKind.Method) {
-      // TODO: Implement more sophisticated logic for overloaded methods
       if (parentKind === vscode.SymbolKind.Class) {
         return Action.Copy
       } //CopyWithChildren
@@ -119,20 +118,29 @@ export class SymbolProvider {
     if (symbol.kind === vscode.SymbolKind.Function) {
       if(symbol.children.some(childSymbol => childSymbol.kind === vscode.SymbolKind.Class)) {
         return Action.CopyWithChildren
+      } else {
+        return Action.Copy
       }
-      log.info('Function:'+symbol.name, symbol.children)
     }
 
+    // Function Handling
+    if (symbol.kind === vscode.SymbolKind.Variable) {
+      if(symbol.children.some(childSymbol => childSymbol.kind === vscode.SymbolKind.Class)) {
+        return Action.CopyWithChildren
+      } else {
+        return Action.Copy
+      }
+    }
 
-    // Default actions
+    // Default Handling
     if (symbolKindBlacklist.has(symbol.kind)) {
       return Action.Skip
-    }
-    if (symbolKindEncloseChild.has(symbol.kind)) {
+    } else if (symbolKindEncloseChild.has(symbol.kind)) {
       return Action.CopyWithChildren
+    } else {
+      return Action.Copy
     }
 
-    return Action.Copy
   }
 
   static extendRangeToIncludeDecoratorsAndComments(
@@ -169,9 +177,7 @@ export class SymbolProvider {
     return new vscode.Range(new vscode.Position(startLine, 0), range.end)
   }
 
-  static createSymbolIdentifier(uri: vscode.Uri, symbol: vscode.DocumentSymbol): string {
-    return `${uri.toString()}-${symbol.kind}-${symbol.name}-${symbol.range.start.line}:${symbol.range.start.character}-${symbol.range.end.line}:${symbol.range.end.character}`
-  }
+
 
   static getClassSignature(document: vscode.TextDocument, classSymbol: vscode.DocumentSymbol): string {
     const startLine = classSymbol.range.start.line
@@ -194,9 +200,10 @@ export class SymbolProvider {
     return document.getText(signatureRange).trim()
   }
 
-
+  static createSymbolIdentifier(uri: vscode.Uri, symbol: vscode.DocumentSymbol): string {
+    return `${uri.toString()}-${symbol.kind}-${symbol.name}-${symbol.range.start.line}:${symbol.range.start.character}-${symbol.range.end.line}:${symbol.range.end.character}`
+  }
 }
-
 
 enum Action {
   Copy,
@@ -204,7 +211,6 @@ enum Action {
   CopyWithChildren,
   CopySignature
 }
-
 
 /**
 1.  File - The 'File' symbol kind.

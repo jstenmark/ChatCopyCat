@@ -18,8 +18,6 @@ export const processSymbolsWithComments = async (editor: vscode.TextEditor): Pro
     return []
   }
 
-  // TODO: load document per location in the processSymbolsWithComments for-of loop
-  // const documents = await Promise.all(locations.map(location => vscode.workspace.openTextDocument(location.uri)))
   return SymbolReferenceService.processSymbolsWithComments(
     locations,
     symbolKindBlacklist,

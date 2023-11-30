@@ -35,9 +35,11 @@ export interface ILogMethods {
   warn: LogFunction
   [method: string]: LogFunction | LogSink
 }
+
 export interface ILogOpts {
   truncate?: number
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LogMixinConstructor = new (...args: any[]) => object
 
@@ -58,4 +60,3 @@ export interface ITraceInfo {
   err?: Error
   returnValue?: unknown
 }
-

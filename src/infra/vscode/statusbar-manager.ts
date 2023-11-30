@@ -29,10 +29,7 @@ export class StatusBarManager implements vscode.Disposable {
     )
     this.statusBarItem.command = 'chatcopycat.openMenu'
     this.statusBarItem.name = 'ChatCopyCat status'
-    this.statusBarItem.tooltip = new vscode.MarkdownString(
-      '$(settings) $(comment-discussion) $(comment-draft) $(comment-unresolved) $(comment) Click to open menu',
-      true, // TODO: change depending on content
-    )
+    this.statusBarItem.tooltip = new vscode.MarkdownString('\n$(settings) Click to open menu\n',true)
     this.statusBarItem.tooltip.isTrusted = true
 
     this.updateState()
@@ -41,8 +38,8 @@ export class StatusBarManager implements vscode.Disposable {
   /**
    * Increases the copy count by one and updates the status bar item state.
    */
-  public increaseCopyCount(): void {
-    this.copyCount = this.copyCount + 1
+  public increaseCopyCount(add?:number): void {
+    this.copyCount = add ? this.copyCount + add : this.copyCount + 1
     this.updateState()
   }
 
@@ -60,10 +57,10 @@ export class StatusBarManager implements vscode.Disposable {
    * Changes the displayed text and background color.
    */
   private updateState() {
-    this.statusBarItem.text = `$(clippy) CopyCats: ${this.copyCount}`
+    this.statusBarItem.text = `$(comment-discussion) CopyCats: ${this.copyCount}`
 
     if (this.copyCount > 0) {
-      this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground')
+      this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground')
     } else {
       this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.defaultBackground')
     }

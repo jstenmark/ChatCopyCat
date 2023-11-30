@@ -87,3 +87,5 @@ export class ClipboardManager implements vscode.Disposable {
 }
 
 export const clipboardManager = new ClipboardManager(statusBarManager)
+
+// https://github.com/microsoft/vscode/blob/main/src/vs/platform/clipboard/common/clipboardService.ts

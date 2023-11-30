@@ -29,6 +29,7 @@
     "url": "https://github.com/jstenmark/ChatCopyCat/issues"
   },
   "pricing": "Free",
+  "extensionKind": ["workspace"],
   "galleryBanner": {
     "color": "#5c2d91",
     "theme": "dark"
@@ -42,6 +43,12 @@
     "assistant",
     "chatbot"
   ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "Got some fs calls, exec handlers etc. Go with your gut."
+    }
+  },
   "contributes": {
     "configuration": {
       "type": "object",
@@ -221,12 +228,12 @@
       },
       {
         "command": "chatcopycat.copyDefinitions",
-        "title": "CCCat: Copy defintions from current document (to clipboard)",
+        "title": "CCCat: Copy defintions from document (to clipboard)",
         "group": "chatcopycat"
       },
       {
         "command": "chatcopycat.copyDefinitionsFromFiles",
-        "title": "CCCat: Copy defintions from selected workspace files (to clipboard)",
+        "title": "CCCat: Copy defintions from files (to clipboard)",
         "group": "chatcopycat",
         "description": "Open a dialog and select which files or folders to copy definitions from, preserves selection. Can add paths to the ignorelist from dialog or reset selection cache"
       },
@@ -267,7 +274,8 @@
       "editor/context": [
         {
           "command": "chatcopycat.getSymbolReferences",
-          "group": "navigation"
+          "group": "navigation",
+          "when": "!terminalfocus && editorTextFocus"
         }
       ]
     },

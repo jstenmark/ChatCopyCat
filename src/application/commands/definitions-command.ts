@@ -2,6 +2,7 @@
 import * as vscode from 'vscode'
 import {Notify} from '../../infra/vscode/notification'
 import {clipboardManager} from '../../infra/clipboard'
+import {statusBarManager} from '../../infra/vscode/statusbar-manager'
 
 
 export async function copyDefinitions(): Promise<void> {
@@ -17,4 +18,5 @@ export async function copyDefinitions(): Promise<void> {
   )
 
   await clipboardManager.copyToClipboard(symbols.join('\n\n'))
+  statusBarManager.updateCopyCount(symbols.length)
 }

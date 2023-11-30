@@ -16,6 +16,7 @@ import {log} from '../../infra/logging/log-base'
 import {getFileTree} from '../../infra/file-tree/tree-transform'
 import {Notify} from '../../infra/vscode/notification'
 import {codeBlock} from '../../domain/models/inquiry-template'
+import {statusBarManager} from '../../infra/vscode/statusbar-manager'
 
 export async function copyDefinitionsFromFiles(): Promise<void> {
   try {
@@ -29,6 +30,7 @@ export async function copyDefinitionsFromFiles(): Promise<void> {
     await window.showInformationMessage(
       `Copied definitions from ${allDefinitions.length} files to clipboard.`,
     )
+    statusBarManager.updateCopyCount(allDefinitions.length)
   } catch (error) {
     log.error('Error copying definitions from files:', error)
     Promise.resolve(window.showErrorMessage('Error occurred while copying definitions.')).catch(

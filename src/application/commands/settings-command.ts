@@ -183,7 +183,7 @@ export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>)
     })
 
     if (result?.find(item => 'special' in item && item.special)) {
-      const newItem = await vscode.window.showInputBox({prompt: 'Enter new item'})
+      const newItem = await vscode.window.showInputBox({prompt: 'Enter new item', title: `Configure ${setting.label}`})
       if (newItem !== undefined) {
         // Handle different types of array items
         if (itemType === 'number') {
@@ -227,6 +227,7 @@ export async function handleSettingWithEnum<T = unknown>(
     })
 
     const selectedEnum = await showQuickPick<IQuickPickItemAction>(enums, {
+      title: `Configure ${setting.label}`,
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       placeHolder: `Current: '${currentValue}'. Change '${setting.settingKey}'`,
     })
@@ -243,6 +244,7 @@ export async function handleSettingWithEnum<T = unknown>(
 export async function editNumberSetting(key: string) {
   const currentValue = configStore.get<number>(key)
   const newValue = await vscode.window.showInputBox({
+    title: `Configure ${key}`,
     prompt: `Enter new value for '${key}' (number)`,
     value: currentValue.toString(),
     validateInput: text => (isNaN(parseFloat(text)) ? 'Please enter a valid number' : null),

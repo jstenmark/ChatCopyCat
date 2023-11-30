@@ -1,6 +1,7 @@
 import {getMetadataSection} from '../../domain/models/inquiry-template'
 import {selectionHeader, fileTreeHeader, fileTreeEnd} from '../../shared/constants/consts'
 import {IHeadersPresent, IHeaderIndex, ILangOpts} from '../../shared/types/types'
+import {statusBarManager} from '../vscode/statusbar-manager'
 import {clipboardManager} from './clipboard-manager'
 
 /**
@@ -75,7 +76,6 @@ export async function replaceFileListInClipboard(newFileListTemplate: string): P
         true,
       )
     } else {
-      // Add fileTree , copyCount=1
       await clipboardManager.copyToClipboard(newFileListTemplate, true)
     }
   }
@@ -114,7 +114,19 @@ export async function updateClipboardWithCopy(
       clipboardContent,
       selectionHeaderPresent,
     )
+    statusBarManager.increaseCopyCount(referenceSections?.length)
+
   } else {
     await clipboardManager.copyToClipboard(clipboardUpdateContent, true)
+    statusBarManager.increaseCopyCount(selectionSections.length + referenceSections!.length || 0)
+
   }
 }
+
+//interface IUpdateTooltip {
+//  filetree: boolean
+//  references: boolean
+//  definitions: boolean
+//  multiCopy: boolean
+//  copy: boolean
+//}
