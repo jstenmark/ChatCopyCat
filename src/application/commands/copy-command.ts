@@ -1,4 +1,4 @@
-import {acitveEditorOrFocurLast} from '../../infra/vscode/editor'
+import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
 import {ConfigStore, SemaphoreService} from '../../infra/config'
 import {generateReferenceSections, generateSelectionSections} from '../../adapters/ui/editor-utils'
 import {getInquiryType} from '../../adapters/ui/components/inquiry-dialog'
@@ -13,10 +13,11 @@ import {
   headersInClipboard,
   updateClipboardWithCopy,
 } from '../../infra/clipboard'
+import {getContentConfig} from '../../domain/models/inquiry-template'
 
 export const copyCode = async (): Promise<void> => {
   await ConfigStore.instance.onConfigReady()
-  const editor: TextEditor | undefined = await acitveEditorOrFocurLast()
+  const editor: TextEditor | undefined = await activeEditorOrFocusLast()
 
   if (
     handleActiveDialogs() ||
@@ -26,19 +27,21 @@ export const copyCode = async (): Promise<void> => {
     return
   }
 
+  const config = getContentConfig()
+
   const inquiryType: string[] | undefined = !(await headersInClipboard()).selectionHeaderPresent
-    ? await getInquiryType()
+    ? await getInquiryType(config)
     : undefined
 
   const langOpts: ILangOpts = getLangOpts(editor)
-  const selectionSections: string[] = generateSelectionSections(editor, langOpts)
+  const selectionSections: string[] = generateSelectionSections(editor, langOpts, config)
 
   let referenceSections = undefined
   if(ConfigStore.instance.get('enableReferenceWithCopy')) {
-    const references = await processSymbolsWithComments(editor) ?? []
-    referenceSections = generateReferenceSections(references)
+    const references = await processSymbolsWithComments(editor,config) ?? []
+    referenceSections = generateReferenceSections(references,config)
   }
 
-  await updateClipboardWithCopy(inquiryType, selectionSections, referenceSections, langOpts)
+  await updateClipboardWithCopy(inquiryType, selectionSections, referenceSections, langOpts,config)
   await SemaphoreService.setDialogState(false)
 }

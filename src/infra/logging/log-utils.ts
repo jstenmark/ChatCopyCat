@@ -2,7 +2,7 @@ import {log} from './log-base'
 import {ILogMethods, LogFunction, ICallInfo, ITraceInfo, ILogInfo, LogLevel} from './types'
 
 /**
- * Utility functions for logging, including methods for safe stringification of values, truncating strings, and
+ * Utility functions for logging, including methods to safely stringify of values, truncating strings, and
  * formatting log messages.
  */
 
@@ -43,12 +43,12 @@ function normalizeCall(call: ICallInfo): ICallInfo {
   return {targetType, name, args}
 }
 function formatMessages(traced: ITraceInfo, call: ICallInfo) {
-  const normalziedCall = normalizeCall(call)
+  const normalizedCall = normalizeCall(call)
 
   const ms = traced.elapsed
   const hasReturnValue = traced.returnValue ? 'truthy' : 'falsy'
 
-  return {ms, hasReturnValue, ...normalziedCall}
+  return {ms, hasReturnValue, ...normalizedCall}
 }
 
 export function truncate(str: string, maxLength: number | undefined = 300): string {

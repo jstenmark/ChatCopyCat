@@ -103,7 +103,7 @@
             "Optimize this code",
             "Fix the syntax/type errors",
             "Fix code logic issues",
-            "Debug and idenify issues",
+            "Debug and identify issues",
             "Improve error handling",
             "Improve code structure",
             "Add unit-tests",
@@ -129,7 +129,7 @@
             "*.lock",
             "dist"
           ],
-          "description": "FileTree: Paths to ignore in filetree dialog. (gitignore syntax)"
+          "description": "FileTree: Paths to ignore in file-tree dialog. (gitignore syntax)"
         },
         "chatcopycat.definitionsAllowList": {
           "type": "array",
@@ -179,6 +179,16 @@
           "default": true,
           "description": "Clipboard: Add languageId in code blocks"
         },
+        "chatcopycat.showPositionInCodeBlock": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clipboard: Show line-num in code blocks or diagnostics sections"
+        },
+        "chatcopycat.showPathInCodeBlock": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clipboard: Show file path in code blocks"
+        },
         "chatcopycat.logLevelInChannel": {
           "type": "string",
           "default": "INFO",
@@ -217,25 +227,25 @@
         "command": "chatcopycat.copyCode",
         "title": "CCCat: Copy selection or document (or append to clipboard)",
         "group": "chatcopycat",
-        "description": "Copies if no previous content, appends if filetree or previous content exists in clipboard (and diagnostics/references/inquirty type). Can close inquiry dialog with copy key binding"
+        "description": "Copies if no previous content, appends if file-tree or previous content exists in clipboard (and diagnostics/references/inquiry type). Can close inquiry dialog with copy key binding"
       },
       {
         "command": "chatcopycat.getFileTree",
-        "title": "CCCat: Copy filetree (or append to clipboard)",
+        "title": "CCCat: Copy file-tree (or append to clipboard)",
         "group": "chatcopycat",
-        "description": "Copies if no previous content, replaces previous filetree in clipboard, prepends if inquiry is present in clipboard"
+        "description": "Copies if no previous content, replaces previous file-tree in clipboard, prepends if inquiry is present in clipboard"
 
       },
       {
         "command": "chatcopycat.copyDefinitions",
-        "title": "CCCat: Copy defintions from document (to clipboard)",
+        "title": "CCCat: Copy definitions from document (to clipboard)",
         "group": "chatcopycat"
       },
       {
         "command": "chatcopycat.copyDefinitionsFromFiles",
-        "title": "CCCat: Copy defintions from files (to clipboard)",
+        "title": "CCCat: Copy definitions from files (to clipboard)",
         "group": "chatcopycat",
-        "description": "Open a dialog and select which files or folders to copy definitions from, preserves selection. Can add paths to the ignorelist from dialog or reset selection cache"
+        "description": "Open a dialog and select which files or folders to copy definitions from, preserves selection. Can add paths to the ignore-list from dialog or reset selection cache"
       },
       {
         "command": "chatcopycat.getSymbolReferences",
@@ -275,7 +285,7 @@
         {
           "command": "chatcopycat.getSymbolReferences",
           "group": "navigation",
-          "when": "!terminalfocus && editorTextFocus"
+          "when": "editorTextFocus && !(inQuickOpen || terminalFocus || filesExplorerFocus || inSearchEditor || searchViewletFocus || replaceInputBoxFocus)"
         }
       ]
     },
@@ -283,12 +293,13 @@
       {
         "key": "ctrl+shift+c",
         "command": "chatcopycat.copyCode",
-        "when": "!terminalFocus && editorTextFocus && chatcopycat:semaphoreDialogOpen == false && !inQuickOpen"
+        "when": "(editorTextFocus && !chatcopycat:semaphoreDialogOpen) && !(inQuickOpen || terminalFocus || filesExplorerFocus || inSearchEditor || searchViewletFocus || replaceInputBoxFocus)",
+        "description": "Copy, append, reset clipboard"
       },
       {
         "key": "ctrl+shift+c",
         "command": "chatcopycat.closeDialog",
-        "when": "!terminalFocus && chatcopycat:semaphoreDialogOpen == true",
+        "when": "chatcopycat:semaphoreDialogOpen && !terminalFocus",
         "description": "Shortcut to close the inquiry dialog"
       }
     ]
@@ -305,7 +316,7 @@
     "lint:config": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --print-config .eslintrc.json",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
-    "pkg": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt",
+    "pkg": "rm -f chatcopycat-*.vsix && yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt",
     "vsce:package": "vsce package --yarn",
     "vsce:package:pre": "vsce package --yarn --pre-release",
     "vsce:publish": "vsce publish",

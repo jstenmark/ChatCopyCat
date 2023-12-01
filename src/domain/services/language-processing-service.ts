@@ -1,59 +1,50 @@
-import {configStore} from '../../infra/config'
 import {defaultTabSize} from '../../shared/constants/consts'
 import {ILangOpts} from '../../shared/types/types'
+import {IContentConfig} from '../models/inquiry-template'
 import {cleanCodeTsJs, cleanSpacesTabsNewlines, tabify} from './language-transform-service'
 
-function handleTypeScriptFile(content: string, options: ILanguageHandlerOptions): string {
-  const cleaned = cleanCodeTsJs(content, options)
+function handleTypeScriptFile(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {
+  const cleaned = cleanCodeTsJs(content, options, config)
   return cleaned
 }
 
-function handleJavaScriptFile(content: string, options: ILanguageHandlerOptions): string {
-  const cleaned = cleanCodeTsJs(content, options)
+function handleJavaScriptFile(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {
+  const cleaned = cleanCodeTsJs(content, options, config)
   return cleaned
 }
 
-function handlePythonFile(content: string, options: ILanguageHandlerOptions): string {
-  const tabified = options.enableTabify ? tabify(content, options.tabSize) : content
-  const cleaned = options.spacesTabsNewlinesRemoval ? cleanSpacesTabsNewlines(tabified) : tabified
+function handlePythonFile(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {
+  const tabified = config.enableTabify ? tabify(content, options.tabSize) : content
+  const cleaned = config.enableSpacesTabsNewlinesRemoval ? cleanSpacesTabsNewlines(tabified) : tabified
   return cleaned
 }
 
-function defaultHandler(content: string, options: ILanguageHandlerOptions): string {
-  const tabified = options.enableTabify ? tabify(content, defaultTabSize) : content
-  const cleaned = options.spacesTabsNewlinesRemoval ? cleanSpacesTabsNewlines(tabified) : tabified
+function defaultHandler(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {
+  const tabified = config.enableTabify ? tabify(content, options.tabSize ?? defaultTabSize) : content
+  const cleaned = config.enableSpacesTabsNewlinesRemoval ? cleanSpacesTabsNewlines(tabified) : tabified
   return cleaned
 }
 
-export function handleFileLanguageId(content: string, langOpts: ILangOpts): string {
-  const enableTabify = configStore.get<boolean>('convertSpacesToTabs')
-  const disableComments = configStore.get<boolean>('enableCommentRemoval')
-  const spacesTabsNewlinesRemoval = configStore.get<boolean>('enableSpacesTabsNewlinesRemoval')
+export function handleFileLanguageId(content: string, langOpts: ILangOpts, config: IContentConfig): string {
 
   const options: ILanguageHandlerOptions = {
-    enableTabify,
-    disableComments,
-    spacesTabsNewlinesRemoval,
     tabSize: langOpts.tabSize,
     insertSpaces: langOpts.insertSpaces
   }
 
   switch (langOpts.language.toLowerCase()) {
     case 'typescript':
-      return handleTypeScriptFile(content, options)
+      return handleTypeScriptFile(content, options, config)
     case 'javascript':
-      return handleJavaScriptFile(content, options)
+      return handleJavaScriptFile(content, options ,config)
     case 'python':
-      return handlePythonFile(content, options)
+      return handlePythonFile(content, options, config)
     default:
-      return defaultHandler(content, options)
+      return defaultHandler(content, options, config)
   }
 }
 
 export interface ILanguageHandlerOptions {
-  enableTabify: boolean
-  disableComments: boolean
-  spacesTabsNewlinesRemoval: boolean
   tabSize: number
   insertSpaces: boolean
 }

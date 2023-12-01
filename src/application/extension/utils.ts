@@ -3,7 +3,6 @@ import {handlers} from './activation'
 import {ExtensionContext, commands} from 'vscode'
 import {IExtension, ICommand, ConfigStore} from '../../infra/config'
 import {Notify} from '../../infra/vscode/notification'
-import {errorMessage} from '../../shared/utils/validate'
 import {devCommands} from './activation'
 import {log} from '../../infra/logging/log-base'
 
@@ -35,8 +34,8 @@ async function exec(handler: () => Promise<void>): Promise<void> {
   try {
     return await handler()
   } catch (error) {
-    Notify.error(`Error executing handle:${errorMessage(error)}`, true, true)
-
+    Notify.error('Error executing handler')
+    log.error('Error executing handler', error, {truncate:0})
   }
 }
 function registerCommand(context: ExtensionContext, cmd: ICommand): void {

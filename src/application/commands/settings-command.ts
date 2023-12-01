@@ -15,11 +15,8 @@ import {
   ISpecialQuickPickItem,
 } from '../../infra/config'
 import {Notify} from '../../infra/vscode/notification'
+import {extName} from '../../shared/constants/consts'
 
-async function reopenSettings() {
-  // Any additional logic before reopening settings can be added here
-  await openSettings()
-}
 export const openSettings = async (): Promise<void> => {
   await configStore.onConfigReady()
   const settingsByType = settingsByTypeObject()
@@ -37,7 +34,7 @@ export const openSettings = async (): Promise<void> => {
   const quickPick = createQuickPick<IExtendedQuickPickItem>(
     quickPickItems,
     [],
-    'ChatCopyCat Settings',
+    `${extName} Settings`,
     'Setting to configure',
   )
   quickPick.onDidTriggerItemButton(async e => {
@@ -46,7 +43,7 @@ export const openSettings = async (): Promise<void> => {
       if (setting) {
         quickPick.dispose()
         await resetConfigButtonAction(setting.settingKey)
-        await reopenSettings()
+        await openSettings()
       }
     }
   })
@@ -87,6 +84,7 @@ export const openSettings = async (): Promise<void> => {
     }
     if (result) {
       Notify.info(`Setting '${settingKey}' updated`, true, true)
+      await openSettings()
     }
   }
 }
@@ -102,7 +100,7 @@ function getIconForType(type: PropertyType | undefined): vscode.ThemeIcon | unde
     case 'number':
       return new vscode.ThemeIcon('symbol-number')
     default:
-      return undefined // Return undefined if no specific icon is needed
+      return undefined // If no specific icon is needed
   }
 }
 
@@ -190,7 +188,7 @@ export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>)
           if (!isNaN(parseFloat(newItem))) {
             arrayValue.push(parseFloat(newItem) as unknown as T)
           } else {
-            Notify.error(`Coudlnt update '${setting.settingKey}', enter a valid number`, true, true)
+            Notify.error(`Couldn't update '${setting.settingKey}', enter a valid number`, true, true)
             return undefined
           }
         } else {
@@ -217,7 +215,7 @@ export async function handleSettingWithEnum<T = unknown>(
     const currentValue = configStore.get<T>(setting.settingKey)
     const defaultValue = configStore.getDefault<T>(setting.settingKey)
 
-    // Creating an array of IQuickPickItemAction objects
+    // Array of IQuickPickItemAction objects
     const enums = setting.settingObject.enum.map(item => {
       const isDefault = item === defaultValue
       const isSelected = item === currentValue

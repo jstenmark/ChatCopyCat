@@ -27,7 +27,7 @@ export async function getActiveEditor(): Promise<vscode.TextEditor | undefined> 
   const {activeTextEditor, visibleTextEditors} = vscode.window
 
   if (!visibleTextEditors.length) {
-    log.warn('No visible texteditor', {getActiveEditor, visibleTextEditors}, {truncate: 0})
+    log.warn('No visible text-editor', {getActiveEditor, visibleTextEditors}, {truncate: 0})
     return (lastTrackedTextEditor = undefined)
   }
 
@@ -38,7 +38,7 @@ export async function getActiveEditor(): Promise<vscode.TextEditor | undefined> 
   return lastTrackedTextEditor
 }
 
-export async function acitveEditorOrFocurLast() {
+export async function activeEditorOrFocusLast() {
   const activeTextEditor = await getActiveEditor()
 
   if (activeTextEditor) {

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import {extId, extName} from '../../shared/constants/consts'
 
 /**
  * Manages the status bar item for the ChatCopyCat extension in Visual Studio Code.
@@ -27,8 +28,8 @@ export class StatusBarManager implements vscode.Disposable {
       vscode.StatusBarAlignment.Left,
       100,
     )
-    this.statusBarItem.command = 'chatcopycat.openMenu'
-    this.statusBarItem.name = 'ChatCopyCat status'
+    this.statusBarItem.command = `${extId}.openMenu`
+    this.statusBarItem.name = extName
     this.statusBarItem.tooltip = new vscode.MarkdownString('\n$(settings) Click to open menu\n',true)
     this.statusBarItem.tooltip.isTrusted = true
 

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import {configStore} from '../config'
 import {log} from '../logging/log-base'
+import {IContentConfig} from '../../domain/models/inquiry-template'
 
 
 export class SymbolProvider {
@@ -35,23 +36,23 @@ export class SymbolProvider {
         const action = SymbolProvider.determineAction(symbolKindBlacklist, symbolKindEncloseChild, symbol, parentKind)
         let childSymbol = undefined
 
-        log.info(`SYMBOL:${symbol.name}\t KIND:${vscode.SymbolKind[symbol.kind]}\t`+
+        log.debug(`SYMBOL:${symbol.name}\t KIND:${vscode.SymbolKind[symbol.kind]}\t`+
         ` PARENTKIND:${parentKind ? vscode.SymbolKind[parentKind] : ''}` )
 
         switch (action) {
           case Action.Skip:
-            log.info('Skip')
+            log.debug('Skip')
             continue
           case Action.Copy:
-            log.info('Copy')
+            log.debug('Copy')
             return symbol
           case Action.CopySignature:
-            log.info('CopySignature')
+            log.debug('CopySignature')
             return symbol
           case Action.CopyWithChildren:
             childSymbol = SymbolProvider.findEnclosingSymbol(symbol.children, position, symbolKindBlacklist, symbolKindEncloseChild, symbol.kind)
             if (childSymbol) {
-              log.info('CopyWithChildren')
+              log.debug('CopyWithChildren')
               return childSymbol
             } else {
               log.info('CopyWithChildren didnt find more children')
@@ -76,7 +77,6 @@ export class SymbolProvider {
     }
 
     // TypeParameter Handling
-    // TODO: check
     if (symbol.kind === vscode.SymbolKind.TypeParameter) {
       if(parentKind === vscode.SymbolKind.Class) {
         return Action.Copy
@@ -147,6 +147,7 @@ export class SymbolProvider {
     document: vscode.TextDocument,
     range: vscode.Range,
     symbolKind: vscode.SymbolKind,
+    config: IContentConfig
   ): vscode.Range {
     let startLine = range.start.line
 
@@ -163,7 +164,7 @@ export class SymbolProvider {
       }
     }
 
-    if(!configStore.get<boolean>('enableCommentRemoval')) {
+    if(!config.enableCommentRemoval) {
       while (startLine > 0) {
         const lineText = document.lineAt(startLine - 1).text.trim()
         if (lineText.startsWith('//') || lineText.startsWith('*') || lineText.startsWith('/*')) {

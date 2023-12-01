@@ -12,52 +12,73 @@ export function getMetadataSection(
   headerIsInClipboard: boolean,
   langOpts: ILangOpts,
   isMultipleSelections: boolean,
+  config: IContentConfig
 ): string {
-  const inquiryTypeEnabled = configStore.get<boolean>('enableInquiryType')
-  const multipleSelectionns = isMultipleSelections ? ' // Multiple Selections from file' : undefined
+  const multipleSelections = isMultipleSelections ? ' // Multiple Selections' : undefined
   const inquiryTypeSection =
-    inquiryTypeEnabled && inquiryTypes && inquiryTypes.length > 0
+    config.enableInquiryType && inquiryTypes && inquiryTypes.length > 0
       ? `${inquiryTypes.join(',')}`
       : undefined
 
   return `${
     !headerIsInClipboard
-      ? generateHeader(inquiryTypeSection, langOpts.language) +
-        `${isMultipleSelections ? '\n - ' + multipleSelectionns : ''}`
-      : `\n---${isMultipleSelections ? multipleSelectionns : ''}`
+      ?  generateHeader(inquiryTypeSection, langOpts.language, config) +
+        `${isMultipleSelections ? '\n - ' + multipleSelections : ''}`
+      : `\n---${isMultipleSelections ? multipleSelections : ''}`
   }\n`
 }
+
+
+export interface IContentConfig {
+  enablePosition: boolean;
+  enablePath: boolean;
+  enableDiagnostics: boolean;
+  enableLanguage: boolean ;
+  enableInquiryType: boolean;
+  enableTabify: boolean;
+  enableCommentRemoval: boolean;
+  enableSpacesTabsNewlinesRemoval: boolean;
+}
+
+export const getContentConfig =  ():IContentConfig => ({
+  enablePosition: configStore.get<boolean>('showPositionInCodeBlock'),
+  enablePath: configStore.get<boolean>('showPathInCodeBlock'),
+  enableDiagnostics: configStore.get<boolean>('enableDiagnostics'),
+  enableLanguage: configStore.get<boolean>('showLanguageInSnippets'),
+  enableInquiryType: configStore.get<boolean>('enableInquiryType'),
+  enableTabify: configStore.get<boolean>('convertSpacesToTabs'),
+  enableCommentRemoval: configStore.get<boolean>('enableCommentRemoval'),
+  enableSpacesTabsNewlinesRemoval: configStore.get<boolean>('enableSpacesTabsNewlinesRemoval'),
+})
 
 export function getContentSection(
   selection: vscode.Selection | undefined,
   editor: vscode.TextEditor,
   langOpts: ILangOpts,
-  relativePathOrBasename: string,
+  relativePathOrBasename: string | undefined,
+  config: IContentConfig
 ): IContentSection {
   const textContent = selection ? editor.document.getText(selection) : editor.document.getText()
-  const textSection = handleFileLanguageId(textContent, langOpts).trimEnd()
-  const enableDiagnostics = configStore.get<boolean>('enableDiagnostics')
-  const showLangInPerSnippet: boolean = configStore.get('showLanguageInSnippets')
+  const textSection = handleFileLanguageId(textContent, langOpts, config).trimEnd()
 
-
-  const selectionDiagnostics = enableDiagnostics ? getAllDiagnostics(editor.document, selection) : []
-  const diagnosticsSection = getDiagnosticsSection(selectionDiagnostics) || ''
+  const selectionDiagnostics = getAllDiagnostics(editor.document, selection, config)
+  const diagnosticsSection = getDiagnosticsSection(selectionDiagnostics, config)
 
   const selectionSection = codeBlock(
     textSection,
     relativePathOrBasename,
-    showLangInPerSnippet ? langOpts.language : '',
-    selection?.start.line ? selection?.start.line + 1 : undefined
-  ) + `\n${diagnosticsSection}`
+    config.enableLanguage ? langOpts.language : undefined,
+    config.enablePosition && selection?.start.line ? selection?.start.line + 1 : undefined
+  ) + `\n${diagnosticsSection ? diagnosticsSection : ''}`
 
   return {selectionSection, selectionDiagnostics}
 }
 
 export const codeBlock = (
   code: string | string[],
-  path: string,
-  lang = '',
-  lineNum?: number
+  path: string | undefined,
+  lang: string | undefined,
+  lineNum: number | undefined
 ): string => {
   const codeText = Array.isArray(code) ? code.join('\n') : code
   const lineInfo = lineNum ? ` Ln:${lineNum}` : ''
@@ -68,9 +89,9 @@ const getCodeRange = (range:vscode.Range) =>
   `${range.start.line + 1}:${range.start.character + 1}-`
   + `${range.end.line + 1}:${range.end.character + 1}`
 
-export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[]): string => diagnostics.length === 0 ? '' :
+export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefined, config: IContentConfig): string | undefined => config.enableDiagnostics && diagnostics?.length === 0 ? undefined :
   `\n${configStore.get<string>('customDiagnosticsMessage')}` || '' +
-  '\n[Selection problems] (reporter ~location~ error)\n' + diagnostics.map(({source, severity, range, message}) =>
+  '\n[Selection problems] (reporter ~location~ error)\n' + diagnostics?.map(({source, severity, range, message}) =>
     `[${source}] ${vscode.DiagnosticSeverity[severity]}\tLn:${getCodeRange(range)}\n${message}`).join('\n').trim()
 
 
@@ -94,7 +115,11 @@ export function generateFilesTemplate(
     .trim()
 }
 
-const generateHeader = (inquiryType?: string, language?: string) =>
-  inquiryType
-    ? `${selectionHeader}: ${inquiryType} - ${language}]`
-    : `${selectionHeader} - ${language}]`
+const generateHeader = (inquiryType: string | undefined, language: string | undefined,  config: IContentConfig) =>{
+  const inquirySection = config.enableInquiryType  && inquiryType? `: ${inquiryType}` : ''
+  const languageSection = config.enableLanguage && language? ` - ${language}` : ''
+
+  return inquiryType && inquiryType !== ''
+    ? `${selectionHeader}${inquirySection}${languageSection}]`
+    : `${selectionHeader}${languageSection}]`
+}

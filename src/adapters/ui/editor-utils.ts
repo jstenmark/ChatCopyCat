@@ -1,9 +1,8 @@
 import * as vscode from 'vscode'
-import {codeBlock, getContentSection} from '../../domain/models/inquiry-template'
+import {IContentConfig, codeBlock, getContentSection} from '../../domain/models/inquiry-template'
 import {getRelativePathOrBasename} from '../../infra/system/file-utils'
 import {IContentSection, ILangOpts} from '../../shared/types/types'
 import {ISymbolReference} from '../../domain/models/lang-types'
-import {log} from '../../infra/logging/log-base'
 
 /**
  * Generates content sections from the selections in a text editor.
@@ -17,32 +16,33 @@ import {log} from '../../infra/logging/log-base'
 export function generateSelectionSections(
   editor: vscode.TextEditor,
   langOpts: ILangOpts,
+  config: IContentConfig
 ): string[] {
-  const relativePathOrBasename: string = getDocumentPath(editor)
+  const relativePathOrBasename = config.enablePath ? getDocumentPath(editor) : undefined
 
   if (editor.selections.some(selection => !selection.isEmpty)) {
     return editor.selections
       .filter(selection => !selection.isEmpty)
-      .map(selection => getContentSection(selection, editor, langOpts, relativePathOrBasename))
+      .map(selection => getContentSection(selection, editor, langOpts, relativePathOrBasename, config))
       .filter(section => section.selectionSection.length > 0)
       .map(section => section.selectionSection)
   } else {
-    log.debug('empty selection')
     const {selectionSection}: IContentSection = getContentSection(
       undefined,
       editor,
       langOpts,
       relativePathOrBasename,
+      config
     )
     return [selectionSection]
   }
 }
 
-export function generateReferenceSections(references: ISymbolReference[]): string[] {
+export function generateReferenceSections(references: ISymbolReference[], config: IContentConfig): string[] {
   return references.map(ref => {
-    const lineNum = ref.rangeDecoratorsComments?.start.line ? ref.rangeDecoratorsComments.start.line +1 : undefined
-    const lang = ref.langOpts?.language
-    return ref.text ? codeBlock(ref.text, ref.path ?? '', lang, lineNum) : ''
+    const lineNum = config.enablePosition && ref.rangeDecoratorsComments?.start.line ? ref.rangeDecoratorsComments.start.line +1 : undefined
+    const lang = config.enableLanguage ? ref.langOpts?.language : ''
+    return ref.text ? codeBlock(ref.text, config.enablePath && ref.path ? ref.path : '', lang, lineNum) : ''
   }).filter(section => section.length > 0)
 }
 
@@ -62,9 +62,12 @@ export const isFullFileSelected = (editor: vscode.TextEditor): boolean => {
 export function getAllDiagnostics(
   document: vscode.TextDocument,
   selection: vscode.Selection | undefined,
-): vscode.Diagnostic[] {
-  if (typeof vscode.Selection !== 'undefined') {
-    // TODO: foramt with TAP (Test Anything Protocol)
+  config: IContentConfig
+): vscode.Diagnostic[] | undefined {
+  if(!config.enableDiagnostics) {
+    return undefined
+  } else if (typeof vscode.Selection !== 'undefined') {
+    // TODO: format with TAP (Test Anything Protocol)
     return vscode.languages.getDiagnostics(document.uri).filter(({range}) => {
       return selection?.intersection(range)
     })

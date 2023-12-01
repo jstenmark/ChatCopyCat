@@ -1,4 +1,4 @@
-import {getMetadataSection} from '../../domain/models/inquiry-template'
+import {IContentConfig, getMetadataSection} from '../../domain/models/inquiry-template'
 import {selectionHeader, fileTreeHeader, fileTreeEnd} from '../../shared/constants/consts'
 import {IHeadersPresent, IHeaderIndex, ILangOpts} from '../../shared/types/types'
 import {statusBarManager} from '../vscode/statusbar-manager'
@@ -69,7 +69,7 @@ export async function replaceFileListInClipboard(newFileListTemplate: string): P
     await clipboardManager.copyToClipboard(updatedContent)
   } else {
     if (selectionHeaderPresent) {
-      // Prepend fileTree before seclection content, copyCount+1
+      // Prepend fileTree before selection content, copyCount+1
       await clipboardManager.prependToClipboard(
         newFileListTemplate.trim() + '\n',
         clipboardContent,
@@ -92,21 +92,23 @@ export async function updateClipboardWithCopy(
   selectionSections: string[],
   referenceSections: string[] | undefined,
   langOpts: ILangOpts,
+  config: IContentConfig
 ): Promise<void> {
   const {selectionHeaderPresent, fileTreeHeaderPresent, fileTreeEndPresent, clipboardContent} =
     await headersInClipboard()
 
   const fileMetadataSection = getMetadataSection(
-    inquiryType,
+    config.enableInquiryType ? inquiryType : undefined,
     selectionHeaderPresent,
     langOpts,
     selectionSections.length > 1 ? true : false,
+    config
   ).trim()
   const selectionContent = selectionSections.join('\n').trim()
   const referenceContent = referenceSections ? referenceSections.join('\n').trim()+'\n' : ''
-
   const clipboardUpdateContent = `\n${fileMetadataSection}\n${selectionContent}\n${referenceContent}`
 
+  const sectionCount = referenceSections?.length ? referenceSections.length + selectionSections.length : selectionSections.length
 
   if ((fileTreeHeaderPresent && fileTreeEndPresent) || selectionHeaderPresent) {
     await clipboardManager.appendToClipboard(
@@ -114,19 +116,11 @@ export async function updateClipboardWithCopy(
       clipboardContent,
       selectionHeaderPresent,
     )
-    statusBarManager.increaseCopyCount(referenceSections?.length)
+    statusBarManager.increaseCopyCount(sectionCount)
 
   } else {
     await clipboardManager.copyToClipboard(clipboardUpdateContent, true)
-    statusBarManager.increaseCopyCount(selectionSections.length + referenceSections!.length || 0)
+    statusBarManager.increaseCopyCount(sectionCount)
 
   }
 }
-
-//interface IUpdateTooltip {
-//  filetree: boolean
-//  references: boolean
-//  definitions: boolean
-//  multiCopy: boolean
-//  copy: boolean
-//}

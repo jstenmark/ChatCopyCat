@@ -3,20 +3,20 @@ import {configStore, SemaphoreService} from '../../../infra/config'
 import {createQuickPick} from './window-components'
 import {quickPickManager, inputBoxManager} from '../dialog/dialog-components-manager'
 import {createInputBox} from './window-components'
+import {IContentConfig} from '../../../domain/models/inquiry-template'
 
 
-export async function getInquiryType(): Promise<string[] | undefined> {
+export async function getInquiryType(config: IContentConfig): Promise<string[] | undefined> {
   await configStore.onConfigReady()
   await SemaphoreService.setDialogState(true)
   const customDefaultInquiryMessage = configStore.get<string>('customDefaultInquiryMessage')
-  const inquiryTypeEnabled = configStore.get<boolean>('enableInquiryType')
 
-  if (inquiryTypeEnabled && customDefaultInquiryMessage && customDefaultInquiryMessage !== '') {
+  if (config.enableInquiryType && customDefaultInquiryMessage && customDefaultInquiryMessage !== '') {
     await SemaphoreService.setDialogState(false)
     return [customDefaultInquiryMessage]
   }
 
-  const res = inquiryTypeEnabled
+  const res = config.enableInquiryType
     ? await getInquiryOptions('Question Context', configStore.get('customInquiryTypes'), 'Custom')
     : undefined
 

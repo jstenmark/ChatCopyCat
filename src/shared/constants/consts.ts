@@ -56,3 +56,6 @@ export const languageExtensionMap: Record<string, string[]> = {
   yaml: ['.yaml', '.yml'],
 }
 
+export const extPublisher = 'JStenmark'
+export const extId = 'chatcopycat'
+export const extName = 'ChatCopyCat'

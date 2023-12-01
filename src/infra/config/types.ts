@@ -61,7 +61,8 @@ export interface IExtension {
         properties: IConfigurationProperties
       }
       commands?: ICommand[]
-    }
+    },
+    version: string
   }
 }
 

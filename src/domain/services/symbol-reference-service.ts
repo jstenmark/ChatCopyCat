@@ -1,6 +1,7 @@
 import {configStore} from '../../infra/config'
 import {getResourcePath} from '../../infra/vscode/document'
 import {SymbolProvider} from '../../infra/vscode/symbol-provider'
+import {IContentConfig} from '../models/inquiry-template'
 import {ISymbolReference} from '../models/lang-types'
 import * as vscode from 'vscode'
 
@@ -9,7 +10,8 @@ export class SymbolReferenceService {
   static async processSymbolsWithComments(
     locations: vscode.Location[],
     symbolBlacklist: Set<vscode.SymbolKind>,
-    symbolEncloseChild: Set<vscode.SymbolKind>
+    symbolEncloseChild: Set<vscode.SymbolKind>,
+    config: IContentConfig
   ): Promise<ISymbolReference[]> {
     const referenceSymbols: ISymbolReference[] = []
     const processedSymbols = new Set<string>()
@@ -31,7 +33,7 @@ export class SymbolReferenceService {
 
       const id = SymbolProvider.createSymbolIdentifier(document.uri, symbol)
       if (!processedSymbols.has(id)) {
-        const rangeDecoratorsComments = SymbolProvider.extendRangeToIncludeDecoratorsAndComments(document, symbol.range, symbol.kind)
+        const rangeDecoratorsComments = SymbolProvider.extendRangeToIncludeDecoratorsAndComments(document, symbol.range, symbol.kind,config)
         const symbolRef = {
           ...symbol,
           id,

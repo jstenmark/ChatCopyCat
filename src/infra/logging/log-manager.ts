@@ -1,6 +1,7 @@
 import {OutputChannel, window, Disposable} from 'vscode'
 import {LogLevel} from './types'
 import {SingletonBase} from '../../shared/utils/singleton'
+import {extName} from '../../shared/constants/consts'
 /**
  * LogManager handles the creation and management of log output channels. It provides methods to log messages
  * at different levels and manages the log output destination.
@@ -21,7 +22,7 @@ export class LogManager extends SingletonBase implements Disposable {
   public static get instance(): LogManager {
     if (!this._instance) {
       this._instance = new LogManager()
-      this._instance.setChannel(window.createOutputChannel('ChatCopyCat', 'log'))
+      this._instance.setChannel(window.createOutputChannel(extName, 'log'))
       this._instance.setLogLevel(LogLevel.DEBUG)
     }
     return this._instance

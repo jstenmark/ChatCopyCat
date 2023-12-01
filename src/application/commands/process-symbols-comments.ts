@@ -3,10 +3,11 @@ import {ISymbolReference} from '../../domain/models/lang-types'
 import {SymbolReferenceService} from '../../domain/services/symbol-reference-service'
 import {Notify} from '../../infra/vscode/notification'
 import {SymbolProvider} from '../../infra/vscode/symbol-provider'
+import {IContentConfig} from '../../domain/models/inquiry-template'
 
 
 
-export const processSymbolsWithComments = async (editor: vscode.TextEditor): Promise<ISymbolReference[]> => {
+export const processSymbolsWithComments = async (editor: vscode.TextEditor, config:IContentConfig): Promise<ISymbolReference[]> => {
   const locations = await SymbolProvider.getSymbolRefsFromSelection(editor)
   if (locations.length === 0) {
     Notify.temporaryStatus('No references found')
@@ -21,7 +22,8 @@ export const processSymbolsWithComments = async (editor: vscode.TextEditor): Pro
   return SymbolReferenceService.processSymbolsWithComments(
     locations,
     symbolKindBlacklist,
-    symbolKindEncloseChild
+    symbolKindEncloseChild,
+    config
   )
 }
 

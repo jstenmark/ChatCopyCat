@@ -1,9 +1,10 @@
 import * as vscode from 'vscode'
 import {ISemaphorePort} from '../../domain/ports/semaphore-port'
 import {log} from '../logging/log-base'
+import {extId} from '../../shared/constants/consts'
 
 export class SemaphoreAdapter implements ISemaphorePort, vscode.Disposable {
-  private readonly dialog_context_key = 'chatcopycat:semaphoreDialogOpen'
+  private readonly dialog_context_key = `${extId}:semaphoreDialogOpen`
 
   public async setDialogState(open: boolean): Promise<boolean> {
     try {

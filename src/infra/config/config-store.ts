@@ -5,7 +5,7 @@ import {log} from '../logging/log-base'
 import {SingletonBase} from '../../shared/utils/singleton'
 import {errorMessage, errorTypeCoerce} from '../../shared/utils/validate'
 import {ILangOpts} from '../../shared/types/types'
-import {defaultTabSize} from '../../shared/constants/consts'
+import {defaultTabSize, extId, extPublisher} from '../../shared/constants/consts'
 
 /**
  * Manages the configuration settings of the extension.
@@ -24,8 +24,8 @@ export class ConfigStore extends SingletonBase implements Disposable {
   private configCache: Record<string, IProperty['default']> = {}
   private pkgJsonProps: Record<string, IProperty> = {}
 
-  readonly extenisonPublisher: string = 'JStenmark'
-  readonly extensionId: string = 'chatcopycat'
+  private readonly extensionPublisher: string = extPublisher
+  private readonly extensionId: string = extId
 
   /**
    * Initializes the ConfigStore instance.
@@ -73,6 +73,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
       this.begunInit = true
     }
     try {
+
       await this.parsePkgJsonConfig()
       await this.updateConfigCache()
       await this.listenForConfigurationChanges()
@@ -124,7 +125,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   private async parsePkgJsonConfig(): Promise<void> {
     const properties = (
       (extensions.getExtension<IExtension>(
-        `${this.extenisonPublisher}.${this.extensionId}`,
+        `${this.extensionPublisher}.${this.extensionId}`,
       ) as IExtension) || undefined
     )?.packageJSON?.contributes?.configuration?.properties
 

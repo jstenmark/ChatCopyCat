@@ -12,11 +12,14 @@ import {openSettings} from './settings-command'
 import {clipboardManager} from '../../infra/clipboard'
 import {getProjectRootPaths} from '../../infra/system/file-utils'
 import {ConfigStore} from '../../infra/config'
+import {extName} from '../../shared/constants/consts'
+import {getSymbolReferences} from './references-command'
 
 export const openMenu = async () => {
   const picks = [
-    {kind: vscode.QuickPickItemKind.Separator, label: 'Definitions'},
-    {label: '$(copy) Copy Definitions', action: async () => copyDefinitions()},
+    {kind: vscode.QuickPickItemKind.Separator, label: 'Symbols and definitions'},
+    {label: '$(copy) Copy Definitions', action: async () => getSymbolReferences()},
+    {label: '$(clippy) Copy references', action: async () => copyDefinitions()},
     {
       label: '$(file-submodule) Copy Definitions from files',
       action: async () => copyDefinitionsFromFiles(),
@@ -56,6 +59,6 @@ export const openMenu = async () => {
   }
 
   await showQuickPick(picks, {
-    placeHolder: 'ChatCopyCat Command Center',
+    placeHolder: `${extName} Command Center`,
   })
 }
