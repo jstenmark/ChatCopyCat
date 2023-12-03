@@ -9,7 +9,7 @@ import {log} from '../../infra/logging/log-base'
 export function registerCommands(context: ExtensionContext): void {
 
   const commandsList = (context.extension as IExtension).packageJSON.contributes.commands?.filter(command => {
-    if(!ConfigStore.instance.get<boolean>('enableDevelopmentMode')) {
+    if(!ConfigStore.instance.get<boolean>('catDevMode')) {
       if(devCommands.includes(command.command)) {
         log.debug('Ignoring ' + command.command)
         return false

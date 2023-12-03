@@ -42,11 +42,6 @@ export interface ISettingsItem<T = unknown> {
 
 export type Properties = Record<string, IProperty>
 
-export interface ISpecialQuickPickItem {
-  label: string
-  picked?: boolean
-  special: boolean
-}
 
 export interface IPackageConfiguration {
   configuration: {

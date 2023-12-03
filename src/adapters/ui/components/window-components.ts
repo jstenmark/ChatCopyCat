@@ -3,6 +3,7 @@ import * as vscode from 'vscode'
 import {getProjectRootPaths} from '../../../infra/system/file-utils'
 import {dialogResultValidator} from '../../../shared/utils/validate'
 import {Notify} from '../../../infra/vscode/notification'
+import {StateStore} from '../../../infra/config'
 
 
 
@@ -100,7 +101,7 @@ export async function showQuickPickMany<T extends vscode.QuickPickItem>(
   items: T[] | Promise<T[]>,
   options: vscode.QuickPickOptions & {canPickMany: true}
 ): Promise<T[] | undefined> {
-  return await vscode.window.showQuickPick(items, options)
+  return await vscode.window.showQuickPick<T>(items, options)
 }
 
 export interface IQuickPickItemAction extends vscode.QuickPickItem {
@@ -145,7 +146,8 @@ export const createQuickPick = <T extends vscode.QuickPickItem>(
   selectedItems: T[] = [],
   title: string,
   placeholder = 'Select item',
-  canSelectMany = false
+  canSelectMany = false,
+  activeItem: string | undefined = undefined
 ) => {
   const quickPick = vscode.window.createQuickPick<T>()
   quickPick.items = quickPickItems
@@ -154,16 +156,30 @@ export const createQuickPick = <T extends vscode.QuickPickItem>(
   quickPick.title = title
   quickPick.selectedItems = selectedItems
 
+  if (activeItem && quickPickItems !== undefined) {
+    const activeItems = quickPickItems.find(item => item.label === activeItem)
+    if(activeItems) {
+      quickPick.activeItems = [activeItems]
+    }
+  }
+
   return quickPick
 }
 
 export const initQuickPick = async <T extends vscode.QuickPickItem>(
-  quickPick: vscode.QuickPick<T>
+  quickPick: vscode.QuickPick<T>,
+  selectedItemKey: string | undefined = undefined
 ) => {
   quickPick.show()
 
   return await Promise.race([
-    new Promise<readonly T[]>(resolve => quickPick.onDidAccept(() => resolve(quickPick.selectedItems))
+    new Promise<readonly T[]>(resolve => quickPick.onDidAccept(() => {
+      if(selectedItemKey && quickPick.selectedItems.length !== 0) {
+        const activeItem = quickPick.selectedItems[0].label
+        StateStore.setState<string>(selectedItemKey, activeItem)
+      }
+      resolve(quickPick.selectedItems)
+    })
     ),
     new Promise<undefined>(resolve => quickPick.onDidHide(() => resolve(undefined))),
   ]).then(result => {

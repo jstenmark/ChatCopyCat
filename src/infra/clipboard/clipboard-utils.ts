@@ -98,7 +98,7 @@ export async function updateClipboardWithCopy(
     await headersInClipboard()
 
   const fileMetadataSection = getMetadataSection(
-    config.enableInquiryType ? inquiryType : undefined,
+    config.enableInquiryMessage ? inquiryType : undefined,
     selectionHeaderPresent,
     langOpts,
     selectionSections.length > 1 ? true : false,
@@ -110,17 +110,21 @@ export async function updateClipboardWithCopy(
 
   const sectionCount = referenceSections?.length ? referenceSections.length + selectionSections.length : selectionSections.length
 
+  if(selectionHeaderPresent) {
+    sectionCount - 1
+  }
+
   if ((fileTreeHeaderPresent && fileTreeEndPresent) || selectionHeaderPresent) {
     await clipboardManager.appendToClipboard(
       clipboardUpdateContent,
       clipboardContent,
-      selectionHeaderPresent,
+      !referenceSections?.length || referenceSections.length === 0 ? selectionHeaderPresent : false
     )
     statusBarManager.increaseCopyCount(sectionCount)
 
   } else {
     await clipboardManager.copyToClipboard(clipboardUpdateContent, true)
-    statusBarManager.increaseCopyCount(sectionCount)
+    statusBarManager.updateCopyCount(sectionCount)
 
   }
 }

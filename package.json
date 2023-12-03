@@ -6,7 +6,7 @@
   "author": {
     "name": "Johannes Stenmark"
   },
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "./out/extension.js",
   "engines": {
     "vscode": "^1.83.1"
@@ -54,47 +54,54 @@
       "type": "object",
       "title": "ChatCopyCat",
       "properties": {
-        "chatcopycat.enableClipboardResetCombo": {
+        "chatcopycat.enableTrimming": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Enables the double-tap reset feature for the clipboard, allowing for quick clearing with a simple key combo."
+          "description": "Clipboard: Remove leading/trailing newlines, remove trailing spaces and tabs per row"
         },
-        "chatcopycat.enableInquiryType": {
+        "chatcopycat.enableSpacesToTabs": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Toggle to always prompt for the type of inquiry with each copy action for customized context setting."
-        },
-        "chatcopycat.enableReferenceWithCopy": {
-          "type": "boolean",
-          "default": false,
-          "description": "Clipboard: Optionality append references to copied selection"
-        },
-        "chatcopycat.includeDecoratorsInReferences": {
-          "type": "boolean",
-          "default": "true",
-          "description": "References: Include Class/Method/Property-decorators with references ('@'-decorator)"
-        },
-        "chatcopycat.enableDiagnostics": {
-          "type": "boolean",
-          "default": true,
-          "description": "Clipboard: Include code errors for each selection."
+          "description": "Clipboard: Indent content using tabs (save tokens)"
         },
         "chatcopycat.enableCommentRemoval": {
           "type": "boolean",
           "default": true,
           "description": "Clipboard: Remove comments (if possible)"
         },
-        "chatcopycat.convertSpacesToTabs": {
+
+        "chatcopycat.enableLanguage": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Indent content using tabs (save tokens)"
+          "description": "Clipboard: Add languageId in code blocks"
         },
-        "chatcopycat.enableSpacesTabsNewlinesRemoval": {
+        "chatcopycat.enablePath": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Remove leading/trailing newlines, remove trailing spaces and tabs per row"
+          "description": "Clipboard: Show file path in code blocks"
         },
-        "chatcopycat.customInquiryTypes": {
+        "chatcopycat.enablePosition": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clipboard: Show line-num in code blocks or diagnostics sections"
+        },
+
+        "chatcopycat.enableDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clipboard: Include code errors for each selection."
+        },
+        "chatcopycat.customDiagnosticsMessage": {
+          "type": "string",
+          "default": "",
+          "description": "Clipboard: Add a custom text along with the diagnostics section if present"
+        },
+        "chatcopycat.enableInquiryMessage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Clipboard: Toggle to always prompt for the type of inquiry with each copy action for customized context setting."
+        },
+        "chatcopycat.inquiryMessagesList": {
           "type": "array",
           "items": {
             "type": "string"
@@ -109,8 +116,37 @@
             "Add unit-tests",
             "Generate docstrings"
           ],
-          "description": "Clipboard: Inquiry types"
+          "description": "Code context: Inquiry types"
         },
+        "chatcopycat.defaultInquiryMessage": {
+          "type": "string",
+          "default": "",
+          "description": "Code context: Set a default message that automatically populates during each fresh clipboard"
+        },
+
+
+        "chatcopycat.enableClipboardResetCombo": {
+          "type": "boolean",
+          "default": true,
+          "description": "Copy: Enables the double-tap reset feature for the clipboard, allowing for quick clearing with a simple key combo."
+        },
+        "chatcopycat.enableForceFocusLastTrackedEditor": {
+          "type": "boolean",
+          "default": true,
+          "description": "Copy: Force document focus (when focus is locked outside of document)."
+        },
+        "chatcopycat.enableReferenceWithCopy": {
+          "type": "boolean",
+          "default": false,
+          "description": "Copy: Optionality append references to copied selection"
+        },
+        "chatcopycat.includeDecoratorsInReferences": {
+          "type": "boolean",
+          "default": "true",
+          "description": "References: Include Class/Method/Property-decorators with references ('@'-decorator)"
+        },
+
+
         "chatcopycat.fileTreeIgnoreList": {
           "type": "array",
           "items": {
@@ -137,7 +173,7 @@
             "type": "string"
           },
           "default": [],
-          "description": "DefinitionsFiles: Add support for custom extensions (['.ts', '.js'])"
+          "description": "DefinitionsFiles: Add support for custom extensions (['.ts', '.js', 'Dockerfile'])"
         },
         "chatcopycat.definitionsIgnoreList": {
           "type": "array",
@@ -159,37 +195,9 @@
           ],
           "description": "DefinitionsFiles: Paths to ignore in select dialog. (gitignore syntax)"
         },
-        "chatcopycat.customDiagnosticsMessage": {
-          "type": "string",
-          "default": "",
-          "description": "Clipboard: Add a text to the diagnostics section"
-        },
-        "chatcopycat.customDefaultInquiryMessage": {
-          "type": "string",
-          "default": "",
-          "description": "Clipboard: Set a default message that automatically populates during each fresh clipboard"
-        },
-        "chatcopycat.enableForceFocusLastTrackedEditor": {
-          "type": "boolean",
-          "default": true,
-          "description": "Clipboard: Force document focus (when focus is locked outside of document)."
-        },
-        "chatcopycat.showLanguageInSnippets": {
-          "type": "boolean",
-          "default": true,
-          "description": "Clipboard: Add languageId in code blocks"
-        },
-        "chatcopycat.showPositionInCodeBlock": {
-          "type": "boolean",
-          "default": true,
-          "description": "Clipboard: Show line-num in code blocks or diagnostics sections"
-        },
-        "chatcopycat.showPathInCodeBlock": {
-          "type": "boolean",
-          "default": true,
-          "description": "Clipboard: Show file path in code blocks"
-        },
-        "chatcopycat.logLevelInChannel": {
+
+
+        "chatcopycat.catLogLevel": {
           "type": "string",
           "default": "INFO",
           "enum": [
@@ -200,22 +208,22 @@
           ],
           "description": "Extension: Set log level"
         },
-        "chatcopycat.defaultMessageTruncate": {
+        "chatcopycat.catLogMsgTruncateLen": {
           "type": "number",
           "default": 200,
           "description": "Extension: Log message max length (0 = no limit)"
         },
-        "chatcopycat.defaultDataTruncate": {
+        "chatcopycat.catLogDataTruncateLen": {
           "type": "number",
           "default": 500,
           "description": "Extension: Log data object max length (0 = no limit)"
         },
-        "chatcopycat.enableFolderWatchingForWindowReload": {
+        "chatcopycat.catEnabledFolderWatcher": {
           "type": "boolean",
           "default": false,
           "description": "Development: Reload window after completed build and install (file watcher)"
         },
-        "chatcopycat.enableDevelopmentMode": {
+        "chatcopycat.catDevMode": {
           "type": "boolean",
           "default": false,
           "description": "Development: Enabled dev functionality"
@@ -319,8 +327,8 @@
     "pkg": "rm -f chatcopycat-*.vsix && yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt",
     "vsce:package": "vsce package --yarn",
     "vsce:package:pre": "vsce package --yarn --pre-release",
-    "vsce:publish": "vsce publish",
-    "vsce:publish:pre": "vsce publish --pre-release"
+    "vsce:publish": "vsce publish --yarn",
+    "vsce:publish:pre": "vsce publish --yarn --pre-release"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^1.4.0",

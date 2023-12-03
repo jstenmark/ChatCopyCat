@@ -1,22 +1,19 @@
-import * as path from 'path'
+import {resolve} from 'path'
 
 import {runTests} from '@vscode/test-electron'
 
 async function main() {
   try {
-    // Passed to `--extensionDevelopmentPath`
-    const extensionDevelopmentPath = path.resolve(__dirname, '../../')
-
-    // Passed to --extensionTestsPath
-    const extensionTestsPath = path.resolve(__dirname, './suite/index')
+    const extensionDevelopmentPath = resolve(__dirname, '../../')
+    const extensionTestsPath = resolve(__dirname, './suite/run')
 
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
+      launchArgs: ['--disable-extensions']
     })
-  } catch (err) {
-    console.error(err)
-    console.error('Failed to run tests')
+  } catch (e) {
+    console.error('Failed to run tests', e)
     process.exit(1)
   }
 }

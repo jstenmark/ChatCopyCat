@@ -6,7 +6,7 @@ import {handlers} from '../../application/extension/activation'
 import {log} from '../logging/log-base'
 
 export function watchForExtensionChanges(): vscode.Disposable {
-  if(configStore.get<boolean>('enableFolderWatchingForWindowReload')) {
+  if(configStore.get<boolean>('catEnabledFolderWatcher')) {
     const watchFolder = path.resolve('/home/johannes/.vscode/watchdir/done.txt')
     log.debug(`Watching ${watchFolder} for changes.`)
 

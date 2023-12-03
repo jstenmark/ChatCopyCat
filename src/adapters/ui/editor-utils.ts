@@ -66,7 +66,7 @@ export function getAllDiagnostics(
 ): vscode.Diagnostic[] | undefined {
   if(!config.enableDiagnostics) {
     return undefined
-  } else if (typeof vscode.Selection !== 'undefined') {
+  } else if (typeof selection !== 'undefined') {
     // TODO: format with TAP (Test Anything Protocol)
     return vscode.languages.getDiagnostics(document.uri).filter(({range}) => {
       return selection?.intersection(range)

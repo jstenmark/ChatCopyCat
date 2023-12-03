@@ -39,7 +39,7 @@ export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
       logOpts?: ILogOpts,
       // eslint-disable-next-line @typescript-eslint/require-await
     ): Promise<void> => {
-      const configuredLogLevel = configStore.get<string>('logLevelInChannel') || 'DEBUG'
+      const configuredLogLevel = configStore.get<string>('catLogLevel') || 'DEBUG'
       const messageLogLevel = LogLevelToNumeric[level]
       const isAllowedToLog =
         messageLogLevel >= LogLevelToNumeric[configuredLogLevel as LogLevel] ? true : false
@@ -48,7 +48,7 @@ export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
         data !== undefined
           ? truncate(
             this.data2String(data),
-            logOpts?.truncate ?? configStore.get('defaultDataTruncate'),
+            logOpts?.truncate ?? configStore.get<number>('catLogDataTruncateLen'),
           )
           : ''
 
@@ -56,7 +56,7 @@ export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
         LogManager.instance.log(
           `${this._now()} [${level}]${level.length === 4 ? ' ' : ''}\t${truncate(
             message,
-            logOpts?.truncate ?? configStore.get('defaultMessageTruncate'),
+            logOpts?.truncate ?? configStore.get<number>('catLogMsgTruncateLen'),
           )} ${dataString}`,
         )
       }

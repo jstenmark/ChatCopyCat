@@ -3,11 +3,11 @@ import {configStore} from '../../infra/config'
 
 export class ConfigAdapter implements IConfigPort {
   get<T>(key: string): T {
-    return configStore.get(key)
+    return configStore.get<T>(key)
   }
 
   async update<T>(key: string, value: T): Promise<void> {
-    return configStore.update(key, value)
+    return configStore.update<T>(key, value)
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await

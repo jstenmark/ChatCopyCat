@@ -58,7 +58,7 @@ export function registerSubscriptions(context: ExtensionContext, subscriptions: 
     statusBarManager,
     ...subscriptions
   )
-  if(ConfigStore.instance.get<boolean>('enableDevelopmentMode')) {
+  if(ConfigStore.instance.get<boolean>('catDevMode')) {
     context.subscriptions.push(watchForExtensionChanges())
   }
 }

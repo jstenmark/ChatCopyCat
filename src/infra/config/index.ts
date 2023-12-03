@@ -6,7 +6,6 @@ export {
   PropertyType,
   Properties,
   IProperty,
-  ISpecialQuickPickItem,
   ICommand,
   IExtension,
   IExtendedQuickPickItem,

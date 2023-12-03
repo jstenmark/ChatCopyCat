@@ -3,7 +3,9 @@ import {
   createQuickPick,
   initQuickPick,
   showQuickPick,
-  IQuickPickItemAction
+  IQuickPickItemAction,
+  inputBox,
+  showQuickPickMany
 } from '../../adapters/ui/components/window-components'
 import {
   configStore,
@@ -12,10 +14,12 @@ import {
   IExtendedQuickPickItem,
   PropertyType,
   ISettingsItem,
-  ISpecialQuickPickItem,
+  StateStore,
 } from '../../infra/config'
 import {Notify} from '../../infra/vscode/notification'
 import {extName} from '../../shared/constants/consts'
+import {Validator, arraysAreEqual} from '../../shared/utils/validate'
+import {log} from '../../infra/logging/log-base'
 
 export const openSettings = async (): Promise<void> => {
   await configStore.onConfigReady()
@@ -36,6 +40,8 @@ export const openSettings = async (): Promise<void> => {
     [],
     `${extName} Settings`,
     'Setting to configure',
+    false,
+    StateStore.getState<string>('lastSelectedSettingsItem')
   )
   quickPick.onDidTriggerItemButton(async e => {
     if (e.button === resetConfigButton) {
@@ -48,7 +54,7 @@ export const openSettings = async (): Promise<void> => {
     }
   })
 
-  const result = await initQuickPick<IExtendedQuickPickItem>(quickPick)
+  const result = await initQuickPick<IExtendedQuickPickItem>(quickPick,'lastSelectedSettingsItem')
 
   if (!result || result.length === 0) {
     return undefined
@@ -82,6 +88,7 @@ export const openSettings = async (): Promise<void> => {
           break
       }
     }
+    log.debug('update result='+result)
     if (result) {
       Notify.info(`Setting '${settingKey}' updated`, true, true)
       await openSettings()
@@ -147,65 +154,87 @@ export function sortAndCreateQuickPickItems(
 
 export async function toggleBooleanSetting(key: string) {
   const currentValue = configStore.get<boolean>(key)
-  await configStore.update(key, !currentValue)
+  await configStore.update<boolean>(key, !currentValue)
   return true
 }
 
 export async function editStringSetting(key: string) {
   const currentValue = configStore.get<string>(key)
-  const newValue = await vscode.window.showInputBox({
+  const newValue = await inputBox({
     prompt: `Enter new value for '${key}'`,
     value: currentValue,
+    validateInput: text => new Validator<string>(text)
+      .warnIfEmpty('Empty strings could have unexpected behaviors, reset to defaults is preferred')
+      .getInputBoxValidationMessage()
+
   })
   if (newValue !== undefined) {
-    await configStore.update(key, newValue)
+    await configStore.update<string>(key, newValue)
   }
   return !!newValue
 }
 
 export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>) {
   const arrayValue: T[] = configStore.get<T[]>(setting.settingKey) ?? []
-  const initialValue: T[] = configStore.get<T[]>(setting.settingKey) ?? []
-  const itemType = setting.settingObject?.items?.itemType
-
+  const initialValue: T[] = [...arrayValue]
+  const itemType = setting.settingObject?.items?.type
+  log.debug('SETTINGSOBJECT=',setting.settingObject)
   const modifyArray = async () => {
-    const arrayItems: (vscode.QuickPickItem | ISpecialQuickPickItem)[] = arrayValue.map(item => ({
+    const arrayItems = arrayValue.map<ISpecialQuickPickItem>(item => ({
       label: String(item),
       picked: true,
     }))
-    const addNewItem: ISpecialQuickPickItem = {label: 'Add New Item...', special: true}
+    const addNewItem: ISpecialQuickPickItem = {label: '[Add New Item]', addNewItemFlag: true}
 
-    const result = await vscode.window.showQuickPick([addNewItem, ...arrayItems], {
+    const result = await showQuickPickMany<ISpecialQuickPickItem>([addNewItem, ...arrayItems], {
       canPickMany: true,
       placeHolder: 'Select items or add new',
+      title: 'Array configurator. Deselect items to remove. Use the "Add"-option to add'
     })
 
-    if (result?.find(item => 'special' in item && item.special)) {
-      const newItem = await vscode.window.showInputBox({prompt: 'Enter new item', title: `Configure ${setting.label}`})
+    if (result?.find(item => 'addNewItemFlag' in item && item.addNewItemFlag)) {
+      const newItem = await inputBox({
+        prompt: 'Enter new item',
+        title: `Configure ${setting.label}`,
+        validateInput: text => {
+          log.debug('validatin gstrin?',{text,itemType})
+          if (itemType === 'number') {
+            return new Validator<string>(text)
+              .isNumber()
+              .getErrorsString()
+          } else if (itemType === 'string') {
+            return new Validator<string>(text)
+              .isNotEmpty()
+              .getErrorsString()
+          }
+          return null
+        }
+
+      })
       if (newItem !== undefined) {
         // Handle different types of array items
         if (itemType === 'number') {
-          if (!isNaN(parseFloat(newItem))) {
-            arrayValue.push(parseFloat(newItem) as unknown as T)
-          } else {
-            Notify.error(`Couldn't update '${setting.settingKey}', enter a valid number`, true, true)
-            return undefined
-          }
+          arrayValue.push(parseFloat(newItem) as T)
         } else {
           // Assume string if not number
-          arrayValue.push(newItem as unknown as T)
+          arrayValue.push(newItem as T)
         }
       }
     } else if (result) {
-      return result.map(item => item.label as unknown as T)
+      return result.map(item => item.label as T)
     }
     return arrayValue
   }
   const updatedArray = await modifyArray()
-  if (typeof updatedArray !== 'undefined') {
-    await configStore.update(setting.settingKey, updatedArray)
+  const isSameValues = arraysAreEqual<T>(initialValue, updatedArray)
+
+  if (typeof updatedArray !== 'undefined' && !isSameValues) {
+    log.debug('updating configstore..')
+    await configStore.update<T[]>(setting.settingKey, updatedArray)
+    return true
   }
-  return !!updatedArray && initialValue !== arrayValue
+
+  return false
 }
 
 export async function handleSettingWithEnum<T = unknown>(
@@ -215,7 +244,6 @@ export async function handleSettingWithEnum<T = unknown>(
     const currentValue = configStore.get<T>(setting.settingKey)
     const defaultValue = configStore.getDefault<T>(setting.settingKey)
 
-    // Array of IQuickPickItemAction objects
     const enums = setting.settingObject.enum.map(item => {
       const isDefault = item === defaultValue
       const isSelected = item === currentValue
@@ -225,14 +253,14 @@ export async function handleSettingWithEnum<T = unknown>(
     })
 
     const selectedEnum = await showQuickPick<IQuickPickItemAction>(enums, {
-      title: `Configure ${setting.label}`,
+      title: `Configure ${setting.settingKey}`,
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       placeHolder: `Current: '${currentValue}'. Change '${setting.settingKey}'`,
     })
 
     if (selectedEnum) {
       const cleanedValue = selectedEnum.label.replace(/ \$\([a-z-]+\)/g, '').trim()
-      await configStore.update(setting.settingKey, cleanedValue as unknown as T) // Cast as T if necessary
+      await configStore.update<T>(setting.settingKey, cleanedValue as unknown as T) // Cast as T if necessary
       return true
     }
   }
@@ -241,14 +269,16 @@ export async function handleSettingWithEnum<T = unknown>(
 
 export async function editNumberSetting(key: string) {
   const currentValue = configStore.get<number>(key)
-  const newValue = await vscode.window.showInputBox({
+  const newValue = await inputBox({
     title: `Configure ${key}`,
     prompt: `Enter new value for '${key}' (number)`,
     value: currentValue.toString(),
-    validateInput: text => (isNaN(parseFloat(text)) ? 'Please enter a valid number' : null),
+    validateInput: text => new Validator<string>(text)
+      .isNumber()
+      .getInputBoxValidationMessage()
   })
   if (newValue !== undefined) {
-    await configStore.update(key, parseFloat(newValue))
+    await configStore.update<number>(key, parseFloat(newValue))
   }
   return !!newValue
 }
@@ -264,4 +294,9 @@ export const resetConfigButton: {
   iconPath: new vscode.ThemeIcon('sync-ignored'),
   tooltip: 'Reset this setting to default',
   action: async (key: string) => await resetConfigButtonAction(key),
+}
+export interface ISpecialQuickPickItem extends vscode.QuickPickItem {
+  label: string
+  picked?: boolean
+  addNewItemFlag?: boolean
 }

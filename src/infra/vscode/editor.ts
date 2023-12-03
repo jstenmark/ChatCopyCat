@@ -8,7 +8,7 @@ import {validFileSchemes} from '../../shared/constants/consts'
 export let lastTrackedTextEditor: vscode.TextEditor | undefined
 
 export async function focusLastTrackedEditor(): Promise<vscode.TextEditor | undefined> {
-  if (!configStore.get('enableForceFocusLastTrackedEditor')) {
+  if (!configStore.get<boolean>('enableForceFocusLastTrackedEditor')) {
     return undefined
   }
   if (lastTrackedTextEditor) {

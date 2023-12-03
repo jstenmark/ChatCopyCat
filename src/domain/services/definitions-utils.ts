@@ -147,7 +147,7 @@ export async function handleIgnoreItemButton(
   if (path.basename(item.filePath) === '.') {
     Notify.warn('Cannot add Workspace root to ignore config',false,true)
   } else {
-    await configStore.update('definitionsIgnoreList', [
+    await configStore.update<string[]>('definitionsIgnoreList', [
       ...configStore.get<string[]>('definitionsIgnoreList'),
       item.filePath
     ])

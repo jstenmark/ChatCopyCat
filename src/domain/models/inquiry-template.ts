@@ -16,7 +16,7 @@ export function getMetadataSection(
 ): string {
   const multipleSelections = isMultipleSelections ? ' // Multiple Selections' : undefined
   const inquiryTypeSection =
-    config.enableInquiryType && inquiryTypes && inquiryTypes.length > 0
+    config.enableInquiryMessage && inquiryTypes && inquiryTypes.length > 0
       ? `${inquiryTypes.join(',')}`
       : undefined
 
@@ -24,7 +24,7 @@ export function getMetadataSection(
     !headerIsInClipboard
       ?  generateHeader(inquiryTypeSection, langOpts.language, config) +
         `${isMultipleSelections ? '\n - ' + multipleSelections : ''}`
-      : `\n---${isMultipleSelections ? multipleSelections : ''}`
+      : `\n${isMultipleSelections ? multipleSelections : ''}`
   }\n`
 }
 
@@ -34,21 +34,21 @@ export interface IContentConfig {
   enablePath: boolean;
   enableDiagnostics: boolean;
   enableLanguage: boolean ;
-  enableInquiryType: boolean;
-  enableTabify: boolean;
+  enableInquiryMessage: boolean;
+  enableSpacesToTabs: boolean;
   enableCommentRemoval: boolean;
-  enableSpacesTabsNewlinesRemoval: boolean;
+  enableTrimming: boolean;
 }
 
 export const getContentConfig =  ():IContentConfig => ({
-  enablePosition: configStore.get<boolean>('showPositionInCodeBlock'),
-  enablePath: configStore.get<boolean>('showPathInCodeBlock'),
+  enablePosition: configStore.get<boolean>('enablePosition'),
+  enablePath: configStore.get<boolean>('enablePath'),
   enableDiagnostics: configStore.get<boolean>('enableDiagnostics'),
-  enableLanguage: configStore.get<boolean>('showLanguageInSnippets'),
-  enableInquiryType: configStore.get<boolean>('enableInquiryType'),
-  enableTabify: configStore.get<boolean>('convertSpacesToTabs'),
+  enableLanguage: configStore.get<boolean>('enableLanguage'),
+  enableInquiryMessage: configStore.get<boolean>('enableInquiryMessage'),
+  enableSpacesToTabs: configStore.get<boolean>('enableSpacesToTabs'),
   enableCommentRemoval: configStore.get<boolean>('enableCommentRemoval'),
-  enableSpacesTabsNewlinesRemoval: configStore.get<boolean>('enableSpacesTabsNewlinesRemoval'),
+  enableTrimming: configStore.get<boolean>('enableTrimming'),
 })
 
 export function getContentSection(
@@ -85,14 +85,16 @@ export const codeBlock = (
   return `\n\`\`\`${lang} ${path}${lineInfo}\n${codeText}\n\`\`\``
 }
 
-const getCodeRange = (range:vscode.Range) =>
-  `${range.start.line + 1}:${range.start.character + 1}-`
-  + `${range.end.line + 1}:${range.end.character + 1}`
+const getCodeRange = (range:vscode.Range, config: IContentConfig): string | undefined =>
+  !config.enablePosition
+    ? undefined
+    : `${range.start.line + 1}:${range.start.character + 1}-` +
+      `${range.end.line + 1}:${range.end.character + 1}`
 
-export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefined, config: IContentConfig): string | undefined => config.enableDiagnostics && diagnostics?.length === 0 ? undefined :
+export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefined, config: IContentConfig): string | undefined => !config.enableDiagnostics || diagnostics?.length === 0 ? undefined :
   `\n${configStore.get<string>('customDiagnosticsMessage')}` || '' +
   '\n[Selection problems] (reporter ~location~ error)\n' + diagnostics?.map(({source, severity, range, message}) =>
-    `[${source}] ${vscode.DiagnosticSeverity[severity]}\tLn:${getCodeRange(range)}\n${message}`).join('\n').trim()
+    `[${source}] ${vscode.DiagnosticSeverity[severity]}${config.enablePosition? '\tLn:' + (getCodeRange(range, config) ?? '') : ''}\n${message}`).join('\n').trim()
 
 
 /**
@@ -103,11 +105,12 @@ export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefin
  */
 export function generateFilesTemplate(
   projectsFiles: {rootPath: string; files: string[]}[],
+  config: IContentConfig
 ): string {
   return projectsFiles
     .map(
       project =>
-        `${fileTreeHeader} ${project.rootPath}\n` +
+        `${fileTreeHeader} ${config.enablePath ? project.rootPath : '' }\n` +
         `${project.files.join('\n')}\n` +
         `${fileTreeEnd}\n`,
     )
@@ -116,8 +119,8 @@ export function generateFilesTemplate(
 }
 
 const generateHeader = (inquiryType: string | undefined, language: string | undefined,  config: IContentConfig) =>{
-  const inquirySection = config.enableInquiryType  && inquiryType? `: ${inquiryType}` : ''
-  const languageSection = config.enableLanguage && language? ` - ${language}` : ''
+  const inquirySection = config.enableInquiryMessage  && inquiryType ? `: ${inquiryType}` : ''
+  const languageSection = config.enableLanguage && language ? ` - ${language}` : ''
 
   return inquiryType && inquiryType !== ''
     ? `${selectionHeader}${inquirySection}${languageSection}]`

@@ -77,7 +77,7 @@ async function fetchWorkspaceFiles(
 ): Promise<{rootPath: string; fileList: IFileListItem[]}[]> {
   const rootPaths: string[] = getProjectRootPaths() ?? []
   const igInstance = ignore()
-  const projectIgnoreList = configStore.get<string[]>('fileTreeIgnoreList') ?? []
+  const projectIgnoreList = configStore.get<string[]>('fileTreeIgnoreList')
   igInstance.add([...projectIgnoreList, ...customIgnoreList])
 
   return await Promise.all(

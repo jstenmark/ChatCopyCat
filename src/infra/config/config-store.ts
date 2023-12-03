@@ -1,4 +1,4 @@
-import {Disposable, EventEmitter, TextDocument, WorkspaceConfiguration, extensions, workspace} from 'vscode'
+import {Disposable, EventEmitter, TextDocument, WorkspaceConfiguration, extensions, workspace, ConfigurationScope} from 'vscode'
 import {Notify} from '../vscode/notification'
 import {IConfigurationProperties, IExtension, IProperty} from './types'
 import {log} from '../logging/log-base'
@@ -114,8 +114,8 @@ export class ConfigStore extends SingletonBase implements Disposable {
    * Retrieves the current WorkspaceConfiguration.
    * @returns The current WorkspaceConfiguration.
    */
-  private getConfiguration(): WorkspaceConfiguration {
-    return workspace.getConfiguration(this.extensionId)
+  private getConfiguration(section:string = this.extensionId, scope?: ConfigurationScope | null | undefined): WorkspaceConfiguration {
+    return workspace.getConfiguration(section,scope)
   }
 
   /**
@@ -158,13 +158,13 @@ export class ConfigStore extends SingletonBase implements Disposable {
   }
 
   public getLangOpts(document: TextDocument): ILangOpts {
-    const editorConfig = workspace.getConfiguration('editor', document.uri)
+    const editorConfig = this.getConfiguration('editor', document.uri)
 
     const tabSize = editorConfig.get<number>('tabSize', defaultTabSize)
     const insertSpaces = editorConfig.get<boolean>('insertSpaces', true)
     const language = document.languageId
 
-    return {tabSize,insertSpaces,language}
+    return {tabSize, insertSpaces, language}
   }
 
   /**

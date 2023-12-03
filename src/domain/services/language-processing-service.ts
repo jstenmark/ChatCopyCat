@@ -14,14 +14,14 @@ function handleJavaScriptFile(content: string, options: ILanguageHandlerOptions,
 }
 
 function handlePythonFile(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {
-  const tabified = config.enableTabify ? tabify(content, options.tabSize) : content
-  const cleaned = config.enableSpacesTabsNewlinesRemoval ? cleanSpacesTabsNewlines(tabified) : tabified
+  const tabified = config.enableSpacesToTabs ? tabify(content, options.tabSize) : content
+  const cleaned = config.enableTrimming ? cleanSpacesTabsNewlines(tabified) : tabified
   return cleaned
 }
 
 function defaultHandler(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {
-  const tabified = config.enableTabify ? tabify(content, options.tabSize ?? defaultTabSize) : content
-  const cleaned = config.enableSpacesTabsNewlinesRemoval ? cleanSpacesTabsNewlines(tabified) : tabified
+  const tabified = config.enableSpacesToTabs ? tabify(content, options.tabSize ?? defaultTabSize) : content
+  const cleaned = config.enableTrimming ? cleanSpacesTabsNewlines(tabified) : tabified
   return cleaned
 }
 

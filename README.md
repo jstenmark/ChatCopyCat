@@ -8,17 +8,19 @@
 
 #### VSCode AI prompt workflow utility
 
-Effortlessly utilize AI prompts in your coding workflow with ChatCopyCat - the subtle yet powerful VS Code extension
+Effortlessly copy code between your IDE and *AI-assistant/ChatGPT* tab
 
 </div>
 
 ---
 ## Just Code and Chill 🛋️
-ChatCopyCat isn’t about hype. It's your coding sidekick that respects your space and enhances your workflow without fanfare or intrusion, sliding into the chatter with a "do your thing" attitude. No sales pitch, just a nifty tool that's there when you need it, invisible when you don't. It's about keeping things real and your code flowing.
+ChatCopyCat isn’t about hype. This extension respects your space and enhances your workflow without fanfare or intrusion, sliding into the chatter with a "do your thing" attitude. No sales pitch, just a nifty tool that's there when you need it, invisible when you don't. It's about keeping things real and your code flowing.
+
+> **Tailored for developers seeking efficiency and precision**, this tool offers a suite of features like intelligent clipboard management, customizable code interactions, and token-efficient performance enhancements. Whether you're streamlining code snippets, managing project contexts, or optimizing code structures, ChatCopyCat enhances productivity without complicating your workspace. Its adaptable nature ensures it fits perfectly into your coding style, making it an indispensable part of your software development toolkit.
 
 - **Sync with Simplicity**: Effortlessly sync your code with AI prompts.
 - **Customizable Interaction**: Add context to your code in your own style.
-- **Token Economy**: Minimize token usage for optimal performance.
+- **Token Economy**: Minimize token usage for optimal LLM-performance.
 
 Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 
@@ -27,7 +29,7 @@ Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 - **Paste & Relax**: Just do a few copies to get prompt-ready, or don't. No pressure.
 - **Clipboard Harmony**: Appends your code snippets or project context in a symphony of productivity.
 - **Versatile Selection**: Select one, select all—bring some diagnostics, references included for free.
-- **Trim the fat**: *Minify*? *Tabify*? *Cleanify*? Sure, if your context window calls for it.
+- **Trim the fat**: *Minify*? *Tabify*? *Cleanify*? Sure, if your window calls for it.
 - **Context on Command**: Contextual information at your fingertips, only when you want it.
 - **File Sense**: Subtle file details, by choice.
 - **You Do You**: Customize if you want, however you want, or go with the flow. This cat's not judging.
@@ -46,77 +48,54 @@ Whether copying code, silencing suggestions,<br> or starting fresh, this command
 **Clipboard Do-Over**: Double-tap <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> - Made a mess? Clean slate in under half a second.
 
 
-> **WARNING**
-> `copyCode` have the same key bind as `open new terminal`
-
+> :warning: **Important**
+> - **`chatcopycat.copyCode`** have the same key bind as **`open new terminal`**
+> - **VSCodeVim** users might experience overloading. *But we have faith in your terminal-like transcendence journey*. 
 ### Key Binds
-**Copy Code Keybinding**
+1. **Copy Code Keybinding**
    - **Key**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
    - **When**: Active when focus is not in the terminal, and the editor has text focus without any open dialog or Quick Open menu.
    - **Description**: This keybinding is the heart of ChatCopyCat, handling multiple actions based on context. It copies the current selection or the entire document, appends to existing clipboard content, and interacts with various features like file tree, diagnostics, and inquiry dialogs. It's a versatile shortcut that adapts to the user's current focus and clipboard content.
 
-**Close Dialog Keybinding**
+2. **Close Dialog Keybinding**
    - **Key**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
    - **When**: Active when a dialog is open, and the focus is not in the terminal.
    - **Description**: A convenient shortcut to close open inquiry dialogs within the extension. This keybinding ensures that users can quickly dismiss dialogs without disrupting their workflow, maintaining the efficiency and fluidity of the coding process.
 
 
-:globe_with_meridians: **Context Menu** <sub>right click in the editor</sub>
-1. **Copy Symbol References**
-  - **Description**: Adds an option in the editor's context menu to copy symbol references. This feature allows users to right-click on a symbol (like a function or method) in the editor and quickly copy all its references to the clipboard, enhancing code navigation and analysis.
+3. **Copy Symbol References context menu** <sub>right click in the editor</sub>
+    - **Description**: Adds an option in the editor's context menu to copy symbol references. This feature allows users to right-click on a symbol (like a function or method) in the editor and quickly copy all its references to the clipboard, enhancing code navigation and analysis.
 
 
 ### Commands
 List of commands defined in the extension, you will find them in the command palette under the  `CCCat: ..`-namespace. Or listed in the extension menu.
 
-
 1. **Copy Code** (`chatcopycat.copyCode`)
     - **Description**: Streamlines the copying process by intelligently detecting the context.If no clipboard content exists, it copies the current selection or entire document. If clipboard content exists, it appends the new selection, integrating with existing file tree data, diagnostics, references, and inquiry types. Facilitates closing of inquiry dialogs via the copy key binding for seamless user experience.
     - **Usage**: Use with the keybinding
-    - **Settings**:
-      - `enableForceFocusLastTrackedEditor`
-      - `enableClipboardResetCombo`
-      - `enableReferenceWithCopy`
-      - Code Block settings
 
 
 2. **Copy File Tree** `chatcopycat.getFileTree`
     - **Description**: Efficiently copies the entire project's file tree structure to the clipboard. If the clipboard already contains data, it appends or replaces the file tree information, considering existing inquiry content for a cohesive data structure.
     - **Usage**: Execute from the extension menu / command palette.
-    - **Settings**:
-      - `fileTreeIgnoreList`
 
 3. **Copy Definitions from Document** `chatcopycat.copyDefinitions`
     - **Description**: Extracts and copies all code definitions (like classes, methods, functions) from the currently active document, making it convenient to capture and use essential code structures.
     - **Usage**: Execute from the extension menu / command palette.
-    - **Settings**:
-      - `definitionsIgnoreList`
-      - `definitionsAllowList`
-      - Code Block settings
-
 
 4. **Copy Definitions from Files** `chatcopycat.copyDefinitionsFromFiles`
     - **Description**: Presents a user-friendly dialog to select specific files or folders from the workspace for copying definitions. It remembers previous selections and allows modification of the ignore list directly from the dialog, enabling users to customize their definition extraction process.
     - **Usage**: Execute from the extension menu / command palette.
-    - **Settings**:
-      - `definitionsIgnoreList`
-      - `definitionsAllowList`
-      - Code Block settings
 
 5. **Copy Symbol References** `chatcopycat.getSymbolReferences`
     - **Description**: Identifies and copies references of a selected symbol (like a function or method) within the code, allowing for a comprehensive view of where and how a particular code piece is used across the project.
     - **Note**: No clipboard context support, except if used with `copyCode`
     - **Usage**: Use with the copy keybinding or execute from the extension menu / command palette.
-    - **Settings**:
-      - `includeDecoratorsInReferences`
-      - `enableForceFocusLastTrackedEditor`
-      - Code Block settings
 
 6. **Reset Clipboard** `chatcopycat.resetClipboard`
    - **Description**: Provides a quick and easy way to clear the clipboard content. A double-tap of the copy key binding within a short interval ^0.5sec^ triggers the clipboard reset, offering a streamlined way to start afresh.
    - **Usage**: Use with the copy keybinding-combo
-   - **Settings**:
-      - `enableClipboardResetCombo`
+
 
 7. **Open Menu/Command Center**
     - **Command**: `chatcopycat.openMenu`
@@ -138,12 +117,10 @@ List of commands defined in the extension, you will find them in the command pal
     - **Command**: `chatcopycat.reloadWindow`
     - **Description**: A development-centric command that enables quick reloading of the VS Code window, facilitating rapid testing and iteration during the extension development.
     - **Usage**: Chained through an watchFile-eventListener that listens for a file-write after the extension is installed, see the package.json-script `yarn pkg`.
-    - **Settings**:
-      - `enableFolderWatchingForWindowReload`
-      - `enableDevelopmentMode`
+
 ---
 ## Language support
-- **Languages with full feature support**: Typescript, Javascript
+- **Languages fully supported**: Typescript, Javascript
 
 - **Default handling**:
   - Uses VSCode implementations for symbol/reference fetching. *A few specific feature edge-cases are done by best-effort*.
@@ -179,50 +156,74 @@ List of commands defined in the extension, you will find them in the command pal
 
 
 <details>
-<summary>Clipboard</summary>
+<summary>Code-block</summary>
 
-### Clipboard Settings
-- **Clipboard Reset Combo**
-  `chatcopycat.enableClipboardResetCombo`: Enable double-tap reset for the clipboard.
+### Code block settings
+> These settings modify code block generation.
+
+#### Code Cleanup  
+- **Excess whitespace/newline/tab Removal**
+  `chatcopycat.enableTrimming`: Remove excess whitespace and newline characters. 
   Default: `true`.
 
-- **Inquiry Type**
-  `chatcopycat.enableInquiryType`: Prompt for the type of inquiry with each copy action. Default: `true`.
+- **Spaces to Tabs Conversion**
+  `chatcopycat.enableSpacesToTabs`: Use tabs for indentation and save tokens!.
+  Default: `true`.
 
-- **Reference With Copy**
-  `chatcopycat.enableReferenceWithCopy`: Optionally append references to copied selection.
-  Default: `false`
+- **Removal of comments**
+  `chatcopycat.enableCommentRemoval`: Remove comments where possible.
+  Default: `true`.
 
+#### Code Metadata  
+- **Display code language**
+  `chatcopycat.enableLanguage`: Display language ID in code blocks.
+  Default: `true`.
+
+- **Display relative file path**
+  `chatcopycat.enablePath`: Display file path in code blocks.
+  Default: `true`.
+
+- **Display line number**
+  `chatcopycat.enablePosition`: Display line-num in code blocks or diagnostics sections.
+  Default: `true`.
+
+#### Code Context
 - **Diagnostics Inclusion**
   `chatcopycat.enableDiagnostics`: Include code errors with selections.
   Default: `true`.
 
-- **Comment Removal**
-  `chatcopycat.enableCommentRemoval`: Remove comments when possible.
+- **Add message to diagnostics section**:
+  `chatcopycat.customDiagnosticsMessage`: Set a persisted message to add with the diagnostics section if present.
+
+- **Inquiry Message**
+  `chatcopycat.enableInquiryMessage`: Prompt for the type of inquiry with each copy action.
   Default: `true`.
 
-- **Spaces to Tabs Conversion**
-  `chatcopycat.convertSpacesToTabs`: Use tabs for indentation and save tokens!.
+- **Custom Inquiry Messages**
+  `chatcopycat.inquiryMessagesList`: Set of prompt instructions that are customizable. Default: Array of standard inquiries.
+
+- **Persisted Inquiry Message**
+  `chatcopycat.defaultInquiryMessage`: Set a default persisted inquiry message for new copy actions.
+
+
+---
+### Copy Settings
+- **Clipboard Reset Combo**
+  `chatcopycat.enableClipboardResetCombo`: Enable double-tap reset for the clipboard.
   Default: `true`.
-
-- **Excess whitespace/newline/tab Removal**
-  `chatcopycat.enableSpacesTabsNewlinesRemoval`: Remove excess whitespace and newline characters. Default: `true`.
-
-- **Custom Inquiry Types**
-  `chatcopycat.customInquiryTypes`: Customize inquiry types. Default: Array of standard inquiries.
-
-- **Custom Diagnostics Message**
-  `chatcopycat.customDiagnosticsMessage`: Add a custom message to the diagnostics section.
-
-- **Default Inquiry Message**
-  `chatcopycat.customDefaultInquiryMessage`: Set a default inquiry message for new copy actions.
 
 - **Force Focus to Last Editor**
-  `chatcopycat.enableForceFocusLastTrackedEditor`: Force focus to the last tracked editor to avoid some strange VSCode behavior. Default: `true`.
-
-- **Language Display in Snippets**
-  `chatcopycat.showLanguageInSnippets`: Show language ID in code blocks.
+  `chatcopycat.enableForceFocusLastTrackedEditor`: Force focus to the last tracked editor to avoid some strange VSCode behavior.
   Default: `true`.
+
+- **Add references from copied selection**
+  `chatcopycat.enableReferenceWithCopy`: Optionality append references to copied selection. Does not support multi selection
+  Default: `false`.
+
+- **Force Focus to Last Editor**
+  `chatcopycat.includeDecoratorsInReferences`: Include Class/Method/Property-decorators along with reference symbols ('@'-decorator). Default: `true`.
+
+
 </details>
 
 <details>
@@ -230,13 +231,13 @@ List of commands defined in the extension, you will find them in the command pal
 
 ### File Tree and Definitions Settings
 - **File Tree Ignore List**
-  `chatcopycat.fileTreeIgnoreList`: Paths to ignore in the file tree dialog.
+  `chatcopycat.fileTreeIgnoreList`: Paths to ignore in the file-tree dialog.
 
 - **Definitions Allow List**
-  `chatcopycat.definitionsAllowList`: Support custom file extensions for definitions.
+  `chatcopycat.definitionsAllowList`: Support custom file extensions for copy-definitions.
 
 - **Definitions Ignore List**
-  `chatcopycat.definitionsIgnoreList`: Paths to ignore in definitions selection dialog.
+  `chatcopycat.definitionsIgnoreList`: Paths to ignore in copy-definitions selection dialog.
 </details>
 
 <details>
@@ -244,23 +245,23 @@ List of commands defined in the extension, you will find them in the command pal
 
 ### Extension and Development Settings
 - **Log Level**
-  `chatcopycat.logLevelInChannel`: Set the log level for the extension.
+  `chatcopycat.catLogLevel`: Set the log level for the extension.
   Default: `"INFO"`.
 
 - **Message Truncate Length**
-  `chatcopycat.defaultMessageTruncate`: Set max length for log messages.
+  `chatcopycat.catLogMsgTruncateLen`: Set max length for log messages.
   Default: `200`.
 
 - **Data Truncate Length**
-  `chatcopycat.defaultDataTruncate`: Set max length for logged data objects.
+  `chatcopycat.catLogDataTruncateLen`: Set max length for logged data objects.
   Default: `500`.
 
 - **Folder Watching for Reload**
-  `chatcopycat.enableFolderWatchingForWindowReload`: Reload window on file changes during development.
+  `chatcopycat.catEnabledFolderWatcher`: Reload window on file changes during development.
   Default: `false`.
 
 - **Development Mode**
-  `chatcopycat.enableDevelopmentMode`: Enable development-specific functionalities.
+  `chatcopycat.catDevMode`: Enable development-specific functionalities.
   Default: `false`.
 
 </details>

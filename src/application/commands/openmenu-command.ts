@@ -44,7 +44,7 @@ export const openMenu = async () => {
 
   ]
 
-  if(ConfigStore.instance.get<boolean>('enableDevelopmentMode')) {
+  if(ConfigStore.instance.get<boolean>('catDevMode')) {
     const devItems = [
       {kind: vscode.QuickPickItemKind.Separator, label: 'Development'},
       {

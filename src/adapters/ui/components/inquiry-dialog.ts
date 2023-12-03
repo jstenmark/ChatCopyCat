@@ -9,15 +9,15 @@ import {IContentConfig} from '../../../domain/models/inquiry-template'
 export async function getInquiryType(config: IContentConfig): Promise<string[] | undefined> {
   await configStore.onConfigReady()
   await SemaphoreService.setDialogState(true)
-  const customDefaultInquiryMessage = configStore.get<string>('customDefaultInquiryMessage')
+  const defaultInquiryMessage = configStore.get<string>('defaultInquiryMessage')
 
-  if (config.enableInquiryType && customDefaultInquiryMessage && customDefaultInquiryMessage !== '') {
+  if (config.enableInquiryMessage && defaultInquiryMessage && defaultInquiryMessage !== '') {
     await SemaphoreService.setDialogState(false)
-    return [customDefaultInquiryMessage]
+    return [defaultInquiryMessage]
   }
 
-  const res = config.enableInquiryType
-    ? await getInquiryOptions('Question Context', configStore.get('customInquiryTypes'), 'Custom')
+  const res = config.enableInquiryMessage
+    ? await getInquiryOptions('Question Context', configStore.get<string[]>('inquiryMessagesList'), 'Custom')
     : undefined
 
   await SemaphoreService.setDialogState(false)

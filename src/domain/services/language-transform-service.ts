@@ -8,11 +8,11 @@ export function cleanCodeTsJs(_code: string, opts: ILanguageHandlerOptions, conf
     code = removeComments(code)
   }
 
-  if (config.enableTabify) {
+  if (config.enableSpacesToTabs) {
     code = tabify(code,opts.tabSize)
   }
 
-  if(config.enableSpacesTabsNewlinesRemoval) {
+  if(config.enableTrimming) {
     code = cleanSpacesTabsNewlines(code)
   }
   return  code
