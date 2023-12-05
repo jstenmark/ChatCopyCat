@@ -104,6 +104,13 @@ export async function showQuickPickMany<T extends vscode.QuickPickItem>(
   return await vscode.window.showQuickPick<T>(items, options)
 }
 
+export async function showQuickPick(
+  items: unknown[],
+  options?: vscode.QuickPickOptions | undefined
+): Promise<vscode.QuickPickItem | undefined> {
+  return await vscode.window.showQuickPick(items as vscode.QuickPickItem[], options) as unknown as vscode.QuickPickItem
+}
+
 export interface IQuickPickItemAction extends vscode.QuickPickItem {
   action?: () => Promise<void>
   notifyMessage?: string
@@ -119,7 +126,7 @@ export interface IQuickPickItemAction extends vscode.QuickPickItem {
  * @throws Error if no item is selected.
  */
 
-export async function showQuickPick<T extends IQuickPickItemAction>(
+export async function showQuickPickAction<T extends IQuickPickItemAction>(
   items: T[] | Promise<T[]>,
   options: vscode.QuickPickOptions
 ): Promise<T | undefined> {

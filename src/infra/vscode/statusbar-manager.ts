@@ -25,7 +25,7 @@ export class StatusBarManager implements vscode.Disposable {
   constructor() {
     this.statusBarItem = vscode.window.createStatusBarItem(
       'primary',
-      vscode.StatusBarAlignment.Left,
+      vscode.StatusBarAlignment.Right,
       100,
     )
     this.statusBarItem.command = `${extId}.openMenu`

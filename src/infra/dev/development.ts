@@ -1,9 +1,13 @@
 import * as fs from 'fs'
+import {readFile} from 'fs/promises'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import {configStore} from '../config'
 import {handlers} from '../../application/extension/activation'
 import {log} from '../logging/log-base'
+import {executeCommand} from '../system/exec'
+import {getProjectRootPaths} from '../system/file-utils'
+import {Notify} from '../vscode/notification'
 
 export function watchForExtensionChanges(): vscode.Disposable {
   if(configStore.get<boolean>('catEnabledFolderWatcher')) {
@@ -25,4 +29,30 @@ export function watchForExtensionChanges(): vscode.Disposable {
     return new vscode.Disposable(() => fs.unwatchFile(watchFolder, watcher))
   }
   return new vscode.Disposable(()=> {/** */})
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const readPackageJson = async (path: string): Promise<any> => {
+  try {
+    const content = await readFile(path, {encoding: 'utf8'})
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return JSON.parse(content)
+  } catch (e) {
+    log.error('Could parse package.json', e)
+    throw e
+  }
+}
+
+export const bumpVersion = async (versionType: 'patch' | 'minor' | 'major') => {
+  const pkgRootPath = getProjectRootPaths()![0]
+  const packageJsonPath: string = path.join(pkgRootPath, 'package.json')
+
+
+  await executeCommand(pkgRootPath, 'yarn', `version --${versionType}`, '--no-git-tag-version')
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  const pkgJsonVersion = (await readPackageJson(packageJsonPath))?.version
+
+  Notify.info(`Version bumped to ${pkgJsonVersion}`, true, true)
 }

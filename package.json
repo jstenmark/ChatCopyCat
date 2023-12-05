@@ -6,7 +6,7 @@
   "author": {
     "name": "Johannes Stenmark"
   },
-  "version": "0.0.7",
+  "version": "0.3.1",
   "main": "./out/extension.js",
   "engines": {
     "vscode": "^1.83.1"
@@ -29,7 +29,9 @@
     "url": "https://github.com/jstenmark/ChatCopyCat/issues"
   },
   "pricing": "Free",
-  "extensionKind": ["workspace"],
+  "extensionKind": [
+    "workspace"
+  ],
   "galleryBanner": {
     "color": "#5c2d91",
     "theme": "dark"
@@ -69,7 +71,6 @@
           "default": true,
           "description": "Clipboard: Remove comments (if possible)"
         },
-
         "chatcopycat.enableLanguage": {
           "type": "boolean",
           "default": true,
@@ -85,7 +86,6 @@
           "default": true,
           "description": "Clipboard: Show line-num in code blocks or diagnostics sections"
         },
-
         "chatcopycat.enableDiagnostics": {
           "type": "boolean",
           "default": true,
@@ -123,8 +123,6 @@
           "default": "",
           "description": "Code context: Set a default message that automatically populates during each fresh clipboard"
         },
-
-
         "chatcopycat.enableClipboardResetCombo": {
           "type": "boolean",
           "default": true,
@@ -145,8 +143,6 @@
           "default": "true",
           "description": "References: Include Class/Method/Property-decorators with references ('@'-decorator)"
         },
-
-
         "chatcopycat.fileTreeIgnoreList": {
           "type": "array",
           "items": {
@@ -195,8 +191,6 @@
           ],
           "description": "DefinitionsFiles: Paths to ignore in select dialog. (gitignore syntax)"
         },
-
-
         "chatcopycat.catLogLevel": {
           "type": "string",
           "default": "INFO",
@@ -242,7 +236,6 @@
         "title": "CCCat: Copy file-tree (or append to clipboard)",
         "group": "chatcopycat",
         "description": "Copies if no previous content, replaces previous file-tree in clipboard, prepends if inquiry is present in clipboard"
-
       },
       {
         "command": "chatcopycat.copyDefinitions",
@@ -317,10 +310,10 @@
     "compile": "tsc --experimentalDecorators -p ./",
     "watch": "tsc --experimentalDecorators --watch",
     "pretest": "yarn compile && yarn lint",
-    "lint": "eslint --ext.ts src",
+    "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext.ts src",
     "lint:local": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache --cache-location ~/.cache/eslint/ --color --fix --ext .ts src",
-    "lint:debug": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --debug --ext .ts src",
+    "lint:debug": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --debug --output-file lint.log --ext .ts src",
     "lint:config": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --print-config .eslintrc.json",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
@@ -331,25 +324,24 @@
     "vsce:publish:pre": "vsce publish --yarn --pre-release"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^1.4.0",
     "@stylistic/eslint-plugin-ts": "^1.4.0",
-    "@types/eslint": "^8.0.0",
+    "@types/eslint": "^8.44.8",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.3",
-    "@types/node": "^17.0.0",
+    "@types/node": "^20.10.3",
     "@types/vscode": "^1.83.1",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.9.1",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
     "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.6",
+    "@vscode/test-electron": "^2.3.8",
     "@vscode/vsce": "^2.21.1",
-    "electron": "^27.0.2",
-    "eslint": "^8.0.0",
-    "glob": "^8.1.0",
+    "electron": "^27.1.3",
+    "eslint": "^8.55.0",
+    "glob": "^10.3.10",
     "ignore": "^5.2.4",
     "mocha": "^10.2.0",
-    "prettier": "3.0.3",
+    "prettier": "3.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "<=5.2.0"
+    "typescript": "<=5.3.2"
   }
 }

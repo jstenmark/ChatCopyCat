@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import {
   createQuickPick,
   initQuickPick,
-  showQuickPick,
+  showQuickPickAction,
   IQuickPickItemAction,
   inputBox,
   showQuickPickMany
@@ -184,9 +184,8 @@ export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>)
       label: String(item),
       picked: true,
     }))
-    const addNewItem: ISpecialQuickPickItem = {label: '[Add New Item]', addNewItemFlag: true}
 
-    const result = await showQuickPickMany<ISpecialQuickPickItem>([addNewItem, ...arrayItems], {
+    const result = await showQuickPickMany<ISpecialQuickPickItem>([{label: '  [Add New Item]', addNewItemFlag: true}, ...arrayItems], {
       canPickMany: true,
       placeHolder: 'Select items or add new',
       title: 'Array configurator. Deselect items to remove. Use the "Add"-option to add'
@@ -197,7 +196,6 @@ export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>)
         prompt: 'Enter new item',
         title: `Configure ${setting.label}`,
         validateInput: text => {
-          log.debug('validatin gstrin?',{text,itemType})
           if (itemType === 'number') {
             return new Validator<string>(text)
               .isNumber()
@@ -229,7 +227,6 @@ export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>)
   const isSameValues = arraysAreEqual<T>(initialValue, updatedArray)
 
   if (typeof updatedArray !== 'undefined' && !isSameValues) {
-    log.debug('updating configstore..')
     await configStore.update<T[]>(setting.settingKey, updatedArray)
     return true
   }
@@ -243,24 +240,25 @@ export async function handleSettingWithEnum<T = unknown>(
   if (setting.settingObject?.enum) {
     const currentValue = configStore.get<T>(setting.settingKey)
     const defaultValue = configStore.getDefault<T>(setting.settingKey)
+    const itemType = setting.settingObject?.type
 
     const enums = setting.settingObject.enum.map(item => {
       const isDefault = item === defaultValue
       const isSelected = item === currentValue
       return {
         label: `${isSelected ? '$(check)' : '   '} ${isDefault ? '$(pinned)' : '   '} ${item}`,
+        value: item as typeof itemType
       }
     })
 
-    const selectedEnum = await showQuickPick<IQuickPickItemAction>(enums, {
+    const selectedEnum = await showQuickPickAction<IQuickPickItemAction & {value: string}>(enums, {
       title: `Configure ${setting.settingKey}`,
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       placeHolder: `Current: '${currentValue}'. Change '${setting.settingKey}'`,
     })
 
     if (selectedEnum) {
-      const cleanedValue = selectedEnum.label.replace(/ \$\([a-z-]+\)/g, '').trim()
-      await configStore.update<T>(setting.settingKey, cleanedValue as unknown as T) // Cast as T if necessary
+      await configStore.update<T>(setting.settingKey, selectedEnum.value as T)
       return true
     }
   }

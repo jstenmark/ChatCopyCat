@@ -1,6 +1,7 @@
 import {IContentConfig, getMetadataSection} from '../../domain/models/inquiry-template'
 import {selectionHeader, fileTreeHeader, fileTreeEnd} from '../../shared/constants/consts'
 import {IHeadersPresent, IHeaderIndex, ILangOpts} from '../../shared/types/types'
+import {log} from '../logging/log-base'
 import {statusBarManager} from '../vscode/statusbar-manager'
 import {clipboardManager} from './clipboard-manager'
 
@@ -11,6 +12,7 @@ import {clipboardManager} from './clipboard-manager'
  */
 export async function headersInClipboard(content?: string): Promise<IHeadersPresent> {
   if (!content || content.length !== 0) {
+
     content = await clipboardManager.readFromClipboard()
   }
 
@@ -107,24 +109,35 @@ export async function updateClipboardWithCopy(
   const selectionContent = selectionSections.join('\n').trim()
   const referenceContent = referenceSections ? referenceSections.join('\n').trim()+'\n' : ''
   const clipboardUpdateContent = `\n${fileMetadataSection}\n${selectionContent}\n${referenceContent}`
+  const headersPresent = (fileTreeHeaderPresent && fileTreeEndPresent) || selectionHeaderPresent
 
-  const sectionCount = referenceSections?.length ? referenceSections.length + selectionSections.length : selectionSections.length
+  const headerIsPresentIncreaseNum = headersPresent ? 1 : 0
+  const selectionCount = selectionSections.length
+  const referenceCount = referenceSections?.length ? referenceSections.length : 0
 
-  if(selectionHeaderPresent) {
-    sectionCount - 1
-  }
+  const contentCount = referenceCount + selectionCount + headerIsPresentIncreaseNum
 
-  if ((fileTreeHeaderPresent && fileTreeEndPresent) || selectionHeaderPresent) {
+  // TODO: fix statusbar counter
+  log.debug('COUNT', {
+    headersPresent,
+    headerIsPresentIncreaseNum,
+    selectionCount,
+    referenceCount,
+    contentCount,
+  }, {truncate: 0})
+
+
+  if (headersPresent) {
     await clipboardManager.appendToClipboard(
       clipboardUpdateContent,
       clipboardContent,
-      !referenceSections?.length || referenceSections.length === 0 ? selectionHeaderPresent : false
+      false
     )
-    statusBarManager.increaseCopyCount(sectionCount)
+    statusBarManager.increaseCopyCount(contentCount)
 
   } else {
     await clipboardManager.copyToClipboard(clipboardUpdateContent, true)
-    statusBarManager.updateCopyCount(sectionCount)
+    statusBarManager.updateCopyCount(contentCount)
 
   }
 }

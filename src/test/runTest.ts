@@ -5,7 +5,7 @@ import {runTests} from '@vscode/test-electron'
 async function main() {
   try {
     const extensionDevelopmentPath = resolve(__dirname, '../../')
-    const extensionTestsPath = resolve(__dirname, './suite/run')
+    const extensionTestsPath = resolve(__dirname, './suite/index')
 
     await runTests({
       extensionDevelopmentPath,

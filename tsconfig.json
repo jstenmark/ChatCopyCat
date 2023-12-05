@@ -23,6 +23,7 @@
     "preserveConstEnums": true
   },
   "exclude": [
+    "scripts",
     "node_modules",
     ".vscode-test",
     "out",

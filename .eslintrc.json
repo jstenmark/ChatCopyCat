@@ -6,12 +6,9 @@
     "@stylistic/ts"
   ],
   "parserOptions": {
-    "tsconfigRootDir": "./",
-
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project":  "./tsconfig.json",
-    "emitDecoratorMetaData": true,
+    "project": true,
     "lib": [
       "ES2022",
       "ESNext.AsyncIterable"
@@ -23,11 +20,7 @@
     "plugin:@typescript-eslint/stylistic-type-checked"
   ],
   "ignorePatterns": [
-    "src/test/",
-    "out/",
-    "node_modules/",
-    "scripts/",
-    "docs/",
+    "src/test", "out", "node_modules", "scripts", "docs",
     "**/*.d.ts"
   ],
   "rules": {

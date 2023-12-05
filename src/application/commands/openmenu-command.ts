@@ -7,13 +7,14 @@ import {
   handleIgnoreResetButton,
 } from '../../domain/services/definitions-utils'
 import {executeCommand} from '../../infra/system/exec'
-import {showQuickPick} from '../../adapters/ui/components/window-components'
+import {showQuickPickAction} from '../../adapters/ui/components/window-components'
 import {openSettings} from './settings-command'
 import {clipboardManager} from '../../infra/clipboard'
 import {getProjectRootPaths} from '../../infra/system/file-utils'
 import {ConfigStore} from '../../infra/config'
 import {extName} from '../../shared/constants/consts'
 import {getSymbolReferences} from './references-command'
+import {showVersionBumpDialog} from '../../adapters/ui/components/bump-version-dialog'
 
 export const openMenu = async () => {
   const picks = [
@@ -53,12 +54,16 @@ export const openMenu = async () => {
           (await executeCommand(getProjectRootPaths()![0], 'yarn pkg')) &&
           (await vscode.commands.executeCommand('workbench.action.reloadWindow'))
         },
+      },
+      {
+        label: '$(versions) Bump Version',
+        action: async () => await showVersionBumpDialog()
       }
     ]
     picks.push(...devItems)
   }
 
-  await showQuickPick(picks, {
+  await showQuickPickAction(picks, {
     placeHolder: `${extName} Command Center`,
   })
 }
