@@ -45,21 +45,6 @@ export const errorMessage = (error: unknown, defaultMessage?: string): string =>
     ? `${defaultMessage ? `${defaultMessage} ` : ''}${error.message}`
     : String(error)
 }
-/**
- * Validates dialog results for various conditions.
- */
-export class DialogResultValidator {
-  /**
-   * Validates if a string is a confirmation value ('yes' or 'no').
-   * @param result - The string to validate.
-   * @returns A validation error message or null if valid.
-   */
-  public validateConfirmationResult(result: string): string | null {
-    return new Validator<string>(result).isNotEmpty().isConfirmationValue().getErrorsString()
-  }
-}
-
-export const dialogResultValidator = new DialogResultValidator()
 
 /**
  * Validates a string against specified criteria.

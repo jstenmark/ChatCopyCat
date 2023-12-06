@@ -40,7 +40,7 @@ export class StatusBarManager implements vscode.Disposable {
    * Increases the copy count by one and updates the status bar item state.
    */
   public increaseCopyCount(add?:number): void {
-    this.copyCount = add ? this.copyCount + add : this.copyCount + 1
+    this.copyCount += (add ?? 1)
     this.updateState()
   }
 

@@ -2,7 +2,6 @@ import {IContentConfig, getMetadataSection} from '../../domain/models/inquiry-te
 import {selectionHeader, fileTreeHeader, fileTreeEnd} from '../../shared/constants/consts'
 import {IHeadersPresent, IHeaderIndex, ILangOpts} from '../../shared/types/types'
 import {log} from '../logging/log-base'
-import {statusBarManager} from '../vscode/statusbar-manager'
 import {clipboardManager} from './clipboard-manager'
 
 /**
@@ -75,10 +74,10 @@ export async function replaceFileListInClipboard(newFileListTemplate: string): P
       await clipboardManager.prependToClipboard(
         newFileListTemplate.trim() + '\n',
         clipboardContent,
-        true,
+        1,
       )
     } else {
-      await clipboardManager.copyToClipboard(newFileListTemplate, true)
+      await clipboardManager.copyToClipboard(newFileListTemplate, 1)
     }
   }
 }
@@ -99,6 +98,11 @@ export async function updateClipboardWithCopy(
   const {selectionHeaderPresent, fileTreeHeaderPresent, fileTreeEndPresent, clipboardContent} =
     await headersInClipboard()
 
+  const treePresent = fileTreeHeaderPresent && fileTreeEndPresent
+  const anyHeaderPresent = (fileTreeHeaderPresent && fileTreeEndPresent) || selectionHeaderPresent
+  // selectionHeaderPresent
+
+
   const fileMetadataSection = getMetadataSection(
     config.enableInquiryMessage ? inquiryType : undefined,
     selectionHeaderPresent,
@@ -106,38 +110,62 @@ export async function updateClipboardWithCopy(
     selectionSections.length > 1 ? true : false,
     config
   ).trim()
+
+
   const selectionContent = selectionSections.join('\n').trim()
   const referenceContent = referenceSections ? referenceSections.join('\n').trim()+'\n' : ''
   const clipboardUpdateContent = `\n${fileMetadataSection}\n${selectionContent}\n${referenceContent}`
-  const headersPresent = (fileTreeHeaderPresent && fileTreeEndPresent) || selectionHeaderPresent
 
-  const headerIsPresentIncreaseNum = headersPresent ? 1 : 0
+
+
   const selectionCount = selectionSections.length
   const referenceCount = referenceSections?.length ? referenceSections.length : 0
 
-  const contentCount = referenceCount + selectionCount + headerIsPresentIncreaseNum
+  const contentCount = calculateContentCount(
+    selectionCount,
+    referenceCount,
+    treePresent,
+    selectionHeaderPresent
+  )
+
 
   // TODO: fix statusbar counter
   log.debug('COUNT', {
-    headersPresent,
-    headerIsPresentIncreaseNum,
     selectionCount,
     referenceCount,
-    contentCount,
+    treePresent,
+    selectionHeaderPresent,
+    CONTENCOUNT: contentCount
   }, {truncate: 0})
 
 
-  if (headersPresent) {
+  if (anyHeaderPresent) {
     await clipboardManager.appendToClipboard(
       clipboardUpdateContent,
       clipboardContent,
-      false
+      contentCount
     )
-    statusBarManager.increaseCopyCount(contentCount)
-
   } else {
-    await clipboardManager.copyToClipboard(clipboardUpdateContent, true)
-    statusBarManager.updateCopyCount(contentCount)
-
+    await clipboardManager.copyToClipboard(clipboardUpdateContent, contentCount)
   }
+}
+
+function calculateContentCount(
+  selectionCount: number,
+  referenceCount: number,
+  treeHeaderPresent: boolean,
+  sectionHeaderPresent: boolean
+): number {
+  // Custom logic to calculate content count based on headers
+  const count = selectionCount + referenceCount
+
+  if (treeHeaderPresent) {
+    // count += 1 // Add logic for tree header
+  }
+
+  if (sectionHeaderPresent) {
+  // count += 1 // Assuming you want to increment by 1 for section header
+  }
+
+  return count
 }

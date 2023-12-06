@@ -1,20 +1,18 @@
 import * as vscode from 'vscode'
 
-export interface ILogInfo {
+export interface ILogEntry {
   level: LogLevel | string
   message: string
-  opts?: ILogOpts
+  opts?: ILoggerSettings
 }
 
 export interface ILogManager {
   getChannel(): vscode.OutputChannel | null
-  getLogLevel(): LogLevelNumeric
-  log(message: string): void
   setChannel(channel: vscode.OutputChannel): void
-  setLogLevel(logLevel: LogLevel): void
+  log(message: string): void
 }
-export type LogFunction = (msg: string, data?: unknown, logOpts?: ILogOpts) => void
-export type LogSink = (level: LogLevel, message: string, data?: unknown, logOpts?: ILogOpts) => void
+export type LoggerMethod = (msg: string, data?: unknown, logOpts?: ILoggerSettings) => void
+export type LogHandler = (level: LogLevel, message: string, data?: unknown, logOpts?: ILoggerSettings) => void
 export enum LogLevel {
   DEBUG = 'DEBUG',
   INFO = 'INFO',
@@ -28,34 +26,34 @@ export enum LogLevelNumeric {
   WARN = 3,
   ERROR = 4
 }
-export interface ILogMethods {
-  debug: LogFunction
-  error: LogFunction
-  info: LogFunction
-  warn: LogFunction
-  [method: string]: LogFunction | LogSink
+export interface ILoggerMethods {
+  debug: LoggerMethod
+  error: LoggerMethod
+  info: LoggerMethod
+  warn: LoggerMethod
+  [method: string]: LoggerMethod | LogHandler
 }
 
-export interface ILogOpts {
+export interface ILoggerSettings {
   truncate?: number
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type LogMixinConstructor = new (...args: any[]) => object
+export type LoggerMixinConstructor = new (...args: any[]) => object
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type LogDecoratorType = <T extends (...args: any[]) => Promise<any>>(
+export type LoggingDecoratorType = <T extends (...args: any[]) => Promise<any>>(
   _target: object,
   _propertyKey: string | symbol,
   descriptor: TypedPropertyDescriptor<T>,
 ) => TypedPropertyDescriptor<T> | void
 
-export interface ICallInfo {
+export interface ICallMetadata {
   args: unknown[]
   name: string
   targetType: string
 }
-export interface ITraceInfo {
+export interface ITraceResult {
   elapsed: number
   err?: Error
   returnValue?: unknown

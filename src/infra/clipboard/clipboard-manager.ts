@@ -26,10 +26,10 @@ export class ClipboardManager implements vscode.Disposable {
   }
 
   @AsyncLogDecorator(LogLevel.INFO, 'Copied to clipboard', {truncate: 20})
-  public async copyToClipboard(text: string, resetCount?: boolean | undefined): Promise<void> {
+  public async copyToClipboard(text: string, resetCount: number | undefined = undefined): Promise<void> {
     await ClipboardManager.copyText(text)
-    if (resetCount === true) {
-      this.statusBarManager.updateCopyCount(1)
+    if (resetCount) {
+      this.statusBarManager.updateCopyCount(resetCount)
     }
   }
 
@@ -42,14 +42,14 @@ export class ClipboardManager implements vscode.Disposable {
   public async prependToClipboard(
     textToPrepend: string,
     clipboardContent?: string,
-    increaseCount?: boolean | undefined,
+    increaseCount?: number,
   ): Promise<void> {
     if (clipboardContent?.length === 0) {
       clipboardContent = await ClipboardManager.pasteText()
     }
     await ClipboardManager.copyText(textToPrepend + clipboardContent)
-    if (increaseCount === true) {
-      this.statusBarManager.increaseCopyCount()
+    if (increaseCount) {
+      this.statusBarManager.increaseCopyCount(increaseCount)
     }
   }
 
@@ -57,14 +57,14 @@ export class ClipboardManager implements vscode.Disposable {
   public async appendToClipboard(
     textToAppend: string,
     clipboardContent?: string,
-    increaseCount?: boolean,
+    increaseCount?: number,
   ): Promise<void> {
     if (clipboardContent?.length === 0) {
       clipboardContent = await ClipboardManager.pasteText()
     }
     await ClipboardManager.copyText(clipboardContent + textToAppend)
-    if (increaseCount === true) {
-      this.statusBarManager.increaseCopyCount()
+    if (increaseCount) {
+      this.statusBarManager.increaseCopyCount(increaseCount)
     }
   }
 

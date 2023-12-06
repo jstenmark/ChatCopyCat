@@ -1,10 +1,9 @@
-import {LogMixinConstructor, ILogMethods, LogFunction, LogSink, ILogOpts, LogLevel} from './types'
+import {ILoggerMethods, LoggerMethod, LogHandler, ILoggerSettings, LogLevel, LogLevelNumeric} from './types'
 import {configStore} from '../config'
 import {log} from './log-base'
 import {LogManager} from './log-manager'
-import {truncate} from './log-utils'
-import {LogLevelToNumeric} from './consts'
-import {defaultTabSize} from '../../shared/constants/consts'
+import {truncateStr} from './log-utils'
+import {defaultJsonTabSize} from '../../shared/constants/consts'
 
 /**
  * Creates a loggable mixin class that extends a base class with logging methods (debug, info, warn, error).
@@ -12,77 +11,65 @@ import {defaultTabSize} from '../../shared/constants/consts'
  * @param Base - The base class to extend.
  * @returns A new class that extends the base class with logging functionality.
  */
-export function LoggableMixin<TBase extends LogMixinConstructor>(Base: TBase) {
-  return class Loggable extends Base implements ILogMethods {
-    [method: string]: LogFunction | LogSink
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function LoggableMixin<TBase extends new (...args: any[]) => object>(Base: TBase) {
+  return class Loggable extends Base implements ILoggerMethods {
+    [method: string]: LoggerMethod | LogHandler
 
-    public debug: LogFunction = (message: string, data?: unknown, logOpts?: ILogOpts): void => {
-      this._log(LogLevel.DEBUG, message, data, logOpts)
+    private logMethod(level: LogLevel): LoggerMethod {
+      return (message, data, logOpts) => this._log(level, message, data, logOpts)
     }
 
-    public info: LogFunction = (message: string, data?: unknown, logOpts?: ILogOpts): void => {
-      this._log(LogLevel.INFO, message, data, logOpts)
-    }
+    public debug = this.logMethod(LogLevel.DEBUG)
+    public info = this.logMethod(LogLevel.INFO)
+    public warn = this.logMethod(LogLevel.WARN)
+    public error = this.logMethod(LogLevel.ERROR)
 
-    public warn: LogFunction = (message: string, data?: unknown, logOpts?: ILogOpts): void => {
-      this._log(LogLevel.WARN, message, data, logOpts)
-    }
-
-    public error: LogFunction = (message: string, data?: unknown, logOpts?: ILogOpts): void => {
-      this._log(LogLevel.ERROR, message, data, logOpts)
-    }
-
-    private _log: LogSink = async (
+    private _log: LogHandler = (
       level: LogLevel,
       message: string,
       data?: unknown,
-      logOpts?: ILogOpts,
-      // eslint-disable-next-line @typescript-eslint/require-await
-    ): Promise<void> => {
-      const configuredLogLevel = configStore.get<string>('catLogLevel') || 'DEBUG'
-      const messageLogLevel = LogLevelToNumeric[level]
-      const isAllowedToLog =
-        messageLogLevel >= LogLevelToNumeric[configuredLogLevel as LogLevel] ? true : false
+      logOpts?: ILoggerSettings,
+    ): void => {
+      const truncateMsgLen = logOpts?.truncate ?? configStore.get<number>('catLogMsgTruncateLen')
+      const truncateDataLen = logOpts?.truncate ?? configStore.get<number>('catLogDataTruncateLen')
+      const configuredLogLevel = configStore.get<LogLevel>('catLogLevel') || LogLevel.DEBUG
 
-      const dataString =
-        data !== undefined
-          ? truncate(
-            this.data2String(data),
-            logOpts?.truncate ?? configStore.get<number>('catLogDataTruncateLen'),
-          )
-          : ''
+      if (LogLevelToNumeric[configuredLogLevel] >= LogLevelToNumeric[level]) {
+        const logMeta = `${now()} [${level}]${level.length === 4 ? ' ' : ''}`
+        const logMessage = truncateStr(message, truncateMsgLen)
+        const logData = getDataString(data, truncateDataLen)
 
-      if (isAllowedToLog) {
-        LogManager.instance.log(
-          `${this._now()} [${level}]${level.length === 4 ? ' ' : ''}\t${truncate(
-            message,
-            logOpts?.truncate ?? configStore.get<number>('catLogMsgTruncateLen'),
-          )} ${dataString}`,
+        LogManager.instance.log(`${logMeta}\t${logMessage} ${logData}`,
         )
       }
     }
-
-    private data2String(data: unknown): string {
-      if (data instanceof Error) {
-        return data.stack ?? data.message
-      }
-      try {
-        return typeof data === 'string' ? data : JSON.stringify(data, null, defaultTabSize)
-      } catch (error) {
-        log.error(`Failed to stringify data: ${(error as Error).message}`)
-        return `Failed to stringify data: ${(error as Error).message}`
-      }
-    }
-
-    private _now(): string {
-      const now = new Date()
-      return `${now.getHours().toString().padStart(2, '0')}:${now
-        .getMinutes()
-        .toString()
-        .padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now
-        .getMilliseconds()
-        .toString()
-        .padStart(3, '0')}`
-    }
   }
 }
+
+export const LogLevelToNumeric: Record<LogLevel, LogLevelNumeric> = {
+  [LogLevel.DEBUG]: LogLevelNumeric.DEBUG,
+  [LogLevel.INFO]: LogLevelNumeric.INFO,
+  [LogLevel.WARN]: LogLevelNumeric.WARN,
+  [LogLevel.ERROR]: LogLevelNumeric.ERROR,
+}
+
+const getDataString = (data: unknown, maxLen: number) => data !== undefined ? truncateStr(data2String(data), maxLen) : ''
+
+const data2String = (data: unknown): string => {
+  if (data instanceof Error) {
+    return data.stack ?? data.message
+  }
+  try {
+    return typeof data === 'string' ? data : JSON.stringify(data, null, defaultJsonTabSize)
+  } catch (error) {
+    log.error(`Failed to stringify data: ${(error as Error).message}`)
+    return `Failed to stringify data: ${(error as Error).message}`
+  }
+}
+const now = ((n: Date = new Date()) =>
+  `${n.getHours().toString().padStart(2, '0')}:` +
+  `${n.getMinutes().toString().padStart(2, '0')}:` +
+  `${n.getSeconds().toString().padStart(2, '0')}:` +
+  `${n.getMilliseconds().toString().padStart(3, '0')}`
+)

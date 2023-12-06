@@ -1,4 +1,5 @@
 export const defaultTabSize = 2
+export const defaultJsonTabSize = 2
 
 export const selectionHeader = '[Code Inquiry'
 export const fileTreeHeader = '[File Tree] Root:'

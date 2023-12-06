@@ -1,15 +1,14 @@
 import {OutputChannel, window, Disposable} from 'vscode'
-import {LogLevel} from './types'
+import {ILogManager} from './types'
 import {SingletonBase} from '../../shared/utils/singleton'
 import {extName} from '../../shared/constants/consts'
 /**
  * LogManager handles the creation and management of log output channels. It provides methods to log messages
  * at different levels and manages the log output destination.
  */
-export class LogManager extends SingletonBase implements Disposable {
+export class LogManager extends SingletonBase implements Disposable, ILogManager {
   private static _instance: LogManager | null = null
   private outputChannel: OutputChannel | null = null
-  private LogLevel: LogLevel = LogLevel.DEBUG
 
   protected constructor() {
     super()
@@ -23,7 +22,6 @@ export class LogManager extends SingletonBase implements Disposable {
     if (!this._instance) {
       this._instance = new LogManager()
       this._instance.setChannel(window.createOutputChannel(extName, 'log'))
-      this._instance.setLogLevel(LogLevel.DEBUG)
     }
     return this._instance
   }
@@ -37,14 +35,6 @@ export class LogManager extends SingletonBase implements Disposable {
 
   public getChannel(): OutputChannel | null {
     return this.outputChannel
-  }
-
-  public getLogLevel(): LogLevel {
-    return this.LogLevel
-  }
-
-  public setLogLevel(logLevel: LogLevel): void {
-    this.LogLevel = logLevel
   }
 
   public log(message: string): void {

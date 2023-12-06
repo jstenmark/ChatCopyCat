@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as vscode from 'vscode'
 import {getProjectRootPaths} from '../../../infra/system/file-utils'
-import {dialogResultValidator} from '../../../shared/utils/validate'
+import {Validator} from '../../../shared/utils/validate'
 import {Notify} from '../../../infra/vscode/notification'
 import {StateStore} from '../../../infra/config'
 
@@ -37,7 +37,11 @@ export async function confirmValidateDialog(): Promise<string | undefined> {
   const answer = await inputBox({
     ignoreFocusOut: true,
     prompt: 'Are you sure?',
-    validateInput: dialogResultValidator.validateConfirmationResult.bind(dialogResultValidator),
+    validateInput: text => new Validator<string>(text)
+      .isNotEmpty()
+      .isConfirmationValue()
+      .getInputBoxValidationMessage()
+
   })
 
   return answer?.toLowerCase() === 'yes' ? answer : undefined

@@ -1,10 +1,11 @@
 import {log} from './log-base'
-import {ILogMethods, LogFunction, ICallInfo, ITraceInfo, ILogInfo, LogLevel} from './types'
+import {ILoggerMethods, LoggerMethod, ICallMetadata, ITraceResult, ILogEntry, LogLevel} from './types'
 
 /**
  * Utility functions for logging, including methods to safely stringify of values, truncating strings, and
  * formatting log messages.
  */
+
 
 export const getTargetName = (_target: object): string =>
   _target?.constructor ? _target.constructor.name : ''
@@ -26,11 +27,11 @@ export function safeStringify(value: unknown): string {
     case 'function':
       return `[function ${value.name}]`
     default:
-      return '[unknown type]'
+      return '[unknown type safeStringify]'
   }
 }
 
-function normalizeCall(call: ICallInfo): ICallInfo {
+function normalizeCall(call: ICallMetadata): ICallMetadata {
   let {targetType, name, args} = call
   targetType = safeStringify(targetType)
 
@@ -42,23 +43,16 @@ function normalizeCall(call: ICallInfo): ICallInfo {
   }
   return {targetType, name, args}
 }
-function formatMessages(traced: ITraceInfo, call: ICallInfo) {
-  const normalizedCall = normalizeCall(call)
 
-  const ms = traced.elapsed
-  const hasReturnValue = traced.returnValue ? 'truthy' : 'falsy'
 
-  return {ms, hasReturnValue, ...normalizedCall}
-}
-
-export function truncate(str: string, maxLength: number | undefined = 300): string {
+export function truncateStr(str: string, maxLength = 300): string {
   if (maxLength === 0) {
     return str
   }
   return str.length > maxLength ? str.substring(0, maxLength) + '...' : str
 }
 
-export function getLoggerMethod(logger: ILogMethods, level: LogLevel): LogFunction {
+export function getLoggerMethod(logger: ILoggerMethods, level: LogLevel): LoggerMethod {
   switch (level) {
     case LogLevel.DEBUG:
       return logger.debug
@@ -83,22 +77,10 @@ function isInEnum(value: any, enumType: any): boolean {
   return Object.values(enumType).includes(value)
 }
 
-export function getLogLevel(level: string | LogLevel): LogLevel | undefined {
-  if (typeof level === 'string') {
-    const upperCaseLevel = level.toUpperCase()
-    return isKeyOfEnum(upperCaseLevel, LogLevel)
-      ? LogLevel[upperCaseLevel as keyof typeof LogLevel]
-      : undefined
-  } else {
-    return isInEnum(level, LogLevel) ? level : undefined
-  }
-}
 
-export function logResult(logInfo: ILogInfo, traced: ITraceInfo, call: ICallInfo) {
-  const {message, level, opts} = logInfo
+export function logResult({message, level, opts}: ILogEntry, traced: ITraceResult, call: ICallMetadata) {
   const formatted = formatMessages(traced, call)
-
-  const typedLevel = getLogLevel(level)
+  const typedLevel = getLogLevelTyped(level)
 
   if (typedLevel !== undefined) {
     const loggerMethod = getLoggerMethod(log, typedLevel)
@@ -106,5 +88,22 @@ export function logResult(logInfo: ILogInfo, traced: ITraceInfo, call: ICallInfo
     loggerMethod(message, logData, opts)
   } else {
     console.warn(`Invalid log level: ${level}`)
+  }
+}
+
+const formatMessages = (traced: ITraceResult, call: ICallMetadata) => ({
+  ms: traced.elapsed,
+  hasReturnValue: traced.returnValue ? 'truthy' : 'falsy',
+  ...normalizeCall(call)
+})
+
+export function getLogLevelTyped(level: string | LogLevel): LogLevel | undefined {
+  if (typeof level === 'string') {
+    const upperCaseLevel = level.toUpperCase()
+    return isKeyOfEnum(upperCaseLevel, LogLevel)
+      ? LogLevel[upperCaseLevel as keyof typeof LogLevel]
+      : undefined
+  } else {
+    return isInEnum(level, LogLevel) ? level : undefined
   }
 }

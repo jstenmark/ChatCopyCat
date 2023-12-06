@@ -6,7 +6,7 @@
   "author": {
     "name": "Johannes Stenmark"
   },
-  "version": "0.3.1",
+  "version": "0.0.9",
   "main": "./out/extension.js",
   "engines": {
     "vscode": "^1.83.1"
@@ -267,7 +267,7 @@
       },
       {
         "command": "chatcopycat.openSettings",
-        "title": "CCCat: Configuration/Extension settings",
+        "title": "CCCat: Configuration | Preferences | Settings",
         "group": "chatcopycat"
       },
       {
@@ -286,7 +286,7 @@
         {
           "command": "chatcopycat.getSymbolReferences",
           "group": "navigation",
-          "when": "editorTextFocus && !(inQuickOpen || terminalFocus || filesExplorerFocus || inSearchEditor || searchViewletFocus || replaceInputBoxFocus)"
+          "when": "editorTextFocus && !(inQuickOpen || terminalFocus || filesExplorerFocus || inSearchEditor || searchViewletFocus || replaceInputBoxFocus || outputFocus)"
         }
       ]
     },
@@ -317,7 +317,7 @@
     "lint:config": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --print-config .eslintrc.json",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
-    "pkg": "rm -f chatcopycat-*.vsix && yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt",
+    "pkg": "rm -f chatcopycat-*.vsix && yarn package && code --install-extension ./chatcopycat-*.vsix --force && echo 'done' > /home/johannes/.vscode/watchdir/done.txt",
     "vsce:package": "vsce package --yarn",
     "vsce:package:pre": "vsce package --yarn --pre-release",
     "vsce:publish": "vsce publish --yarn",

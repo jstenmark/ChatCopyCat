@@ -24,7 +24,6 @@ export function registerCommands(context: ExtensionContext): void {
     return
   }
 
-
   for (const cmd of commandsList) {
     registerCommand(context, cmd)
   }

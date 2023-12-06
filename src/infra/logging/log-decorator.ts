@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {performance} from 'perf_hooks'
 import {log} from './log-base'
-import {ILogMethods, ILogOpts, LogFunction, LogLevel, LogDecoratorType} from './types'
-import {getLogLevel, getTargetName, getLoggerMethod, logResult} from './log-utils'
+import {ILoggerMethods, ILoggerSettings, LoggerMethod, LogLevel, LoggingDecoratorType} from './types'
+import {getLogLevelTyped, getTargetName, getLoggerMethod, logResult} from './log-utils'
 
 /**
  * Decorator for logging method calls at a specified log level with a given message.
@@ -14,7 +14,7 @@ import {getLogLevel, getTargetName, getLoggerMethod, logResult} from './log-util
 export function LogDecorator(
   level: LogLevel | string,
   message: string,
-  logOpts?: ILogOpts,
+  logOpts?: ILoggerSettings,
 ): MethodDecorator {
   return function <T>(
     _target: object,
@@ -23,10 +23,10 @@ export function LogDecorator(
   ): TypedPropertyDescriptor<T> | void {
     if (typeof descriptor.value === 'function') {
       const originalMethod = descriptor.value as (...args: any[]) => any
-      descriptor.value = function (this: typeof _target & ILogMethods, ...args: any[]): any {
-        const typedLevel = getLogLevel(level)
+      descriptor.value = function (this: typeof _target & ILoggerMethods, ...args: any[]): any {
+        const typedLevel = getLogLevelTyped(level)
         if (typedLevel !== undefined) {
-          const loggerMethod:LogFunction = getLoggerMethod(log, typedLevel)
+          const loggerMethod: LoggerMethod = getLoggerMethod(log, typedLevel)
           loggerMethod(message, args, logOpts)
         } else {
           console.warn(`Invalid log level: ${level}`)
@@ -48,8 +48,8 @@ export function LogDecorator(
 export function AsyncLogDecorator(
   level: LogLevel | string,
   message: string,
-  opts?: ILogOpts,
-): LogDecoratorType {
+  opts?: ILoggerSettings,
+): LoggingDecoratorType {
   return function <T extends (...args: any[]) => Promise<any>>(
     _target: object, //any
     _propertyKey: string | symbol,
