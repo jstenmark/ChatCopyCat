@@ -5,6 +5,7 @@ export interface ILangOpts {
   language: string
   tabSize: number
 }
+
 export interface IContentSection {
   selectionDiagnostics: vscode.Diagnostic[] | undefined
   selectionSection: string

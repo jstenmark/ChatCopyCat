@@ -24,6 +24,19 @@ ChatCopyCat isn’t about hype. This extension respects your space and enhances 
 
 Code as serene as a cat napping in a sunbeam, that's ChatCopyCat for you.
 
+## ChatGPT conversation examples
+
+- [Code optimization with references](https://chat.openai.com/share/4f8f4c07-0368-42a5-b9fb-20c9e1983dcb)
+
+- [Copying references for improved contextual understanding](https://chat.openai.com/share/fc8ac779-f085-4ab7-bfa6-cc1260a0c199)
+
+- [Copy and included code errors + copy code references](https://chat.openai.com/share/cb41bc67-2f81-44ca-b5ac-49a96658870c)
+
+- [Copy references exapmle 2](https://chat.openai.com/share/fbd83096-2497-4ad6-9f10-facf6e69850c)
+
+- [Copy document and include file-tree](https://chat.openai.com/share/8312de87-0268-443b-a960-44c0ffe59e6a)
+
+
 ---
 ## Chilled-Out Features
 - **Paste & Relax**: Just do a few copies to get prompt-ready, or don't. No pressure.
@@ -50,7 +63,8 @@ Whether copying code, silencing suggestions,<br> or starting fresh, this command
 
 > :warning: **Important**
 > - **`chatcopycat.copyCode`** have the same key bind as **`open new terminal`**
-> - **VSCodeVim** users might experience overloading. *But we have faith in your terminal-like transcendence journey*. 
+> - **VSCodeVim** users might experience overloading. *But we have faith in your terminal-like transcendence journey*.
+
 ### Key Binds
 1. **Copy Code Keybinding**
    - **Key**: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
@@ -161,9 +175,9 @@ List of commands defined in the extension, you will find them in the command pal
 ### Code block settings
 > These settings modify code block generation.
 
-#### Code Cleanup  
+#### Code Cleanup
 - **Excess whitespace/newline/tab Removal**
-  `chatcopycat.enableTrimming`: Remove excess whitespace and newline characters. 
+  `chatcopycat.enableTrimming`: Remove excess whitespace and newline characters.
   Default: `true`.
 
 - **Spaces to Tabs Conversion**
@@ -174,7 +188,7 @@ List of commands defined in the extension, you will find them in the command pal
   `chatcopycat.enableCommentRemoval`: Remove comments where possible.
   Default: `true`.
 
-#### Code Metadata  
+#### Code Metadata
 - **Display code language**
   `chatcopycat.enableLanguage`: Display language ID in code blocks.
   Default: `true`.
@@ -270,7 +284,12 @@ List of commands defined in the extension, you will find them in the command pal
 ## Staying Fresh
 Right now, ChatCopyCat is all about choice—grab what you need, tag it if you feel like it, and keep it simple.
 
+- **Code anonymity**: We're working on  **code anonymization functionalities**, enabling easier workflow without leaking critical codebase/information to the LLM provider. *Please get in touch with maintainer for further information, seeking beta testers.*
+
+- **Codebase refactor**: Mind mind the mess, the codebase is ongoning a facelift, hexagonal pattern <3
+
 - **[Future Brainwaves](ROADMAP.md)**: We’re all about evolving without complicating.
+
 
 For now, whether it's a snippet or the whole shebang, we're keeping it casual and integrated.
 
