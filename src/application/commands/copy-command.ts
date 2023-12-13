@@ -1,7 +1,7 @@
 import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
 import {ConfigStore, SemaphoreService} from '../../infra/config'
 import {generateReferenceSections, generateSelectionSections} from '../../adapters/ui/editor-utils'
-import {getInquiryType} from '../../adapters/ui/components/inquiry-dialog'
+import {getInquiryType} from '../../adapters/ui/dialog/inquiry-dialog'
 import {getLangOpts} from '../../infra/vscode/editor'
 import {handleActiveDialogs} from '../../adapters/ui/dialog/dialog-utils'
 import {ILangOpts} from '../../shared/types/types'

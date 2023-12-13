@@ -3,11 +3,12 @@ import {readFile} from 'fs/promises'
 import * as path from 'path'
 import * as vscode from 'vscode'
 import {configStore} from '../config'
-import {handlers} from '../../application/extension/activation'
+import {commandHandlers} from '../../application/extension/activation'
 import {log} from '../logging/log-base'
 import {executeCommand} from '../system/exec'
 import {getProjectRootPaths} from '../system/file-utils'
 import {Notify} from '../vscode/notification'
+import {BumpTypes} from '../../adapters/ui/dialog/bump-version-dialog'
 
 export function watchForExtensionChanges(): vscode.Disposable {
   if(configStore.get<boolean>('catEnabledFolderWatcher')) {
@@ -17,7 +18,7 @@ export function watchForExtensionChanges(): vscode.Disposable {
     const watcher = (curr: fs.Stats, prev: fs.Stats) => {
       if (curr.mtimeMs !== prev.mtimeMs) {
         log.info(`Detected change in ${watchFolder}, reloading window.`)
-        handlers.reloadWindow().then(
+        commandHandlers.reloadWindow().then(
           () => log.info('Window reloaded successfully.'),
           (err: Error) => log.error('Failed to reload window: ' + err.message),
         )
@@ -44,7 +45,7 @@ const readPackageJson = async (path: string): Promise<any> => {
   }
 }
 
-export const bumpVersion = async (versionType: 'patch' | 'minor' | 'major') => {
+export const bumpVersion = async (versionType: BumpTypes) => {
   const pkgRootPath = getProjectRootPaths()![0]
   const packageJsonPath: string = path.join(pkgRootPath, 'package.json')
 

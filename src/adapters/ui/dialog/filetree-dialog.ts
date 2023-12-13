@@ -3,7 +3,7 @@ import {IFileListItem, IFileTreeDialogItem, IFileTreeNode} from '../../../domain
 import {handleButtonAction, updateDefinitionsDialogAutoselect, processSelectionResults} from '../filetree-handler'
 import {convertFileTreeNodeToItem} from '../../../domain/services/definitions-utils'
 import {StateStore} from '../../../infra/config'
-import {createQuickPick, initQuickPick} from './window-components'
+import {createQuickPick, initQuickPick} from '../components/window-components'
 
 
 export const selectFileTreeDialogItem = (node: IFileTreeNode, label: string) => ({

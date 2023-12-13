@@ -1,6 +1,5 @@
 import {ILoggerMethods, LoggerMethod, LogHandler, ILoggerSettings, LogLevel, LogLevelNumeric} from './types'
 import {configStore} from '../config'
-import {log} from './log-base'
 import {LogManager} from './log-manager'
 import {truncateStr} from './log-utils'
 import {defaultJsonTabSize} from '../../shared/constants/consts'
@@ -16,60 +15,93 @@ export function LoggableMixin<TBase extends new (...args: any[]) => object>(Base
   return class Loggable extends Base implements ILoggerMethods {
     [method: string]: LoggerMethod | LogHandler
 
-    private logMethod(level: LogLevel): LoggerMethod {
-      return (message, data, logOpts) => this._log(level, message, data, logOpts)
+    private createLoggerMethod(level: LogLevel): LoggerMethod {
+      return (message, data, loggerOptions) => void this.processLog(level, message, data, loggerOptions)
     }
 
-    public debug = this.logMethod(LogLevel.DEBUG)
-    public info = this.logMethod(LogLevel.INFO)
-    public warn = this.logMethod(LogLevel.WARN)
-    public error = this.logMethod(LogLevel.ERROR)
+    public debug = this.createLoggerMethod(LogLevel.DEBUG)
+    public info = this.createLoggerMethod(LogLevel.INFO)
+    public warn = this.createLoggerMethod(LogLevel.WARN)
+    public error = this.createLoggerMethod(LogLevel.ERROR)
 
-    private _log: LogHandler = (
+    private processLog(
       level: LogLevel,
       message: string,
       data?: unknown,
-      logOpts?: ILoggerSettings,
-    ): void => {
-      const truncateMsgLen = logOpts?.truncate ?? configStore.get<number>('catLogMsgTruncateLen')
-      const truncateDataLen = logOpts?.truncate ?? configStore.get<number>('catLogDataTruncateLen')
-      const configuredLogLevel = configStore.get<LogLevel>('catLogLevel') || LogLevel.DEBUG
+      loggerOptions?: ILoggerSettings,
+    ): void {
+      const {truncateOptions, logLevel} = getLogConfiguration()
 
-      if (LogLevelToNumeric[configuredLogLevel] >= LogLevelToNumeric[level]) {
-        const logMeta = `${now()} [${level}]${level.length === 4 ? ' ' : ''}`
-        const logMessage = truncateStr(message, truncateMsgLen)
-        const logData = getDataString(data, truncateDataLen)
+      if (LogLevelToNumberMap[level] >= LogLevelToNumberMap[logLevel]) {
+        const {logMeta, logMessage, logData} = buildLogEnvelope(message, data, level, loggerOptions!, truncateOptions)
 
-        LogManager.instance.log(`${logMeta}\t${logMessage} ${logData}`,
+        LogManager.instance.log(`${logMeta} ${logMessage} ${logData}`,
         )
       }
     }
   }
 }
 
-export const LogLevelToNumeric: Record<LogLevel, LogLevelNumeric> = {
-  [LogLevel.DEBUG]: LogLevelNumeric.DEBUG,
-  [LogLevel.INFO]: LogLevelNumeric.INFO,
-  [LogLevel.WARN]: LogLevelNumeric.WARN,
-  [LogLevel.ERROR]: LogLevelNumeric.ERROR,
-}
 
-const getDataString = (data: unknown, maxLen: number) => data !== undefined ? truncateStr(data2String(data), maxLen) : ''
+const formatDataAsString = (data: unknown, maxLen: number) =>
+  data !== undefined
+    ? truncateStr(convertDataToString(data), maxLen)
+    : ''
 
-const data2String = (data: unknown): string => {
+const convertDataToString = (data: unknown): string => {
   if (data instanceof Error) {
     return data.stack ?? data.message
   }
   try {
     return typeof data === 'string' ? data : JSON.stringify(data, null, defaultJsonTabSize)
   } catch (error) {
-    log.error(`Failed to stringify data: ${(error as Error).message}`)
     return `Failed to stringify data: ${(error as Error).message}`
   }
 }
+
 const now = ((n: Date = new Date()) =>
   `${n.getHours().toString().padStart(2, '0')}:` +
   `${n.getMinutes().toString().padStart(2, '0')}:` +
   `${n.getSeconds().toString().padStart(2, '0')}:` +
   `${n.getMilliseconds().toString().padStart(3, '0')}`
 )
+
+export const LogLevelToNumberMap: Record<LogLevel, LogLevelNumeric> = {
+  [LogLevel.DEBUG]: LogLevelNumeric.DEBUG,
+  [LogLevel.INFO]: LogLevelNumeric.INFO,
+  [LogLevel.WARN]: LogLevelNumeric.WARN,
+  [LogLevel.ERROR]: LogLevelNumeric.ERROR,
+}
+
+interface ILoggerConfiguration {
+  truncateOptions: {
+    msgTruncate: number
+    dataTruncate: number
+  },
+  logLevel: LogLevel
+}
+const getLogConfiguration = (): ILoggerConfiguration => ({
+  truncateOptions: {
+    msgTruncate: configStore.get<number>('catLogMsgTruncateLen') ?? 201,
+    dataTruncate: configStore.get<number>('catLogDataTruncateLen') ?? 202,
+  },
+  logLevel: configStore.get<LogLevel>('catLogLevel') ?? LogLevel.DEBUG
+})
+
+
+interface ILogMessageStructure {
+  logMeta: string,
+  logMessage: string,
+  logData: string
+}
+const buildLogEnvelope = (
+  message: string,
+  data: unknown,
+  level: LogLevel,
+  logOpts: ILoggerSettings,
+  {msgTruncate, dataTruncate}: ILoggerConfiguration['truncateOptions']
+): ILogMessageStructure => ({
+  logMeta: `${now()} [${level}]${level.length === 4 ? ' ' : ''}`,
+  logMessage: truncateStr(message, logOpts?.truncate ?? msgTruncate),
+  logData: formatDataAsString(data, logOpts?.truncate ?? dataTruncate)
+})

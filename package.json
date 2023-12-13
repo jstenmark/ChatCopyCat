@@ -1,12 +1,26 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
+  "version": "0.0.12",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": {
     "name": "Johannes Stenmark"
   },
-  "version": "0.0.9",
+  "categories": [
+    "Snippets",
+    "Programming Languages",
+    "Other"
+  ],
+  "icon": "images/png/logo_128.png",
+  "galleryBanner": {
+    "color": "#5c2d91",
+    "theme": "dark"
+  },
+  "pricing": "Free",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "engines": {
     "vscode": "^1.83.1"
@@ -15,27 +29,15 @@
     "type": "git",
     "url": "https://github.com/jstenmark/ChatCopyCat.git"
   },
-  "categories": [
-    "Snippets",
-    "Programming Languages",
-    "Other"
-  ],
-  "icon": "images/png/logo_128.png",
-  "homepage": "https://github.com/jstenmark/ChatCopyCat",
-  "activationEvents": [
-    "onStartupFinished"
-  ],
+  "homepage": "https://github.com/jstenmark/ChatCopyCat/blob/main/README.md",
   "bugs": {
-    "url": "https://github.com/jstenmark/ChatCopyCat/issues"
+    "url": "https://github.com/jstenmark/ChatCopyCat/issues",
+    "email": "johannes@stenmark.in"
   },
-  "pricing": "Free",
+  "markdown": "github",
   "extensionKind": [
     "workspace"
   ],
-  "galleryBanner": {
-    "color": "#5c2d91",
-    "theme": "dark"
-  },
   "preview": true,
   "license": "MIT",
   "keywords": [
@@ -47,8 +49,12 @@
   ],
   "capabilities": {
     "untrustedWorkspaces": {
-      "supported": false,
-      "description": "Got some fs calls, exec handlers etc. Go with your gut."
+      "supported": "limited",
+      "restrictedConfigurations": [
+        "chatcopycat.catEnabledFolderWatcher",
+        "chatcopycat.catDevMode"
+      ],
+      "description": "Got some fs calls, exec handlers etc. Only used by dev mode but go with your gut."
     }
   },
   "contributes": {
@@ -59,47 +65,47 @@
         "chatcopycat.enableTrimming": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Remove leading/trailing newlines, remove trailing spaces and tabs per row"
+          "description": "Code Cleanup: Remove leading/trailing newlines, remove trailing spaces and tabs per row"
         },
         "chatcopycat.enableSpacesToTabs": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Indent content using tabs (save tokens)"
+          "description": "Code Cleanup: Indent content using tabs (save tokens)"
         },
         "chatcopycat.enableCommentRemoval": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Remove comments (if possible)"
+          "description": "Code Cleanup: Remove comments (if possible)"
         },
         "chatcopycat.enableLanguage": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Add languageId in code blocks"
+          "description": "Code Metadata: Add languageId in code blocks"
         },
         "chatcopycat.enablePath": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Show file path in code blocks"
+          "description": "Code Metadata: Show file path in code blocks"
         },
         "chatcopycat.enablePosition": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Show line-num in code blocks or diagnostics sections"
+          "description": "Code Metadata: Show line-num in code blocks or diagnostics sections"
         },
         "chatcopycat.enableDiagnostics": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Include code errors for each selection."
+          "description": "Code Context: Include code errors for each selection."
         },
         "chatcopycat.customDiagnosticsMessage": {
           "type": "string",
           "default": "",
-          "description": "Clipboard: Add a custom text along with the diagnostics section if present"
+          "description": "Code Context: Add a custom text along with the diagnostics section if present"
         },
         "chatcopycat.enableInquiryMessage": {
           "type": "boolean",
           "default": true,
-          "description": "Clipboard: Toggle to always prompt for the type of inquiry with each copy action for customized context setting."
+          "description": "Code Context: Toggle to always prompt for the type of inquiry with each copy action for customized context setting."
         },
         "chatcopycat.inquiryMessagesList": {
           "type": "array",
@@ -136,7 +142,7 @@
         "chatcopycat.enableReferenceWithCopy": {
           "type": "boolean",
           "default": false,
-          "description": "Copy: Optionality append references to copied selection"
+          "description": "References: Optionality append references to copied selection"
         },
         "chatcopycat.includeDecoratorsInReferences": {
           "type": "boolean",

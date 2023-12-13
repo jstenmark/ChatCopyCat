@@ -6,6 +6,7 @@ import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
 import {processSymbolsWithComments} from './process-symbols-comments'
 import {statusBarManager} from '../../infra/vscode/statusbar-manager'
 import {getContentConfig} from '../../domain/models/inquiry-template'
+import {showAppendOrCopyDialog} from '../../adapters/ui/dialog/append-copy-dialog'
 
 
 export const getSymbolReferences = async (): Promise<void> => {
@@ -16,11 +17,27 @@ export const getSymbolReferences = async (): Promise<void> => {
   const config = getContentConfig()
 
   const references = await processSymbolsWithComments(editor, config)
-
   const referenceSections = generateReferenceSections(references, config)
-  await clipboardManager.copyToClipboard(referenceSections.join('\n').trim())
-  Notify.info(`Copied ${referenceSections.length} references to clipboard`)
-  statusBarManager.updateCopyCount(referenceSections.length)
+
+  const action = await showAppendOrCopyDialog()
+  if (!action) {
+    return
+  }
+
+  const referenceText = referenceSections.join('\n').trim()
+  if (action === 'append') {
+    await clipboardManager.appendToClipboard(
+      referenceText,
+      await clipboardManager.readFromClipboard(),
+      referenceSections.length
+    )
+    Notify.info(`Appended ${referenceSections.length} references to clipboard`)
+  } else if (action === 'copy') {
+    await clipboardManager.copyToClipboard(referenceText)
+    Notify.info(`Copied ${referenceSections.length} references to clipboard`)
+    statusBarManager.updateCopyCount(referenceSections.length)
+
+  }
 }
 
 

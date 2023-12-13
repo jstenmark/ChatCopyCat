@@ -14,7 +14,7 @@ import {getProjectRootPaths} from '../../infra/system/file-utils'
 import {ConfigStore} from '../../infra/config'
 import {extName} from '../../shared/constants/consts'
 import {getSymbolReferences} from './references-command'
-import {showVersionBumpDialog} from '../../adapters/ui/components/bump-version-dialog'
+import {showVersionBumpDialog} from '../../adapters/ui/dialog/bump-version-dialog'
 
 export const openMenu = async () => {
   const picks = [

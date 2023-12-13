@@ -5,7 +5,7 @@ import {
 import * as vscode from 'vscode'
 import * as path from 'path'
 
-import {showFolderTreeDialog} from '../../adapters/ui/components/filetree-dialog'
+import {showFolderTreeDialog} from '../../adapters/ui/dialog/filetree-dialog'
 import {IFileListItem, IFileTreeNode, IPathAndUri} from '../../domain/models/filetree-types'
 import {
   getCustomSupportedFileExtensions,

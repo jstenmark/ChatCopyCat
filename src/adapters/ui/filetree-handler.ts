@@ -15,7 +15,7 @@ import {
 import {StateStore, configStore} from '../../infra/config'
 import {getFileTree} from '../../infra/file-tree/tree-transform'
 import {log} from '../../infra/logging/log-base'
-import {ignoreButton, ignoreResetButton, cacheResetButton} from './components/filetree-dialog'
+import {ignoreButton, ignoreResetButton, cacheResetButton} from './dialog/filetree-dialog'
 import {LanguageService} from '../../domain/services/language-service'
 
 /**

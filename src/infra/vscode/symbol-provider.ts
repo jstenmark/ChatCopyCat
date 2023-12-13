@@ -41,21 +41,17 @@ export class SymbolProvider {
 
         switch (action) {
           case Action.Skip:
-            log.debug('Skip')
             continue
           case Action.Copy:
-            log.debug('Copy')
             return symbol
           case Action.CopySignature:
-            log.debug('CopySignature')
             return symbol
           case Action.CopyWithChildren:
-            childSymbol = SymbolProvider.findEnclosingSymbol(symbol.children, position, symbolKindBlacklist, symbolKindEncloseChild, symbol.kind)
+            childSymbol =
+              SymbolProvider.findEnclosingSymbol(symbol.children, position, symbolKindBlacklist, symbolKindEncloseChild, symbol.kind)
             if (childSymbol) {
-              log.debug('CopyWithChildren')
               return childSymbol
             } else {
-              log.info('CopyWithChildren didnt find more children')
               return symbol
             }
             break

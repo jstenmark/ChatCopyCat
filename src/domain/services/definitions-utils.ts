@@ -1,6 +1,6 @@
 import path from 'path'
 import * as vscode from 'vscode'
-import {selectFileTreeDialogItem} from '../../adapters/ui/components/filetree-dialog'
+import {selectFileTreeDialogItem} from '../../adapters/ui/dialog/filetree-dialog'
 import {IFileTreeNode, IFileTreeDialogItem, IFileListItem} from '../models/filetree-types'
 import {refreshDialog} from '../../adapters/ui/filetree-handler'
 import {configStore, StateStore} from '../../infra/config'

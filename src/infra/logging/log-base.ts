@@ -12,7 +12,7 @@ class LogBase {
 /**
  * Creates a new LogBaseMixin by applying the LoggableMixin to the LogBase class.
  */
-export const LogBaseMixin = LoggableMixin(LogBase)
+const LogBaseMixin = LoggableMixin(LogBase)
 
 /**
  * Creates an instance of the LogBaseMixin class, which combines logging functionality with the base log features.

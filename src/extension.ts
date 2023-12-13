@@ -3,7 +3,7 @@ import {Notify} from './infra/vscode/notification'
 import {errorMessage} from './shared/utils/validate'
 
 import {registerCommands} from './application/extension/utils'
-import {initExtension, registerSubscriptions} from './application/extension/activation'
+import {initExtension, registerDisposables} from './application/extension/activation'
 import {log} from './infra/logging/log-base'
 import {IExtension} from './infra/config'
 import {extId, extPublisher} from './shared/constants/consts'
@@ -14,7 +14,7 @@ export async function activate(context: ExtensionContext) {
     const subscriptions = await initExtension(context)
 
     registerCommands(context)
-    registerSubscriptions(context, subscriptions)
+    registerDisposables(context, subscriptions)
     const version = (
       (extensions.getExtension<IExtension>(
         `${extPublisher}.${extId}`,

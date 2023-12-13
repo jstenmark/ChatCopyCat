@@ -20,24 +20,31 @@ import {ConfigAdapter} from '../../adapters/vscode/config-adapter'
 import {LanguageAdapter} from '../../adapters/vscode/language-adapter'
 import {LanguageService} from '../../domain/services/language-service'
 
+export const devCommands: string[] = [] // ["chatcopycat.reloadWindow"]
 
 
 export const initExtension = async (_context: ExtensionContext): Promise<Disposable[]> => {
+  // Init some infra
+  LogManager.instance // Init Logmanager with fallback conf
+  await ConfigStore.initialize()
+
+  // Init adapters
   const semaphoreAdapter = new SemaphoreAdapter()
   const languageAdapter = new LanguageAdapter()
-  const configAdapter = new ConfigAdapter()
+  const configAdapter = new ConfigAdapter() // WIP
 
-  await ConfigStore.initialize()
+
+  // Init Core
   await SemaphoreService.initialize(semaphoreAdapter)
   await LanguageService.initialize(languageAdapter,configAdapter)
   StateStore.instance
 
+  // Return Disposables
   return [semaphoreAdapter]
 }
 
-export const devCommands: string[] =  [] // ["chatcopycat.reloadWindow"]
-
-export const handlers: Record<string, () => Promise<void>> = {
+// Read from pkgJson
+export const commandHandlers: Record<string, () => Promise<void>> = {
   copyCode,
   resetClipboard: clipboardManager.resetClipboard.bind(clipboardManager),
   closeDialog,
@@ -49,7 +56,8 @@ export const handlers: Record<string, () => Promise<void>> = {
   reloadWindow: async () => await commands.executeCommand('workbench.action.reloadWindow'),
   openSettings,
 }
-export function registerSubscriptions(context: ExtensionContext, subscriptions: Disposable[]): void {
+
+export function registerDisposables(context: ExtensionContext, subscriptions: Disposable[]): void {
   context.subscriptions.push(
     ConfigStore.instance,
     StateStore.instance,

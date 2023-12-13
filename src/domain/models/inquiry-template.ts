@@ -6,7 +6,6 @@ import {handleFileLanguageId} from '../services/language-processing-service'
 import {IContentSection, ILangOpts} from '../../shared/types/types'
 import {selectionHeader} from '../../shared/constants/consts'
 
-
 export function getMetadataSection(
   inquiryTypes: string[] | undefined,
   headerIsInClipboard: boolean,
@@ -28,7 +27,6 @@ export function getMetadataSection(
   }\n`
 }
 
-
 export interface IContentConfig {
   enablePosition: boolean;
   enablePath: boolean;
@@ -40,7 +38,7 @@ export interface IContentConfig {
   enableTrimming: boolean;
 }
 
-export const getContentConfig =  ():IContentConfig => ({
+export const getContentConfig = (): IContentConfig => ({
   enablePosition: configStore.get<boolean>('enablePosition'),
   enablePath: configStore.get<boolean>('enablePath'),
   enableDiagnostics: configStore.get<boolean>('enableDiagnostics'),
@@ -69,9 +67,13 @@ export function getContentSection(
     relativePathOrBasename,
     config.enableLanguage ? langOpts.language : undefined,
     config.enablePosition && selection?.start.line ? selection?.start.line + 1 : undefined
-  ) + `\n${diagnosticsSection ? diagnosticsSection : ''}`
+  )
 
-  return {selectionSection, selectionDiagnostics}
+
+  return {
+    selectionSection: diagnosticsSection ? `${selectionSection.trimEnd()}${diagnosticsSection}` : selectionSection,
+    selectionDiagnostics
+  }
 }
 
 export const codeBlock = (
@@ -91,10 +93,24 @@ const getCodeRange = (range:vscode.Range, config: IContentConfig): string | unde
     : `${range.start.line + 1}:${range.start.character + 1}-` +
       `${range.end.line + 1}:${range.end.character + 1}`
 
-export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefined, config: IContentConfig): string | undefined => !config.enableDiagnostics || diagnostics?.length === 0 ? undefined :
-  `\n${configStore.get<string>('customDiagnosticsMessage')}` || '' +
-  '\n[Selection problems] (reporter ~location~ error)\n' + diagnostics?.map(({source, severity, range, message}) =>
-    `[${source}] ${vscode.DiagnosticSeverity[severity]}${config.enablePosition? '\tLn:' + (getCodeRange(range, config) ?? '') : ''}\n${message}`).join('\n').trim()
+export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefined, config: IContentConfig): string | undefined => {
+  if (!config.enableDiagnostics || !diagnostics || diagnostics.length === 0) {
+    return undefined
+  }
+
+  const customDiagnosticsMessage = '\n' + configStore.get<string>('customDiagnosticsMessage') || ''
+  let diagnosticsSection = `${customDiagnosticsMessage}\n[Selection problems] (reporter ~location~ error)\n`
+
+  diagnosticsSection += diagnostics.map(({source, severity, range, message}) => {
+    const severityText = vscode.DiagnosticSeverity[severity]
+    const positionText = config.enablePosition ? `\tLn: ${getCodeRange(range, config) ?? ''}` : ''
+
+    return `[${source}] ${severityText}${positionText}\n${message}`
+  }).join('\n').trim()
+
+  return diagnosticsSection
+}
+
 
 
 /**

@@ -22,8 +22,7 @@ export class SemaphoreAdapter implements ISemaphorePort, vscode.Disposable {
    */
   public dispose(): void {
     Promise.resolve(this.setDialogState(false)).catch(error => {
-      log.error('Error resetting dialog state on dispose', error)
-      console.error('Error resetting dialog state on dispose', error)
+      throw error
     })
   }
 }

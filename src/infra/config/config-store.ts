@@ -19,7 +19,6 @@ export class ConfigStore extends SingletonBase implements Disposable {
   private configReadyPromise: Promise<void>
   private configLoadSuccess = false
   private begunInit = false
-
   private defaultConfig: Record<string, IProperty['default']> = {}
   private configCache: Record<string, IProperty['default']> = {}
   private pkgJsonProps: Record<string, IProperty> = {}

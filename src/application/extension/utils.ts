@@ -1,4 +1,4 @@
-import {handlers} from './activation'
+import {commandHandlers} from './activation'
 
 import {ExtensionContext, commands} from 'vscode'
 import {IExtension, ICommand, ConfigStore} from '../../infra/config'
@@ -39,7 +39,7 @@ async function exec(handler: () => Promise<void>): Promise<void> {
 }
 function registerCommand(context: ExtensionContext, cmd: ICommand): void {
   const [, action] = cmd.command.split('.')
-  const handler = handlers[action]
+  const handler = commandHandlers[action]
   if (handler) {
     const command = commands.registerCommand(cmd.command, () => exec(handler))
     context.subscriptions.push(command)
