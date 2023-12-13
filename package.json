@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": {
@@ -38,7 +38,7 @@
   "extensionKind": [
     "workspace"
   ],
-  "preview": true,
+  "preview": false,
   "license": "MIT",
   "keywords": [
     "prompt",
