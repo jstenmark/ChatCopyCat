@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": {
@@ -233,7 +233,7 @@
     "commands": [
       {
         "command": "chatcopycat.copyCode",
-        "title": "CCCat: Copy selection or document (or append to clipboard)",
+        "title": "CCCat: Copy/Append selection/document to clipboard",
         "group": "chatcopycat",
         "description": "Copies if no previous content, appends if file-tree or previous content exists in clipboard (and diagnostics/references/inquiry type). Can close inquiry dialog with copy key binding"
       },
@@ -319,7 +319,7 @@
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext.ts src",
     "lint:local": "NODE_OPTIONS=--max-old-space-size=4096 eslint --cache --cache-location ~/.cache/eslint/ --color --fix --ext .ts src",
-    "lint:debug": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --debug --output-file lint.log --ext .ts src",
+    "lint:debug": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --fix --debug --output-file lint.log --ext .ts src",
     "lint:config": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --print-config .eslintrc.json",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
@@ -346,8 +346,9 @@
     "glob": "^10.3.10",
     "ignore": "^5.2.4",
     "mocha": "^10.2.0",
+    "module-alias": "^2.2.3",
     "prettier": "3.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "<=5.3.2"
+    "typescript": "<=5.3.2", "typescript-eslint-language-service": "^5.0.5"
   }
 }

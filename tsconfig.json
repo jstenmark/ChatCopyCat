@@ -1,26 +1,45 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    // Options
+    "strict"                          : true ,
+    "sourceMap"                       : true ,
+    "experimentalDecorators"          : true ,
+    "emitDecoratorMetadata"           : true ,
+
+    // Rules
+    "noImplicitReturns"               : true ,  // Report error when not all code paths in function return a value.
+    "noFallthroughCasesInSwitch"      : true ,  // Report errors for fallthrough cases in switch statement.
+    "noUnusedParameters"              : true ,
+    "removeComments"                  : true ,
+    "preserveConstEnums"              : true ,
+    "forceConsistentCasingInFileNames": true ,
+    "allowSyntheticDefaultImports"    : true ,
+    "skipLibCheck"                    : false,
+
+    // Target
+    "esModuleInterop"                 : true,
     "moduleResolution": "node",
-    "module": "CommonJS",
     "target": "ESNext",
-    "outDir": "out",
+    "module": "CommonJS",
     "lib": [
       "ES2022",
-      "ESNext.AsyncIterable"
+      "ESNext.AsyncIterable", "ESNext.Array", "ESNext.Intl", "ESNext.Symbol"
     ],
-    "sourceMap": true,
+
+    // Output and links
+    "outDir": "out",
     "rootDir": "src",
-    "esModuleInterop": true,
-    "strict": true,
-    /* Additional Checks */
-    "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
-    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
-    "noUnusedParameters": true,
-    "skipLibCheck": false,
-    "removeComments": true,
-    "preserveConstEnums": true
+    "baseUrl": ".",
+    "paths": {
+      "@domain/*"     : ["./out/domain/*"                      ],
+      "@application/*": ["./out/application/*"                 ],
+      "@infra/*"      : ["./out/infra/*"      , "./src/infra/*"],
+      "@adapters/*"   : ["./out/adapters/*"                    ],
+      "@shared/*"     : ["./out/shared/*"                      ]
+    },
+
+    // Plugins
+    "plugins": [ {"name": "typescript-eslint-language-service"} ] /* "watchDirs": [] defaults to .eslintrc.* */
   },
   "exclude": [
     "scripts",
@@ -35,4 +54,5 @@
     "src",
     "images",
   ],
+
 }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import {IContentConfig, codeBlock, getContentSection} from '../../domain/models/inquiry-template'
-import {getRelativePathOrBasename} from '../../infra/system/file-utils'
+import {getRelativePathOrBasename} from '@infra/system/file-utils'
 import {IContentSection, ILangOpts} from '../../shared/types/types'
 import {ISymbolReference} from '../../domain/models/lang-types'
 

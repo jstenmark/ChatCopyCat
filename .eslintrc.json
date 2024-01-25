@@ -20,7 +20,7 @@
     "plugin:@typescript-eslint/stylistic-type-checked"
   ],
   "ignorePatterns": [
-    "src/test", "out", "node_modules", "scripts", "docs",
+    "src/test", "out", "node_modules", "scripts", "docs/",
     "**/*.d.ts"
   ],
   "rules": {

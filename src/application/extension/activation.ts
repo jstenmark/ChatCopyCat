@@ -1,3 +1,5 @@
+import 'module-alias/register'
+
 import {commands, Disposable, ExtensionContext} from 'vscode'
 import {clipboardManager} from '../../infra/clipboard'
 import {ConfigStore, SemaphoreService, StateStore} from '../../infra/config'
