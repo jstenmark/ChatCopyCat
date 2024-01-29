@@ -1,6 +1,4 @@
-export {configStore, ConfigStore} from './config-store'
-export {SemaphoreService} from '../../domain/services/semaphore-service'
-export {StateStore} from '../state/state-store'
+export {configStore} from '@infra/config/config-store'
 export {
   ISettingsItem,
   PropertyType,
@@ -10,5 +8,5 @@ export {
   IExtension,
   IExtendedQuickPickItem,
   IConfigurationProperties
-} from './types'
-export {settingsByTypeObject} from './consts'
+} from '@infra/config/types'
+export {settingsByTypeObject} from '@infra/config/consts'

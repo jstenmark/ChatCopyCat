@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {type ChildProcess, fork, type ForkOptions, spawn, type SpawnOptions} from 'child_process'
 import {tmpdir} from 'os'
-import {log} from '../logging/log-base'
+import {log} from '@infra/logging/log-base'
 
 
 function handleChildProcessEvents(

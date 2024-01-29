@@ -1,5 +1,5 @@
-import {IConfigPort} from '../../domain/ports/config-port'
-import {configStore} from '../../infra/config'
+import {IConfigPort} from '@domain/ports/config-port'
+import {configStore} from '@infra/config'
 
 export class ConfigAdapter implements IConfigPort {
   get<T>(key: string): T {

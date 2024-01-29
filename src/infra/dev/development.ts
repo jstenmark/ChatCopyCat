@@ -2,13 +2,13 @@ import * as fs from 'fs'
 import {readFile} from 'fs/promises'
 import * as path from 'path'
 import * as vscode from 'vscode'
-import {configStore} from '../config'
-import {commandHandlers} from '../../application/extension/activation'
-import {log} from '../logging/log-base'
-import {executeCommand} from '../system/exec'
-import {getProjectRootPaths} from '../system/file-utils'
-import {Notify} from '../vscode/notification'
-import {BumpTypes} from '../../adapters/ui/dialog/bump-version-dialog'
+import {configStore} from '@infra/config'
+import {commandHandlers} from '@application/extension/activation'
+import {log} from '@infra/logging/log-base'
+import {executeCommand} from '@infra/system/exec'
+import {getProjectRootPaths} from '@infra/system/file-utils'
+import {Notify} from '@infra/vscode/notification'
+import {BumpTypes} from '@adapters/ui/dialog/bump-version-dialog'
 
 export function watchForExtensionChanges(): vscode.Disposable {
   if(configStore.get<boolean>('catEnabledFolderWatcher')) {
@@ -20,7 +20,7 @@ export function watchForExtensionChanges(): vscode.Disposable {
         log.info(`Detected change in ${watchFolder}, reloading window.`)
         commandHandlers.reloadWindow().then(
           () => log.info('Window reloaded successfully.'),
-          (err: Error) => log.error('Failed to reload window: ' + err.message),
+          (err: Error) => log.error(`Failed to reload window: ${err.message}`),
         )
       }
     }

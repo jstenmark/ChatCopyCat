@@ -1,6 +1,6 @@
 
 import * as vscode from 'vscode'
-import {showQuickPick} from '../components/window-components'
+import {showQuickPick} from '@adapters/ui/components/window-components'
 
 
 export interface IAppendOrCopyOption extends vscode.QuickPickItem {

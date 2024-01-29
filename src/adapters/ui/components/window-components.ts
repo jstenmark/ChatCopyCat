@@ -1,9 +1,9 @@
 import * as fs from 'fs'
 import * as vscode from 'vscode'
-import {getProjectRootPaths} from '../../../infra/system/file-utils'
-import {Validator} from '../../../shared/utils/validate'
-import {Notify} from '../../../infra/vscode/notification'
-import {StateStore} from '../../../infra/config'
+import {getProjectRootPaths} from '@infra/system/file-utils'
+import {Validator} from '@shared/utils/validate'
+import {Notify} from '@infra/vscode/notification'
+import {StateStoreSingleton} from '@infra/state/state-store'
 
 
 
@@ -192,7 +192,7 @@ export const initQuickPick = async <T extends vscode.QuickPickItem>(
     new Promise<readonly T[]>(resolve => quickPick.onDidAccept(() => {
       if(selectedItemKey && quickPick.selectedItems.length !== 0) {
         const activeItem = quickPick.selectedItems[0].label
-        StateStore.setState<string>(selectedItemKey, activeItem)
+        StateStoreSingleton.setState<string>(selectedItemKey, activeItem)
       }
       resolve(quickPick.selectedItems)
     })

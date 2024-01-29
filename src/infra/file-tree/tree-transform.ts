@@ -1,10 +1,9 @@
 import * as path from 'path'
 import ignore from 'ignore'
-import {configStore} from '../config'
-import {getFileList} from './file-handling'
-import {getProjectRootPaths} from '../system/file-utils'
-import {IFileListItem} from '../../domain/models/filetree-types'
-import {IFileTreeNode} from '../../domain/models/filetree-types'
+import {configStore} from '@infra/config'
+import {getFileList} from '@infra/file-tree/file-handling'
+import {getProjectRootPaths} from '@infra/system/file-utils'
+import {IFileListItem, IFileTreeNode} from '@domain/models/filetree-types'
 
 export function convertToFileTreeNode(rootPath: string, fileList: IFileListItem[]): IFileTreeNode {
   const rootNode: IFileTreeNode = {

@@ -1,35 +1,24 @@
 import {window} from 'vscode'
-import {log} from '../../infra/logging/log-base'
-import {SingletonBase} from '../../shared/utils/singleton'
-import {ISemaphorePort} from '../ports/semaphore-port'
-import {errorMessage} from '../../shared/utils/validate'
+import {log} from '@infra/logging/log-base'
+import {ISemaphorePort} from '@domain/ports/semaphore-port'
+import {errorMessage} from '@shared/utils/validate'
+import {SingletonMixin} from '@shared/utils/singleton'
 
 /**
  * Manages a semaphore state to indicate if a dialog is currently open in the extension.
  * This helps in controlling the flow and preventing overlapping dialog interactions.
  */
-export class SemaphoreService extends SingletonBase {
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+export class SemaphoreService {
   private static semaphorePort: ISemaphorePort | undefined = undefined
-
-  private constructor() {
-    super()
-  }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   static async initialize(semaphorePort: ISemaphorePort): Promise<void> {
-    if (!this.semaphorePort) {
-      this.semaphorePort = semaphorePort
-      this.instance
+    if (!SemaphoreService.semaphorePort) {
+      SemaphoreService.semaphorePort = semaphorePort
     } else {
       throw new Error('SemaphoreService has already been initialized')
     }
-  }
-
-  static get instance(): SemaphoreService {
-    if (!this.semaphorePort) {
-      throw new Error('SemaphoreService is not initialized')
-    }
-    return super.getInstance<SemaphoreService>(this)
   }
 
   /**
@@ -40,15 +29,17 @@ export class SemaphoreService extends SingletonBase {
    */
   public static async setDialogState(open: boolean): Promise<boolean> {
     try {
-      if (!this.semaphorePort) {
+      if (!SemaphoreService.semaphorePort) {
         throw new Error('SemaphoreService is not initialized')
       }
-      await this.semaphorePort.setDialogState(open)
+      await SemaphoreService.semaphorePort.setDialogState(open)
       return true
     } catch (error) {
-      void window.showErrorMessage('Error setting sempahore flag:' + errorMessage(error))
+      void window.showErrorMessage(`Error setting sempahore flag:${errorMessage(error)}`)
       log.error('Error setting dialog flag:', error)
       throw error
     }
   }
 }
+
+export const SemaphoreServiceSingleton = SingletonMixin(SemaphoreService)

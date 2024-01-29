@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
-import {ISemaphorePort} from '../../domain/ports/semaphore-port'
-import {log} from '../logging/log-base'
-import {extId} from '../../shared/constants/consts'
+import {ISemaphorePort} from '@domain/ports/semaphore-port'
+import {log} from '@infra/logging/log-base'
+import {extId} from '@shared/constants/consts'
 
 export class SemaphoreAdapter implements ISemaphorePort, vscode.Disposable {
   private readonly dialog_context_key = `${extId}:semaphoreDialogOpen`

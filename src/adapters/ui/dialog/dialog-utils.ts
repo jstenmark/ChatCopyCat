@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
-import {inputBoxManager, quickPickManager} from './dialog-components-manager'
-import {log} from '../../../infra/logging/log-base'
-import {DialogComponent} from '../../../shared/types/types'
+import {inputBoxManager, quickPickManager} from '@adapters/ui/dialog/dialog-components-manager'
+import {log} from '@infra/logging/log-base'
+import {DialogComponent} from '@shared/types/types'
 
 export const isQuickPick = (
   component: DialogComponent,
@@ -31,7 +31,8 @@ export function handleActiveDialogs(): boolean {
     quickPickManager.close()
     log.debug('closing quickPick')
     return true
-  } else if (inputBoxManager.isActive()) {
+  }
+  if (inputBoxManager.isActive()) {
     inputBoxManager.close()
     log.debug('closing inputBox')
     return true

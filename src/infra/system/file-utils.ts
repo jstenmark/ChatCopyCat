@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as vscode from 'vscode'
 import * as path from 'path'
-import {log} from '../logging/log-base'
+import {log} from '@infra/logging/log-base'
 
 /**
  * Check if a path is a directory or file and execute the corresponding callback.
@@ -18,7 +18,7 @@ export async function isDirectoryOrFile<T>(
     const stat = await fs.promises.stat(filePath)
     if (stat.isDirectory()) {
       return await onDirectory()
-    } else if (stat.isFile()) {
+    } if (stat.isFile()) {
       return await onFile()
     }
   } catch (err) {

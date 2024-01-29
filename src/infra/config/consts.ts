@@ -1,4 +1,4 @@
-import {PropertyType, ISettingsItem} from './types'
+import {PropertyType, ISettingsItem} from '@infra/config/types'
 
 export const settingsByTypeObject = (): Record<PropertyType, ISettingsItem[]> =>
   ({

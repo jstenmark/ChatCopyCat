@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
-import {IFileListItem, IFileTreeDialogItem, IFileTreeNode} from '../../../domain/models/filetree-types'
-import {handleButtonAction, updateDefinitionsDialogAutoselect, processSelectionResults} from '../filetree-handler'
-import {convertFileTreeNodeToItem} from '../../../domain/services/definitions-utils'
-import {StateStore} from '../../../infra/config'
-import {createQuickPick, initQuickPick} from '../components/window-components'
+import {IFileListItem, IFileTreeDialogItem, IFileTreeNode} from '@domain/models/filetree-types'
+import {handleButtonAction, updateDefinitionsDialogAutoselect, processSelectionResults} from '@adapters/ui/filetree-handler'
+import {convertFileTreeNodeToItem} from '@domain/services/definitions-utils'
+import {createQuickPick, initQuickPick} from '@adapters/ui/components/window-components'
+import {StateStoreSingleton} from '@infra/state/state-store'
 
 
 export const selectFileTreeDialogItem = (node: IFileTreeNode, label: string) => ({
@@ -37,7 +37,7 @@ export const cacheResetButton: vscode.QuickInputButton = {
 
 export async function showFolderTreeDialog(fileTree: IFileTreeNode[]): Promise<IFileListItem[]> {
   const quickPickItems = fileTree.flatMap(node => convertFileTreeNodeToItem(node))
-  const definitionsAutoSelect = StateStore.getState<string[]>('definitionsAutoSelect') ?? []
+  const definitionsAutoSelect = StateStoreSingleton.getState<string[]>('definitionsAutoSelect') ?? []
   const initialAutoSelect = new Set(definitionsAutoSelect)
   const selectedItems: IFileTreeDialogItem[] = []
   quickPickItems.forEach(item => {

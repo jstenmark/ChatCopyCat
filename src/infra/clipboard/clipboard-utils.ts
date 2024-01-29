@@ -1,8 +1,8 @@
-import {IContentConfig, getMetadataSection} from '../../domain/models/inquiry-template'
-import {selectionHeader, fileTreeHeader, fileTreeEnd} from '../../shared/constants/consts'
-import {IHeadersPresent, IHeaderIndex, ILangOpts} from '../../shared/types/types'
-import {log} from '../logging/log-base'
-import {clipboardManager} from './clipboard-manager'
+import {IContentConfig, getMetadataSection} from '@domain/models/inquiry-template'
+import {selectionHeader, fileTreeHeader, fileTreeEnd} from '@shared/constants/consts'
+import {IHeadersPresent, IHeaderIndex, ILangOpts} from '@shared/types/types'
+import {log} from '@infra/logging/log-base'
+import {clipboardManager} from '@infra/clipboard/clipboard-manager'
 
 /**
  * Checks if specific headers are present in the clipboard content.

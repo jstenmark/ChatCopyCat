@@ -1,12 +1,14 @@
-import {ExtensionContext,extensions} from 'vscode'
-import {Notify} from './infra/vscode/notification'
-import {errorMessage} from './shared/utils/validate'
+import 'module-alias/register'
 
-import {registerCommands} from './application/extension/utils'
-import {initExtension, registerDisposables} from './application/extension/activation'
-import {log} from './infra/logging/log-base'
-import {IExtension} from './infra/config'
-import {extId, extPublisher} from './shared/constants/consts'
+import {ExtensionContext,extensions} from 'vscode'
+import {Notify} from '@infra/vscode/notification'
+import {errorMessage} from '@shared/utils/validate'
+
+import {registerCommands} from '@application/extension/utils'
+import {initExtension, registerDisposables} from '@application/extension/activation'
+import {log} from '@infra/logging/log-base'
+import {IExtension} from '@infra/config'
+import {extId, extPublisher} from '@shared/constants/consts'
 
 
 export async function activate(context: ExtensionContext) {

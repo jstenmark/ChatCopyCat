@@ -1,7 +1,7 @@
-import {defaultTabSize} from '../../shared/constants/consts'
-import {ILangOpts} from '../../shared/types/types'
-import {IContentConfig} from '../models/inquiry-template'
-import {cleanCodeTsJs, cleanSpacesTabsNewlines, tabify} from './language-transform-service'
+import {defaultTabSize} from '@shared/constants/consts'
+import {ILangOpts} from '@shared/types/types'
+import {IContentConfig} from '@domain/models/inquiry-template'
+import {cleanCodeTsJs, cleanSpacesTabsNewlines, tabify} from '@domain/services/language-transform-service'
 
 function handleTypeScriptFile(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {
   const cleaned = cleanCodeTsJs(content, options, config)

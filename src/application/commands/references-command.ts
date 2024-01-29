@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
-import {Notify} from '../../infra/vscode/notification'
-import {clipboardManager} from '../../infra/clipboard/clipboard-manager'
-import {generateReferenceSections} from '../../adapters/ui/editor-utils'
-import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
-import {processSymbolsWithComments} from './process-symbols-comments'
-import {statusBarManager} from '../../infra/vscode/statusbar-manager'
-import {getContentConfig} from '../../domain/models/inquiry-template'
-import {showAppendOrCopyDialog} from '../../adapters/ui/dialog/append-copy-dialog'
+import {Notify} from '@infra/vscode/notification'
+import {clipboardManager} from '@infra/clipboard/clipboard-manager'
+import {generateReferenceSections} from '@adapters/ui/editor-utils'
+import {activeEditorOrFocusLast} from '@infra/vscode/editor'
+import {processSymbolsWithComments} from '@application/commands/process-symbols-comments'
+import {statusBarManager} from '@infra/vscode/statusbar-manager'
+import {getContentConfig} from '@domain/models/inquiry-template'
+import {showAppendOrCopyDialog} from '@adapters/ui/dialog/append-copy-dialog'
 
 
 export const getSymbolReferences = async (): Promise<void> => {
