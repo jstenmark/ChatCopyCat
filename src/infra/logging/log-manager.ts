@@ -1,11 +1,7 @@
 import {OutputChannel, window, Disposable} from 'vscode'
-import {ILogManager} from '@infra/logging/types'
 import {SingletonMixin} from '@shared/utils/singleton'
-/**
- * LogManager handles the creation and management of log output channels. It provides methods to log messages
- * at different levels and manages the log output destination.
- */
-class LogManager implements Disposable, ILogManager {
+
+class LogManager implements Disposable {
   private outputChannel: OutputChannel | null = null
 
   public setChannel(channel: OutputChannel): void {

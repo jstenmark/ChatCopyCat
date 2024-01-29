@@ -3,7 +3,7 @@ import {clipboardManager} from '@infra/clipboard'
 import {ConfigStoreSingleton} from '@infra/config/config-store'
 import {debounce} from '@shared/utils/debounce'
 import {LogDecorator} from '@infra/logging/log-decorator'
-import {LogLevel} from '@infra/logging/types'
+import {LogLevel} from '@infra/logging/log-utils'
 
 /**
  * Manages quick copy operations, providing functionality to reset the clipboard content

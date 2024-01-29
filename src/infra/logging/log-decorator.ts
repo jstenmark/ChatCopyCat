@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {performance} from 'perf_hooks'
-import {log} from '@infra/logging/log-base'
-import {ILoggerMethods, ILoggerSettings, LoggerMethod, LogLevel, LoggingDecoratorType} from '@infra/logging/types'
-import {getLogLevelTyped, getTargetName, getLoggerMethod, logResult} from '@infra/logging/log-utils'
+import {getLogLevelTyped, getTargetName, getLoggerMethod, logResult, ILoggerSettings, LogLevel} from '@infra/logging/log-utils'
 
 /**
  * Decorator for logging method calls at a specified log level with a given message.
@@ -23,10 +21,10 @@ export function LogDecorator(
   ): TypedPropertyDescriptor<T> | void {
     if (typeof descriptor.value === 'function') {
       const originalMethod = descriptor.value as (...args: any[]) => any
-      descriptor.value = function (this: typeof _target & ILoggerMethods, ...args: any[]): any {
+      descriptor.value = function (this: typeof _target, ...args: any[]): any {
         const typedLevel = getLogLevelTyped(level)
         if (typedLevel !== undefined) {
-          const loggerMethod: LoggerMethod = getLoggerMethod(log, typedLevel)
+          const loggerMethod = getLoggerMethod(typedLevel)
           loggerMethod(message, args, logOpts)
         } else {
           console.warn(`Invalid log level: ${level}`)
@@ -66,7 +64,7 @@ export function AsyncLogDecorator(
           const result = (await originalMethod.apply(this, args)) as ReturnType<T>
           const end = performance.now()
           logResult(
-            {message, level, opts},
+            {message, level, opts: {...opts, async: true}},
             {elapsed: end - start, returnValue: result},
             {targetType: getTargetName(_target), name: String(_propertyKey), args: args},
           )
@@ -77,7 +75,7 @@ export function AsyncLogDecorator(
             {
               message,
               level: LogLevel.ERROR,
-              opts,
+              opts: {...opts, async: true},
             },
             {
               elapsed: end - start,
@@ -97,3 +95,9 @@ export function AsyncLogDecorator(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type LoggingDecoratorType = <T extends (...args: any[]) => Promise<any>>(
+  _target: object,
+  _propertyKey: string | symbol,
+  descriptor: TypedPropertyDescriptor<T>,
+) => TypedPropertyDescriptor<T> | void
