@@ -3,7 +3,7 @@ import {
   IFileTreeNode,
   IFileListItem,
   IFileTreeDialogItem
-} from '../../domain/models/filetree-types'
+} from '@domain/models/filetree-types'
 import {
   convertFileTreeNodeToItem,
   findNodeByPath,
@@ -11,12 +11,13 @@ import {
   handleIgnoreItemButton,
   handleIgnoreResetButton,
   handleSelectionResetButton,
-} from '../../domain/services/definitions-utils'
-import {StateStore, configStore} from '../../infra/config'
-import {getFileTree} from '../../infra/file-tree/tree-transform'
-import {log} from '../../infra/logging/log-base'
-import {ignoreButton, ignoreResetButton, cacheResetButton} from './dialog/filetree-dialog'
-import {LanguageService} from '../../domain/services/language-service'
+} from '@domain/services/definitions-utils'
+import {configStore} from '@infra/config'
+import {getFileTree} from '@infra/file-tree/tree-transform'
+import {log} from '@infra/logging/log-base'
+import {ignoreButton, ignoreResetButton, cacheResetButton} from '@adapters/ui/dialog/filetree-dialog'
+import {LanguageService} from '@domain/services/language-service'
+import {StateStoreSingleton} from '@infra/state/state-store'
 
 /**
  * Updates the auto select state based on the user's selections in the Quick Pick.
@@ -38,7 +39,7 @@ export function updateDefinitionsDialogAutoselect(
     path => result.some(item => item.filePath === path) ?? true,
   )
 
-  StateStore.setState<string[]>('definitionsAutoSelect', updatedAutoSelect)
+  StateStoreSingleton.setState<string[]>('definitionsAutoSelect', updatedAutoSelect)
 }
 
 /**

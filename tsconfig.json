@@ -29,17 +29,14 @@
     // Output and links
     "outDir": "out",
     "rootDir": "src",
-    "baseUrl": ".",
+    "baseUrl": "./", // resolve to out for compiled extension, resolve to src as development fallback
     "paths": {
-      "@domain/*"     : ["./out/domain/*"                      ],
-      "@application/*": ["./out/application/*"                 ],
-      "@infra/*"      : ["./out/infra/*"      , "./src/infra/*"],
-      "@adapters/*"   : ["./out/adapters/*"                    ],
-      "@shared/*"     : ["./out/shared/*"                      ]
-    },
-
-    // Plugins
-    "plugins": [ {"name": "typescript-eslint-language-service"} ] /* "watchDirs": [] defaults to .eslintrc.* */
+      "@application/*": ["out/application/*", "src/application/*"],
+      "@adapters/*"   : ["out/adapters/*"   , "src/adapters/*"   ],
+      "@domain/*"     : ["out/domain/*"     , "src/domain/*"     ],
+      "@shared/*"     : ["out/shared/*"     , "src/shared/*"     ],
+      "@infra/*"      : ["out/infra/*"      , "src/infra/*"      ]
+    }
   },
   "exclude": [
     "scripts",

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import {log} from '../../infra/logging/log-base'
+import {log} from '@infra/logging/log-base'
 
 export class Notify extends vscode.Disposable {
   private static log = log

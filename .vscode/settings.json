@@ -5,28 +5,11 @@
     "**/*.js": {
       "when": "$(basename).ts"
     },
-    "**/.git": true,
+    "**/.git": true
   },
   "search.exclude": {
     "out": true,
     "**/node_modules/**": true,
-    "**/*.code-search": true,
-  },
-  "path-autocomplete.pathMappings": {
-    "@domain/*"     : ["${folder}/src/domain/*"     ],
-    "@application/*": ["${folder}/src/application/*"],
-    "@infra/*"      : ["${folder}/src/infra/*"      ],
-    "@adapters/*"   : ["${folder}/src/adapters/*"   ],
-    "@shared/*"     : ["${folder}/src/shared/*"     ]
-  },
-  //"path-autocomplete.extensionOnImport": false,
-  //"path-autocomplete.excludedItems": {
-  //  "**": {
-  //      "when": "**/*.ts",
-  //      "context": "@*"
-  //  }
-  //},
-  // "path-autocomplete.ignoredFilesPattern": ""
-  "chatcopycat.catDevMode": true,
-
+    "**/*.code-search": true
+  }
 }

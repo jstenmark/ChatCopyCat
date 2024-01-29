@@ -6,7 +6,7 @@ import {
   IQuickPickItemAction,
   inputBox,
   showQuickPickMany
-} from '../../adapters/ui/components/window-components'
+} from '@adapters/ui/components/window-components'
 import {
   configStore,
   settingsByTypeObject,
@@ -14,12 +14,12 @@ import {
   IExtendedQuickPickItem,
   PropertyType,
   ISettingsItem,
-  StateStore,
-} from '../../infra/config'
-import {Notify} from '../../infra/vscode/notification'
-import {extName} from '../../shared/constants/consts'
-import {Validator, arraysAreEqual} from '../../shared/utils/validate'
-import {log} from '../../infra/logging/log-base'
+} from '@infra/config'
+import {Notify} from '@infra/vscode/notification'
+import {extName} from '@shared/constants/consts'
+import {Validator, arraysAreEqual} from '@shared/utils/validate'
+import {log} from '@infra/logging/log-base'
+import {StateStoreSingleton} from '@infra/state/state-store'
 
 export const openSettings = async (): Promise<void> => {
   await configStore.onConfigReady()
@@ -41,7 +41,7 @@ export const openSettings = async (): Promise<void> => {
     `${extName} Settings`,
     'Setting to configure',
     false,
-    StateStore.getState<string>('lastSelectedSettingsItem')
+    StateStoreSingleton.getState<string>('lastSelectedSettingsItem')
   )
   quickPick.onDidTriggerItemButton(async e => {
     if (e.button === resetConfigButton) {
@@ -88,7 +88,7 @@ export const openSettings = async (): Promise<void> => {
           break
       }
     }
-    log.debug('update result='+result)
+    log.debug(`update result=${result}`)
     if (result) {
       Notify.info(`Setting '${settingKey}' updated`, true, true)
       await openSettings()
@@ -200,7 +200,8 @@ export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>)
             return new Validator<string>(text)
               .isNumber()
               .getErrorsString()
-          } else if (itemType === 'string') {
+          }
+          if (itemType === 'string') {
             return new Validator<string>(text)
               .isNotEmpty()
               .getErrorsString()

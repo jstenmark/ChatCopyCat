@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
-import {configStore} from '../config'
-import {log} from '../logging/log-base'
-import {IContentConfig} from '../../domain/models/inquiry-template'
+import {configStore} from '@infra/config'
+import {log} from '@infra/logging/log-base'
+import {IContentConfig} from '@domain/models/inquiry-template'
 
 
 export class SymbolProvider {

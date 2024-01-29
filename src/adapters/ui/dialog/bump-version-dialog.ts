@@ -1,6 +1,6 @@
-import {bumpVersion} from '../../../infra/dev/development'
-import {Notify} from '../../../infra/vscode/notification'
-import {showQuickPick} from '../components/window-components'
+import {bumpVersion} from '@infra/dev/development'
+import {Notify} from '@infra/vscode/notification'
+import {showQuickPick} from '@adapters/ui/components/window-components'
 import * as vscode from 'vscode'
 
 export enum BumpTypes {

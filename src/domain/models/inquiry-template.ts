@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
-import {configStore} from '../../infra/config'
-import {fileTreeEnd, fileTreeHeader} from '../../shared/constants/consts'
-import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
-import {handleFileLanguageId} from '../services/language-processing-service'
-import {IContentSection, ILangOpts} from '../../shared/types/types'
-import {selectionHeader} from '../../shared/constants/consts'
+import {configStore} from '@infra/config'
+import {fileTreeEnd, fileTreeHeader} from '@shared/constants/consts'
+import {getAllDiagnostics} from '@adapters/ui/editor-utils'
+import {handleFileLanguageId} from '@domain/services/language-processing-service'
+import {IContentSection, ILangOpts} from '@shared/types/types'
+import {selectionHeader} from '@shared/constants/consts'
 
 export function getMetadataSection(
   inquiryTypes: string[] | undefined,

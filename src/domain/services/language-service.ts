@@ -1,17 +1,14 @@
-import {configStore} from '../../infra/config'
-import {languageExtensionMap} from '../../shared/constants/consts'
-import {SingletonBase} from '../../shared/utils/singleton'
-import {IConfigPort} from '../ports/config-port'
-import {ILanguagePort} from '../ports/language-port'
+import {configStore} from '@infra/config'
+import {languageExtensionMap} from '@shared/constants/consts'
+import {SingletonMixin} from '@shared/utils/singleton'
+import {IConfigPort} from '@domain/ports/config-port'
+import {ILanguagePort} from '@domain/ports/language-port'
 
-export class LanguageService extends SingletonBase {
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
+export class LanguageService {
   private static languagePort: ILanguagePort | undefined = undefined
   private static configPort: IConfigPort | undefined = undefined
 
-
-  private constructor() {
-    super()
-  }
 
   // eslint-disable-next-line @typescript-eslint/require-await
   static async initialize(
@@ -21,26 +18,17 @@ export class LanguageService extends SingletonBase {
     if (!this.languagePort || !this.configPort) {
       this.languagePort = languagePort
       this.configPort = configPort
-      this.instance
     } else {
       throw new Error('LanguageService has already been initialized')
     }
   }
-
-  static get instance(): LanguageService {
-    if (!this.languagePort || !this.configPort) {
-      throw new Error('LanguageService is not initialized')
-    }
-    return super.getInstance<LanguageService>(this)
-  }
-
 
   static async getCustomSupportedFileExtensions(): Promise<Set<string>> {
     //await this.configPort.onConfigReady()
     await configStore.onConfigReady()
 
     const extensionsSet = new Set<string>()
-    const langs = await this.languagePort!.getLanguages()
+    const langs = await LanguageService.languagePort?.getLanguages() ?? []
 
     for (const lang of langs) {
       const extensions = languageExtensionMap[lang]
@@ -54,3 +42,5 @@ export class LanguageService extends SingletonBase {
   }
 
 }
+
+export const LanguageServiceSingleton = SingletonMixin(LanguageService)

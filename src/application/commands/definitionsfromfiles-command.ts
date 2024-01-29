@@ -5,18 +5,18 @@ import {
 import * as vscode from 'vscode'
 import * as path from 'path'
 
-import {showFolderTreeDialog} from '../../adapters/ui/dialog/filetree-dialog'
-import {IFileListItem, IFileTreeNode, IPathAndUri} from '../../domain/models/filetree-types'
+import {showFolderTreeDialog} from '@adapters/ui/dialog/filetree-dialog'
+import {IFileListItem, IFileTreeNode, IPathAndUri} from '@domain/models/filetree-types'
 import {
   getCustomSupportedFileExtensions,
-} from '../../domain/services/definitions-utils'
-import {clipboardManager} from '../../infra/clipboard'
-import {configStore} from '../../infra/config'
-import {log} from '../../infra/logging/log-base'
-import {getFileTree} from '../../infra/file-tree/tree-transform'
-import {Notify} from '../../infra/vscode/notification'
-import {codeBlock} from '../../domain/models/inquiry-template'
-import {statusBarManager} from '../../infra/vscode/statusbar-manager'
+} from '@domain/services/definitions-utils'
+import {clipboardManager} from '@infra/clipboard'
+import {configStore} from '@infra/config'
+import {log} from '@infra/logging/log-base'
+import {getFileTree} from '@infra/file-tree/tree-transform'
+import {Notify} from '@infra/vscode/notification'
+import {codeBlock} from '@domain/models/inquiry-template'
+import {statusBarManager} from '@infra/vscode/statusbar-manager'
 
 export async function copyDefinitionsFromFiles(): Promise<void> {
   try {

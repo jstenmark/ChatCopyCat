@@ -3,6 +3,6 @@ export {
   headerIndexInClipboard,
   replaceFileListInClipboard,
   updateClipboardWithCopy,
-} from './clipboard-utils'
-export {quickCopyManager} from './quickcopy-manager'
-export {clipboardManager} from './clipboard-manager'
+} from '@infra/clipboard/clipboard-utils'
+export {quickCopyManager} from '@infra/clipboard/quickcopy-manager'
+export {clipboardManager} from '@infra/clipboard/clipboard-manager'

@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import {IContentConfig, codeBlock, getContentSection} from '../../domain/models/inquiry-template'
+import {IContentConfig, codeBlock, getContentSection} from '@domain/models/inquiry-template'
 import {getRelativePathOrBasename} from '@infra/system/file-utils'
-import {IContentSection, ILangOpts} from '../../shared/types/types'
-import {ISymbolReference} from '../../domain/models/lang-types'
+import {IContentSection, ILangOpts} from '@shared/types/types'
+import {ISymbolReference} from '@domain/models/lang-types'
 
 /**
  * Generates content sections from the selections in a text editor.

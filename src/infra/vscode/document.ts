@@ -1,5 +1,5 @@
 import {TextEditor, Uri, workspace} from 'vscode'
-import {getRelativePathOrBasename} from '../system/file-utils'
+import {getRelativePathOrBasename} from '@infra/system/file-utils'
 
 /**
  * Gets the relative path or basename of the document in the given text editor.

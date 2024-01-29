@@ -346,9 +346,19 @@
     "glob": "^10.3.10",
     "ignore": "^5.2.4",
     "mocha": "^10.2.0",
-    "module-alias": "^2.2.3",
     "prettier": "3.1.0",
     "ts-node": "^10.9.1",
-    "typescript": "<=5.3.2", "typescript-eslint-language-service": "^5.0.5"
+    "typescript": "<=5.3.2",
+    "typescript-eslint-language-service": "^5.0.5"
+  },
+  "_moduleAliases": {
+    "@infra": "out/infra",
+    "@domain": "out/domain",
+    "@application": "out/application",
+    "@adapters": "out/adapters",
+    "@shared": "out/shared"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.3"
   }
 }

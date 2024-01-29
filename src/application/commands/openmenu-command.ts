@@ -1,20 +1,20 @@
 import * as vscode from 'vscode'
-import {getFileTree} from './filetree-command'
-import {copyDefinitions} from './definitions-command'
-import {copyDefinitionsFromFiles} from './definitionsfromfiles-command'
+import {getFileTree} from '@application/commands/filetree-command'
+import {copyDefinitions} from '@application/commands/definitions-command'
+import {copyDefinitionsFromFiles} from '@application/commands/definitionsfromfiles-command'
 import {
   handleSelectionResetButton,
   handleIgnoreResetButton,
-} from '../../domain/services/definitions-utils'
-import {executeCommand} from '../../infra/system/exec'
-import {showQuickPickAction} from '../../adapters/ui/components/window-components'
-import {openSettings} from './settings-command'
-import {clipboardManager} from '../../infra/clipboard'
-import {getProjectRootPaths} from '../../infra/system/file-utils'
-import {ConfigStore} from '../../infra/config'
-import {extName} from '../../shared/constants/consts'
-import {getSymbolReferences} from './references-command'
-import {showVersionBumpDialog} from '../../adapters/ui/dialog/bump-version-dialog'
+} from '@domain/services/definitions-utils'
+import {executeCommand} from '@infra/system/exec'
+import {showQuickPickAction} from '@adapters/ui/components/window-components'
+import {openSettings} from '@application/commands/settings-command'
+import {clipboardManager} from '@infra/clipboard'
+import {getProjectRootPaths} from '@infra/system/file-utils'
+import {extName} from '@shared/constants/consts'
+import {getSymbolReferences} from '@application/commands/references-command'
+import {showVersionBumpDialog} from '@adapters/ui/dialog/bump-version-dialog'
+import {ConfigStoreSingleton} from '@infra/config/config-store'
 
 export const openMenu = async () => {
   const picks = [
@@ -45,7 +45,7 @@ export const openMenu = async () => {
 
   ]
 
-  if(ConfigStore.instance.get<boolean>('catDevMode')) {
+  if (ConfigStoreSingleton.instance.get<boolean>('catDevMode')) {
     const devItems = [
       {kind: vscode.QuickPickItemKind.Separator, label: 'Development'},
       {

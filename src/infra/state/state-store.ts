@@ -1,28 +1,12 @@
-import * as vscode from 'vscode'
-import {SingletonBase} from '../../shared/utils/singleton'
+import {Disposable} from 'vscode'
+import {SingletonMixin} from '@shared/utils/singleton'
 
 /**
  * Manages a state store for the extension, allowing to save and retrieve stateful data.
  * This class follows the Singleton pattern to ensure a single instance manages the state.
  */
-export class StateStore extends SingletonBase implements vscode.Disposable {
+export class StateStore implements Disposable {
   private static state = new Map<string, unknown>()
-
-  /**
-   * Protected constructor to prevent direct instantiation and ensure singleton pattern.
-   */
-  protected constructor() {
-    super()
-  }
-
-  /**
-   * Gets the singleton instance of the StateStore.
-   * Need to cast the return as a definite type to circumvent the Disposable implementation
-   * @returns The singleton instance of StateStore.
-   */
-  static get instance(): StateStore {
-    return super.getInstance<StateStore>(this) as StateStore
-  }
 
   /**
    * Sets a state value with a specified key.
@@ -31,7 +15,7 @@ export class StateStore extends SingletonBase implements vscode.Disposable {
    */
   // Save a value in the state
   public static setState<T>(key: string, value: T): void {
-    this.state.set(key, value)
+    StateStore.state.set(key, value)
   }
 
   /**
@@ -40,7 +24,7 @@ export class StateStore extends SingletonBase implements vscode.Disposable {
    * @returns The state value if found, or undefined if the key does not exist.
    */
   public static getState<T>(key: string): T | undefined {
-    return this.state.get(key) as T | undefined
+    return StateStore.state.get(key) as T | undefined
   }
 
   /**
@@ -48,20 +32,15 @@ export class StateStore extends SingletonBase implements vscode.Disposable {
    * @param key - The key of the state to clear.
    */
   public static clearState(key: string): void {
-    this.state.delete(key)
-  }
-
-  /**
-   * Clears all stored states in the StateStore.
-   */
-  public static clearAllStates(): void {
-    this.state.clear()
+    StateStore.state.delete(key)
   }
 
   /**
    * Disposes the StateStore by clearing all its stored states.
    */
-  public dispose() {
-    StateStore.clearAllStates()
+  public dispose(): void {
+    StateStore.state.clear()
   }
 }
+
+export const StateStoreSingleton = SingletonMixin(StateStore)

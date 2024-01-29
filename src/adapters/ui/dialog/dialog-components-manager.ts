@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
-import {log} from '../../../infra/logging/log-base'
-import {DialogComponent} from '../../../shared/types/types'
-import {isQuickPick, isInputBox, disposeAllEventHandlers} from './dialog-utils'
+import {log} from '@infra/logging/log-base'
+import {DialogComponent} from '@shared/types/types'
+import {isQuickPick, isInputBox, disposeAllEventHandlers} from '@adapters/ui/dialog/dialog-utils'
 
 /**
  * Manages UI dialog components for a Visual Studio Code extension.

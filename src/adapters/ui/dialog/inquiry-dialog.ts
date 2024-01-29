@@ -1,18 +1,19 @@
 
-import {configStore, SemaphoreService} from '../../../infra/config'
-import {createQuickPick} from '../components/window-components'
-import {quickPickManager, inputBoxManager} from './dialog-components-manager'
-import {createInputBox} from '../components/window-components'
-import {IContentConfig} from '../../../domain/models/inquiry-template'
+import {configStore} from '@infra/config'
+import {createQuickPick} from '@adapters/ui/components/window-components'
+import {quickPickManager, inputBoxManager} from '@adapters/ui/dialog/dialog-components-manager'
+import {createInputBox} from '@adapters/ui/components/window-components'
+import {IContentConfig} from '@domain/models/inquiry-template'
+import {SemaphoreServiceSingleton} from '@domain/services/semaphore-service'
 
 
 export async function getInquiryType(config: IContentConfig): Promise<string[] | undefined> {
   await configStore.onConfigReady()
-  await SemaphoreService.setDialogState(true)
+  await SemaphoreServiceSingleton.setDialogState(true)
   const defaultInquiryMessage = configStore.get<string>('defaultInquiryMessage')
 
   if (config.enableInquiryMessage && defaultInquiryMessage && defaultInquiryMessage !== '') {
-    await SemaphoreService.setDialogState(false)
+    await SemaphoreServiceSingleton.setDialogState(false)
     return [defaultInquiryMessage]
   }
 
@@ -20,7 +21,7 @@ export async function getInquiryType(config: IContentConfig): Promise<string[] |
     ? await getInquiryOptions('Question Context', configStore.get<string[]>('inquiryMessagesList'), 'Custom')
     : undefined
 
-  await SemaphoreService.setDialogState(false)
+  await SemaphoreServiceSingleton.setDialogState(false)
   return res
 }
 /*
@@ -51,9 +52,8 @@ export async function getInquiryOptions(
     if (selectedOption === customItem) {
       const customInput: string | undefined = await inputBoxManager.show(() => createInputBox({placeHolder: '...'}))
       return customInput ? [customInput] : []
-    } else {
-      return [selectedOption]
     }
+    return [selectedOption]
   }
   return []
 }

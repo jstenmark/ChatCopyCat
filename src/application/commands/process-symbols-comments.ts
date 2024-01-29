@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
-import {ISymbolReference} from '../../domain/models/lang-types'
-import {SymbolReferenceService} from '../../domain/services/symbol-reference-service'
-import {Notify} from '../../infra/vscode/notification'
-import {SymbolProvider} from '../../infra/vscode/symbol-provider'
-import {IContentConfig} from '../../domain/models/inquiry-template'
+import {ISymbolReference} from '@domain/models/lang-types'
+import {SymbolReferenceService} from '@domain/services/symbol-reference-service'
+import {Notify} from '@infra/vscode/notification'
+import {SymbolProvider} from '@infra/vscode/symbol-provider'
+import {IContentConfig} from '@domain/models/inquiry-template'
 
 
 

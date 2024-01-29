@@ -1,4 +1,4 @@
-import {ILanguagePort} from '../../domain/ports/language-port'
+import {ILanguagePort} from '@domain/ports/language-port'
 import * as vscode from 'vscode'
 
 export class LanguageAdapter implements ILanguagePort {

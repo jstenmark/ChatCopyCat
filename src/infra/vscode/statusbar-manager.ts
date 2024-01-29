@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import {extId, extName} from '../../shared/constants/consts'
+import {extId, extName} from '@shared/constants/consts'
 
 /**
  * Manages the status bar item for the ChatCopyCat extension in Visual Studio Code.

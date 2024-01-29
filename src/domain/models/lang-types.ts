@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import {ILangOpts} from '../../shared/types/types'
+import {ILangOpts} from '@shared/types/types'
 
 export interface ISymbolReference extends vscode.DocumentSymbol {
   rangeDecoratorsComments?: vscode.Range

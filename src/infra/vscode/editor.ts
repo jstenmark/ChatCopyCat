@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
-import {configStore} from '../config'
-import {ILangOpts} from '../../shared/types/types'
-import {log} from '../../infra/logging/log-base'
-import {validFileSchemes} from '../../shared/constants/consts'
+import {configStore} from '@infra/config'
+import {ILangOpts} from '@shared/types/types'
+import {log} from '@infra/logging/log-base'
+import {validFileSchemes} from '@shared/constants/consts'
 
 
 export let lastTrackedTextEditor: vscode.TextEditor | undefined

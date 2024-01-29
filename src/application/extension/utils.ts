@@ -1,21 +1,21 @@
-import {commandHandlers} from './activation'
+import {commandHandlers, devCommands} from '@application/extension/activation'
 
 import {ExtensionContext, commands} from 'vscode'
-import {IExtension, ICommand, ConfigStore} from '../../infra/config'
-import {Notify} from '../../infra/vscode/notification'
-import {devCommands} from './activation'
-import {log} from '../../infra/logging/log-base'
+import {IExtension, ICommand} from '@infra/config'
+import {ConfigStoreSingleton} from '@infra/config/config-store'
+import {Notify} from '@infra/vscode/notification'
+import {log} from '@infra/logging/log-base'
 
 export function registerCommands(context: ExtensionContext): void {
 
   const commandsList = (context.extension as IExtension).packageJSON.contributes.commands?.filter(command => {
-    if(!ConfigStore.instance.get<boolean>('catDevMode')) {
+    if (!ConfigStoreSingleton.instance.get<boolean>('catDevMode')) {
       if(devCommands.includes(command.command)) {
-        log.debug('Ignoring ' + command.command)
+        log.debug(`Ignoring ${command.command}`)
         return false
       }
     }
-    log.debug('Registering ' + command.command)
+    log.debug(`Registering ${command.command}`)
     return true
   })
 

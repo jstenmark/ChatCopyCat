@@ -1,8 +1,8 @@
-import {ILoggerMethods, LoggerMethod, LogHandler, ILoggerSettings, LogLevel, LogLevelNumeric} from './types'
-import {configStore} from '../config'
-import {LogManager} from './log-manager'
-import {truncateStr} from './log-utils'
-import {defaultJsonTabSize} from '../../shared/constants/consts'
+import {ILoggerMethods, LoggerMethod, LogHandler, ILoggerSettings, LogLevel, LogLevelNumeric} from '@infra/logging/types'
+import {configStore} from '@infra/config'
+import {LogManagerSingleton} from '@infra/logging/log-manager'
+import {truncateStr} from '@infra/logging/log-utils'
+import {defaultJsonTabSize} from '@shared/constants/consts'
 
 /**
  * Creates a loggable mixin class that extends a base class with logging methods (debug, info, warn, error).
@@ -35,7 +35,7 @@ export function LoggableMixin<TBase extends new (...args: any[]) => object>(Base
       if (LogLevelToNumberMap[level] >= LogLevelToNumberMap[logLevel]) {
         const {logMeta, logMessage, logData} = buildLogEnvelope(message, data, level, loggerOptions!, truncateOptions)
 
-        LogManager.instance.log(`${logMeta} ${logMessage} ${logData}`,
+        LogManagerSingleton.instance.log(`${logMeta} ${logMessage} ${logData}`,
         )
       }
     }

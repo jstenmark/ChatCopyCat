@@ -1,22 +1,21 @@
 import {Disposable, EventEmitter, TextDocument, WorkspaceConfiguration, extensions, workspace, ConfigurationScope} from 'vscode'
-import {Notify} from '../vscode/notification'
-import {IConfigurationProperties, IExtension, IProperty} from './types'
-import {log} from '../logging/log-base'
-import {SingletonBase} from '../../shared/utils/singleton'
-import {errorMessage, errorTypeCoerce} from '../../shared/utils/validate'
-import {ILangOpts} from '../../shared/types/types'
-import {defaultTabSize, extId, extPublisher} from '../../shared/constants/consts'
+import {Notify} from '@infra/vscode/notification'
+import {IConfigurationProperties, IExtension, IProperty} from '@infra/config/types'
+import {log} from '@infra/logging/log-base'
+import {errorMessage, errorTypeCoerce} from '@shared/utils/validate'
+import {ILangOpts} from '@shared/types/types'
+import {defaultTabSize, extId, extPublisher} from '@shared/constants/consts'
+import {SingletonMixin} from '@shared/utils/singleton'
 
 /**
  * Manages the configuration settings of the extension.
  * It parses the package.json configuration, listens for changes, and updates the configuration cache.
  */
-export class ConfigStore extends SingletonBase implements Disposable {
-  private static _instance: ConfigStore
+class ConfigStore implements Disposable {
   private configChangeEmitter = new EventEmitter<Record<string, IProperty['default']>>() // todo listen to events
   private configReadyEmitter: EventEmitter<void> = new EventEmitter<void>()
 
-  private configReadyPromise: Promise<void>
+  private configReadyPromise: Promise<void> = Promise.resolve()
   private configLoadSuccess = false
   private begunInit = false
   private defaultConfig: Record<string, IProperty['default']> = {}
@@ -26,40 +25,12 @@ export class ConfigStore extends SingletonBase implements Disposable {
   private readonly extensionPublisher: string = extPublisher
   private readonly extensionId: string = extId
 
-  /**
-   * Initializes the ConfigStore instance.
-   */
-  constructor() {
-    super()
-    this.configReadyPromise = new Promise<void>((resolve, reject) => {
-      this.configReadyEmitter.event(() => {
-        if (this.configLoadSuccess) {
-          log.info('Config Loaded. Initializing extension...')
-          resolve()
-        } else {
-          log.error('Config NOT Loaded...')
-          reject(new Error('Failed to load configuration'))
-        }
-      })
-    })
-  }
-
-  /**
-   * Gets the singleton instance of the ConfigStore.
-   * @returns The singleton instance of ConfigStore.
-   */
-  public static get instance(): ConfigStore {
-    if (!this._instance) {
-      this._instance = new ConfigStore()
-    }
-    return this._instance
-  }
 
   /**
    * Initializes the configuration store asynchronously.
    */
-  public static async initialize(): Promise<void> {
-    await this.instance._initialize()
+  public async initialize(): Promise<void> {
+    await this._initialize()
   }
 
   /**
@@ -68,19 +39,33 @@ export class ConfigStore extends SingletonBase implements Disposable {
   private async _initialize(): Promise<void> {
     if (this.begunInit) {
       return
-    } else {
-      this.begunInit = true
     }
-    try {
+    this.begunInit = true
+    if (!this.configLoadSuccess) {
+      this.configReadyPromise = new Promise<void>((resolve, reject) => {
+        this.configReadyEmitter.event(() => {
+          if (this.configLoadSuccess) {
+            log.info('Config Loaded. Initializing extension...')
+            resolve()
+          } else {
+            log.error('Config NOT Loaded...')
+            reject(new Error('Failed to load configuration'))
+          }
+        })
+      })
+    }
 
+    try {
       await this.parsePkgJsonConfig()
       await this.updateConfigCache()
       await this.listenForConfigurationChanges()
-      this.setConfigLoadSuccess(true)
+      this.configLoadSuccess = true
     } catch (error) {
-      this.setConfigLoadSuccess(false)
+      this.configLoadSuccess = false
       Notify.error(`Error loading config:${errorMessage(error)}`, true, true)
       throw error
+    } finally {
+      this.configReadyEmitter.fire()
     }
   }
 
@@ -98,15 +83,6 @@ export class ConfigStore extends SingletonBase implements Disposable {
       Notify.error(`Error during configuration loading:${errorMessage(error)}`, true, true)
       throw errorTypeCoerce(error, customErrorMessage)
     }
-  }
-
-  /**
-   * Sets the configuration load success status and emits the config ready event.
-   * @param success - A boolean indicating whether the configuration loaded successfully.
-   */
-  public setConfigLoadSuccess(success: boolean): void {
-    this.configLoadSuccess = success
-    this.configReadyEmitter.fire()
   }
 
   /**
@@ -231,12 +207,14 @@ export class ConfigStore extends SingletonBase implements Disposable {
    * Disposes of the resources used by the ConfigStore.
    */
   public dispose(): void {
-    ConfigStore.instance.configReadyEmitter.dispose()
-    ConfigStore.instance.configChangeEmitter.dispose()
+    this.configReadyEmitter.dispose()
+    this.configChangeEmitter.dispose()
   }
 }
 
 /**
  * The singleton instance of the ConfigStore.
  */
-export const configStore: ConfigStore = ConfigStore.instance
+
+export const ConfigStoreSingleton = SingletonMixin(ConfigStore)
+export const configStore: ConfigStore = ConfigStoreSingleton.instance

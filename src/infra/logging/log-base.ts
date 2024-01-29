@@ -1,4 +1,4 @@
-import {LoggableMixin} from './log-mixin'
+import {LoggableMixin} from '@infra/logging/log-mixin'
 
 /**
  * Base class for logging functionality. This class is intended to be extended with mixins to provide

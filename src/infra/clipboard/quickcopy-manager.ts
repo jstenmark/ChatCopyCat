@@ -1,9 +1,9 @@
-import {log} from '../logging/log-base'
-import {clipboardManager} from '../clipboard'
-import {ConfigStore} from '../config'
-import {debounce} from '../../shared/utils/debounce'
-import {LogDecorator} from '../logging/log-decorator'
-import {LogLevel} from '../logging/types'
+import {log} from '@infra/logging/log-base'
+import {clipboardManager} from '@infra/clipboard'
+import {ConfigStoreSingleton} from '@infra/config/config-store'
+import {debounce} from '@shared/utils/debounce'
+import {LogDecorator} from '@infra/logging/log-decorator'
+import {LogLevel} from '@infra/logging/types'
 
 /**
  * Manages quick copy operations, providing functionality to reset the clipboard content
@@ -24,9 +24,9 @@ export class QuickCopyManager {
    * @returns A boolean indicating whether the clipboard should be reset.
    */
   async shouldResetClipboard(now: number): Promise<boolean> {
-    await ConfigStore.instance.onConfigReady()
+    await ConfigStoreSingleton.instance.onConfigReady()
 
-    const resetHotkeyEnabled = ConfigStore.instance.get<boolean>('enableClipboardResetCombo')
+    const resetHotkeyEnabled = ConfigStoreSingleton.instance.get<boolean>('enableClipboardResetCombo')
     if (!resetHotkeyEnabled) {
       log.info('Reset clipboard hotkey is disabled.')
       false
