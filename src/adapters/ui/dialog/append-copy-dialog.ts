@@ -4,7 +4,7 @@ import {showQuickPick} from '../components/window-components'
 
 
 export interface IAppendOrCopyOption extends vscode.QuickPickItem {
-  action: 'append' | 'copy';
+  action: 'append' | 'copy'
 }
 
 export async function showAppendOrCopyDialog(): Promise<IAppendOrCopyOption['action'] | undefined> {

@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
+import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
 import {configStore} from '../../infra/config'
 import {fileTreeEnd, fileTreeHeader} from '../../shared/constants/consts'
-import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
-import {handleFileLanguageId} from '../services/language-processing-service'
-import {IContentSection, ILangOpts} from '../../shared/types/types'
 import {selectionHeader} from '../../shared/constants/consts'
+import {IContentSection, ILangOpts} from '../../shared/types/types'
+import {handleFileLanguageId} from '../services/language-processing-service'
 
 export function getMetadataSection(
   inquiryTypes: string[] | undefined,
@@ -21,8 +21,7 @@ export function getMetadataSection(
 
   return `${
     !headerIsInClipboard
-      ?  generateHeader(inquiryTypeSection, langOpts.language, config) +
-        `${isMultipleSelections ? '\n - ' + multipleSelections : ''}`
+      ?  `${generateHeader(inquiryTypeSection, langOpts.language, config)}${isMultipleSelections ? `\n - ${multipleSelections}` : ''}`
       : `\n${isMultipleSelections ? multipleSelections : ''}`
   }\n`
 }
@@ -98,7 +97,7 @@ export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefin
     return undefined
   }
 
-  const customDiagnosticsMessage = '\n' + configStore.get<string>('customDiagnosticsMessage') || ''
+  const customDiagnosticsMessage = `\n${configStore.get<string>('customDiagnosticsMessage')}` || ''
   let diagnosticsSection = `${customDiagnosticsMessage}\n[Selection problems] (reporter ~location~ error)\n`
 
   diagnosticsSection += diagnostics.map(({source, severity, range, message}) => {

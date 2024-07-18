@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import {IContentConfig, codeBlock, getContentSection} from '../../domain/models/inquiry-template'
+import {ISymbolReference} from '../../domain/models/lang-types'
 import {getRelativePathOrBasename} from '../../infra/system/file-utils'
 import {IContentSection, ILangOpts} from '../../shared/types/types'
-import {ISymbolReference} from '../../domain/models/lang-types'
 
 /**
  * Generates content sections from the selections in a text editor.
@@ -40,7 +40,7 @@ export function generateSelectionSections(
 
 export function generateReferenceSections(references: ISymbolReference[], config: IContentConfig): string[] {
   return references.map(ref => {
-    const lineNum = config.enablePosition && ref.rangeDecoratorsComments?.start.line ? ref.rangeDecoratorsComments.start.line +1 : undefined
+    const lineNum = config.enablePosition && ref.rangeDecoratorsComments?.start.line ? ref.rangeDecoratorsComments.start.line + 1 : undefined
     const lang = config.enableLanguage ? ref.langOpts?.language : ''
     return ref.text ? codeBlock(ref.text, config.enablePath && ref.path ? ref.path : '', lang, lineNum) : ''
   }).filter(section => section.length > 0)
@@ -64,7 +64,7 @@ export function getAllDiagnostics(
   selection: vscode.Selection | undefined,
   config: IContentConfig
 ): vscode.Diagnostic[] | undefined {
-  if(!config.enableDiagnostics) {
+  if (!config.enableDiagnostics) {
     return undefined
   } else if (typeof selection !== 'undefined') {
     // TODO: format with TAP (Test Anything Protocol)

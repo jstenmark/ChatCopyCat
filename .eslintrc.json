@@ -10,22 +10,40 @@
     "sourceType": "module",
     "project": true,
     "lib": [
-      "ES2022",
+      "ES2022"              ,
       "ESNext.AsyncIterable"
     ]
   },
   "extends": [
-    "eslint:recommended",
+    "eslint:recommended"                                ,
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked"
   ],
   "ignorePatterns": [
-    "src/test", "out", "node_modules", "scripts", "docs",
+    "src/test"    ,
+    "out"         ,
+    "node_modules",
+    "scripts"     ,
+    "docs"        ,
     "**/*.d.ts"
   ],
   "rules": {
-    "@stylistic/ts/indent": ["error", 2],
-    "@stylistic/ts/quotes": ["error", "single"],
+    "@stylistic/ts/indent": [
+      "error",
+      2
+    ],
+    "@stylistic/ts/no-extra-semi": [
+      "error",
+      "never"
+    ],
+    "@stylistic/ts/quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape"          : true ,
+        "allowTemplateLiterals": false
+      }
+    ],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
@@ -44,7 +62,6 @@
       }
     ],
     "@stylistic/ts/no-underscore-dangle": "off",
-    "@stylistic/ts/object-curly-spacing": "warn",
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -65,11 +82,11 @@
     "@stylistic/ts/comma-dangle": [
       "error",
       {
-        "arrays": "only-multiline",
-        "objects": "only-multiline",
-        "imports": "only-multiline",
-        "exports": "ignore",
-        "functions": "only-multiline"
+        "arrays"   : "only-multiline",
+        "objects"  : "only-multiline",
+        "imports"  : "only-multiline",
+        "exports"  : "only-multiline",
+        "functions": "ignore"
       }
     ]
   }

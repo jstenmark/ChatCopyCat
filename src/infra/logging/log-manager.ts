@@ -1,7 +1,7 @@
 import {OutputChannel, window, Disposable} from 'vscode'
 import {ILogManager} from './types'
 import {SingletonBase} from '../../shared/utils/singleton'
-//import {extName} from '../../shared/constants/consts'
+
 /**
  * LogManager handles the creation and management of log output channels. It provides methods to log messages
  * at different levels and manages the log output destination.

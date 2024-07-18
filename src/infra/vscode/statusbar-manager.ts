@@ -12,7 +12,7 @@ export class StatusBarManager implements vscode.Disposable {
   private copyCount = 0
 
   /**
-   * Disposes of the status bar item, removing it from the VS Code status bar.
+   * Disposes of the status bar iEtem, removing it from the VS Code status bar.
    */
   dispose() {
     this.statusBarItem.hide()
@@ -30,7 +30,7 @@ export class StatusBarManager implements vscode.Disposable {
     )
     this.statusBarItem.command = `${extId}.openMenu`
     this.statusBarItem.name = extName
-    this.statusBarItem.tooltip = new vscode.MarkdownString('\n$(settings) Click to open menu\n',true)
+    this.statusBarItem.tooltip = new vscode.MarkdownString('\n$(settings) Click to open menu\n', true)
     this.statusBarItem.tooltip.isTrusted = true
 
     this.updateState()
@@ -39,7 +39,7 @@ export class StatusBarManager implements vscode.Disposable {
   /**
    * Increases the copy count by one and updates the status bar item state.
    */
-  public increaseCopyCount(add?:number): void {
+  public increaseCopyCount(add?: number): void {
     this.copyCount += (add ?? 1)
     this.updateState()
   }

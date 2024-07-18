@@ -1,21 +1,21 @@
 import {commandHandlers} from './activation'
 
 import {ExtensionContext, commands} from 'vscode'
-import {IExtension, ICommand, ConfigStore} from '../../infra/config'
+import {ConfigStore, ICommand, IExtension} from '../../infra/config'
+import {log} from '../../infra/logging/log-base'
 import {Notify} from '../../infra/vscode/notification'
 import {devCommands} from './activation'
-import {log} from '../../infra/logging/log-base'
 
 export function registerCommands(context: ExtensionContext): void {
 
   const commandsList = (context.extension as IExtension).packageJSON.contributes.commands?.filter(command => {
-    if(!ConfigStore.instance.get<boolean>('catDevMode')) {
-      if(devCommands.includes(command.command)) {
-        log.debug('Ignoring ' + command.command)
+    if (!ConfigStore.instance.get<boolean>('catDevMode')) {
+      if (devCommands.includes(command.command)) {
+        log.debug(`Ignoring ${command.command}`)
         return false
       }
     }
-    log.debug('Registering ' + command.command)
+    log.debug(`Registering ${command.command}`)
     return true
   })
 
@@ -34,7 +34,7 @@ async function exec(handler: () => Promise<void>): Promise<void> {
     return await handler()
   } catch (error) {
     Notify.error('Error executing handler')
-    log.error('Error executing handler', error, {truncate:0})
+    log.error('Error executing handler', error, {truncate: 0})
   }
 }
 function registerCommand(context: ExtensionContext, cmd: ICommand): void {

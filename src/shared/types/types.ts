@@ -29,4 +29,4 @@ export interface IHeaderIndex {
 export type DialogComponent = vscode.QuickPick<vscode.QuickPickItem> | vscode.InputBox
 
 export type Optional<T extends object, K extends keyof T = keyof T> = Omit<T, K> &
-Partial<Pick<T, K>>
+  Partial<Pick<T, K>>

@@ -4,18 +4,18 @@ import {ILanguageHandlerOptions} from './language-processing-service'
 export function cleanCodeTsJs(_code: string, opts: ILanguageHandlerOptions, config: IContentConfig): string {
 
   let code = _code
-  if(config.enableCommentRemoval) {
+  if (config.enableCommentRemoval) {
     code = removeComments(code)
   }
 
   if (config.enableSpacesToTabs) {
-    code = tabify(code,opts.tabSize)
+    code = tabify(code, opts.tabSize)
   }
 
-  if(config.enableTrimming) {
+  if (config.enableTrimming) {
     code = cleanSpacesTabsNewlines(code)
   }
-  return  code
+  return code
 
 }
 
@@ -71,7 +71,7 @@ function removeComments(_code: string): string {
 }
 
 export const tabify = (content: string, tabSize: number) => {
-  return content.split('\n').map(line=> {
+  return content.split('\n').map(line => {
     const matches = line.match(/^[\t ]*/)
     const match = matches ? matches[0] : ''
     const indentSize = match.replace(/\t/g, ' '.repeat(tabSize)).length

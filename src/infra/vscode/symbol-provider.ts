@@ -23,7 +23,6 @@ export class SymbolProvider {
     return await vscode.commands.executeCommand<vscode.DocumentSymbol[]>('vscode.executeDocumentSymbolProvider',uri)
   }
 
-
   static findEnclosingSymbol(
     symbols: vscode.DocumentSymbol[],
     position: vscode.Position,
@@ -34,27 +33,19 @@ export class SymbolProvider {
     for (const symbol of symbols) {
       if (symbol.range.contains(position)) {
         const action = SymbolProvider.determineAction(symbolKindBlacklist, symbolKindEncloseChild, symbol, parentKind)
-        let childSymbol = undefined
+        let childSymbol: vscode.DocumentSymbol | undefined = undefined
 
-        log.debug(`SYMBOL:${symbol.name}\t KIND:${vscode.SymbolKind[symbol.kind]}\t`+
-        ` PARENTKIND:${parentKind ? vscode.SymbolKind[parentKind] : ''}` )
+        log.debug(`SYMBOL: ${symbol.name}\t KIND: ${vscode.SymbolKind[symbol.kind]}\t PARENTKIND: ${parentKind ? vscode.SymbolKind[parentKind] : ''}`)
 
         switch (action) {
           case Action.Skip:
             continue
           case Action.Copy:
-            return symbol
           case Action.CopySignature:
             return symbol
           case Action.CopyWithChildren:
-            childSymbol =
-              SymbolProvider.findEnclosingSymbol(symbol.children, position, symbolKindBlacklist, symbolKindEncloseChild, symbol.kind)
-            if (childSymbol) {
-              return childSymbol
-            } else {
-              return symbol
-            }
-            break
+            childSymbol = SymbolProvider.findEnclosingSymbol(symbol.children, position, symbolKindBlacklist, symbolKindEncloseChild, symbol.kind)
+            return childSymbol ?? symbol
         }
       }
     }

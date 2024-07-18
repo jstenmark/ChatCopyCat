@@ -1,0 +1,57 @@
+; http://editorconfig.org
+# verify by either:
+#   editorconfig-checker -config .editorconfig -disable-indentation -exclude _ARCHIVE
+#   eclint check .
+
+root = true
+
+[*]
+indent_style = space
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+quote_type = double
+
+# Nix
+[*.{zsh,sh,bash}]
+indent_size = 2
+
+[{Dockerfile,Makefile}]
+indent_style = space
+indent_size = 2
+
+# Web
+[*.{htm,html,css,sass,scss,svg,json,json5}]
+indent_size = 2
+block_comment_start = /*
+block_comment = *
+block_comment_end = */
+
+# code
+[*.{js,jsx,ts,tsx,mjs,cjs,vue}]
+indent_size = 2
+quote_type = single
+spaces_around_operators = true
+spaces_around_brackets = none
+block_comment_start = /*
+block_comment = *
+block_comment_end = */
+[{package.json,package-lock.json,.travis.yml,npm-shrinkwrap.json}]
+indent_size = 2
+[{test/fixtures,deps,tools/node_modules,tools/gyp,tools/icu,tools/msvs}/**]
+insert_final_newline = false
+indent_size = 2
+
+[*.{py,ini}]
+indent_size = 4
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.{md,mdx,rst}]
+trim_trailing_whitespace = false
+indent_size = 2
+
+[{COMMIT_EDITMSG,MERGE_MSG}]
+max_line_length = 72
+indent_size = 4
