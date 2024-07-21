@@ -40,9 +40,10 @@ export function generateSelectionSections(
 
 export function generateReferenceSections(references: ISymbolReference[], config: IContentConfig): string[] {
   return references.map(ref => {
-    const lineNum = config.enablePosition && ref.rangeDecoratorsComments?.start.line ? ref.rangeDecoratorsComments.start.line + 1 : undefined
+    const lineNumStart = config.enablePosition && ref.rangeDecoratorsComments?.start.line ? ref.rangeDecoratorsComments.start.line + 1 : undefined
+    const lineNumEnd = config.enablePosition && ref.rangeDecoratorsComments?.end.line ? ref.rangeDecoratorsComments.end.line + 1 : undefined
     const lang = config.enableLanguage ? ref.langOpts?.language : ''
-    return ref.text ? codeBlock(ref.text, config.enablePath && ref.path ? ref.path : '', lang, lineNum) : ''
+    return ref.text ? codeBlock(ref.text, config.enablePath && ref.path ? ref.path : '', lang, lineNumStart, lineNumEnd) : ''
   }).filter(section => section.length > 0)
 }
 
@@ -87,4 +88,3 @@ export function getDocumentPath(editor: vscode.TextEditor): string {
   const workspaceFolder = vscode.workspace.getWorkspaceFolder(resource)
   return getRelativePathOrBasename(resource.fsPath, workspaceFolder?.uri.fsPath)
 }
-

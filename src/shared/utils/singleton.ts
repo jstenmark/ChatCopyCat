@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 /**
  * An abstract base class for implementing the Singleton pattern.

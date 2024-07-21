@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+ 
 import * as vscode from 'vscode'
 
 const ERROR_MESSAGES = {

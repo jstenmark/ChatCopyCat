@@ -131,7 +131,6 @@ export class DialogComponentManager implements vscode.Disposable {
 
       this.disposable = vscode.Disposable.from(component, ...disposables)
     }).finally(() => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.cleanUp()
     })
   }

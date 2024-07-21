@@ -20,9 +20,7 @@ export function disposeAllEventHandlers(disposables: vscode.Disposable[]): void 
 }
 
 export const closeDialog = async (): Promise<void> => {
-  // eslint-disable-next-line @typescript-eslint/await-thenable
   await quickPickManager.close()
-  // eslint-disable-next-line @typescript-eslint/await-thenable
   await inputBoxManager.close()
 }
 

@@ -113,9 +113,8 @@ export async function updateClipboardWithCopy(
 
 
   const selectionContent = selectionSections.join('\n').trim()
-  const referenceContent = referenceSections ? referenceSections.join('\n').trim()+'\n' : ''
+  const referenceContent = referenceSections ? referenceSections.join('\n').trim() + '\n' : ''
   const clipboardUpdateContent = `\n${fileMetadataSection}\n${selectionContent}\n${referenceContent}`
-
 
 
   const selectionCount = selectionSections.length
@@ -164,7 +163,7 @@ function calculateContentCount(
   }
 
   if (sectionHeaderPresent) {
-  // count += 1 // Assuming you want to increment by 1 for section header
+    // count += 1 // Assuming you want to increment by 1 for section header
   }
 
   return count

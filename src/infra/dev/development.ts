@@ -11,8 +11,8 @@ import {Notify} from '../vscode/notification'
 import {BumpTypes} from '../../adapters/ui/dialog/bump-version-dialog'
 
 export function watchForExtensionChanges(): vscode.Disposable {
-  if(configStore.get<boolean>('catEnabledFolderWatcher')) {
-    const watchFolder = path.resolve('/home/johannes/.vscode/watchdir/done.txt')
+  if (configStore.get<boolean>('catEnabledFolderWatcher')) {
+    const watchFolder = path.resolve('~/.vscode/watchdir/done.txt')
     log.debug(`Watching ${watchFolder} for changes.`)
 
     const watcher = (curr: fs.Stats, prev: fs.Stats) => {
@@ -29,15 +29,15 @@ export function watchForExtensionChanges(): vscode.Disposable {
 
     return new vscode.Disposable(() => fs.unwatchFile(watchFolder, watcher))
   }
-  return new vscode.Disposable(()=> {/** */})
+  return new vscode.Disposable(() => {/** */})
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const readPackageJson = async (path: string): Promise<any> => {
   try {
     const content = await readFile(path, {encoding: 'utf8'})
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+     
     return JSON.parse(content)
   } catch (e) {
     log.error('Could parse package.json', e)
@@ -52,7 +52,7 @@ export const bumpVersion = async (versionType: BumpTypes) => {
 
   await executeCommand(pkgRootPath, 'yarn', `version --${versionType}`, '--no-git-tag-version')
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+   
   const pkgJsonVersion = (await readPackageJson(packageJsonPath))?.version
 
   Notify.info(`Version bumped to ${pkgJsonVersion}`, true, true)

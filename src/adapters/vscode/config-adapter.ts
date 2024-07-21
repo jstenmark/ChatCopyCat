@@ -10,7 +10,7 @@ export class ConfigAdapter implements IConfigPort {
     return configStore.update<T>(key, value)
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
+   
   async onConfigReady(): Promise<void> {
     return
   }

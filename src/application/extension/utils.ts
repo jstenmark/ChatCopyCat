@@ -1,10 +1,11 @@
 import {commandHandlers} from './activation'
 
 import {ExtensionContext, commands} from 'vscode'
-import {ConfigStore, ICommand, IExtension} from '../../infra/config'
+import {ConfigStore} from '../../infra/config'
 import {log} from '../../infra/logging/log-base'
 import {Notify} from '../../infra/vscode/notification'
 import {devCommands} from './activation'
+import {IExtension, ICommand} from '../../shared/types/types'
 
 export function registerCommands(context: ExtensionContext): void {
 

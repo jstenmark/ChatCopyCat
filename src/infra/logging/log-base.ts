@@ -5,7 +5,7 @@ import {LoggableMixin} from './log-mixin'
  * logging capabilities.
  */
 class LogBase {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+
   constructor(..._args: any[]) { /** */}
 }
 

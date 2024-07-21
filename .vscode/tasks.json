@@ -27,10 +27,12 @@
       "script": "lint",
       "problemMatcher": [
         "$tsc"
-      ]
+      ],
+      "label": "eslint: lint"
     },
     {
-      "type": "eslint",
+      "type": "npm",
+      "script": "lint:local",
       "problemMatcher": [
         "$eslint-stylish"
       ],
@@ -40,8 +42,8 @@
       "type": "npm",
       "script": "pkg",
       "problemMatcher": [],
-      "label": "npm: pkg",
-      "detail": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > /home/johannes/.vscode/watchdir/done.txt"
+      "label": "vsce pkg",
+      "detail": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > ~/.vscode/watchdir/done.txt"
     }
   ]
 }

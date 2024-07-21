@@ -5,8 +5,6 @@ import {ILoggerMethods, LoggerMethod, ICallMetadata, ITraceResult, ILogEntry, Lo
  * Utility functions for logging, including methods to safely stringify of values, truncating strings, and
  * formatting log messages.
  */
-
-
 export const getTargetName = (_target: object): string =>
   _target?.constructor ? _target.constructor.name : ''
 
@@ -71,9 +69,7 @@ function isKeyOfEnum(key: string, enumType: Record<string, string>): key is keyo
   return Object.keys(enumType).includes(key)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isInEnum(value: any, enumType: any): boolean {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return Object.values(enumType).includes(value)
 }
 

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import {performance} from 'perf_hooks'
 import {log} from './log-base'
 import {ILoggerMethods, ILoggerSettings, LoggerMethod, LogLevel, LoggingDecoratorType} from './types'
@@ -51,7 +51,7 @@ export function AsyncLogDecorator(
   opts?: ILoggerSettings,
 ): LoggingDecoratorType {
   return function <T extends (...args: any[]) => Promise<any>>(
-    _target: object, //any
+    _target: object, // any
     _propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<T>,
   ): TypedPropertyDescriptor<T> | void {
@@ -96,4 +96,3 @@ export function AsyncLogDecorator(
     }
   }
 }
-

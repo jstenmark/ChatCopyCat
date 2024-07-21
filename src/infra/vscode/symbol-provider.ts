@@ -20,7 +20,7 @@ export class SymbolProvider {
   static async getSymbolsFromResource(
     uri: vscode.Uri,
   ): Promise<vscode.DocumentSymbol[] | undefined> {
-    return await vscode.commands.executeCommand<vscode.DocumentSymbol[]>('vscode.executeDocumentSymbolProvider',uri)
+    return await vscode.commands.executeCommand<vscode.DocumentSymbol[]>('vscode.executeDocumentSymbolProvider', uri)
   }
 
   static findEnclosingSymbol(
@@ -65,7 +65,7 @@ export class SymbolProvider {
 
     // TypeParameter Handling
     if (symbol.kind === vscode.SymbolKind.TypeParameter) {
-      if(parentKind === vscode.SymbolKind.Class) {
+      if (parentKind === vscode.SymbolKind.Class) {
         return Action.Copy
       } else {
         return Action.Copy
@@ -74,7 +74,7 @@ export class SymbolProvider {
 
     // Interface Handling
     if (symbol.kind === vscode.SymbolKind.Interface) {
-      if(parentKind === vscode.SymbolKind.Class) {
+      if (parentKind === vscode.SymbolKind.Class) {
         return Action.Copy
       }
     }
@@ -85,11 +85,11 @@ export class SymbolProvider {
         return Action.CopyWithChildren
       }
 
-      if(parentKind === vscode.SymbolKind.Function) {
+      if (parentKind === vscode.SymbolKind.Function) {
         return Action.CopyWithChildren
       }
 
-      if(![vscode.SymbolKind.Class, vscode.SymbolKind.Function].includes(parentKind)) {
+      if (![vscode.SymbolKind.Class, vscode.SymbolKind.Function].includes(parentKind)) {
         return Action.CopyWithChildren
       }
     }
@@ -98,12 +98,12 @@ export class SymbolProvider {
     if (symbol.kind === vscode.SymbolKind.Method) {
       if (parentKind === vscode.SymbolKind.Class) {
         return Action.Copy
-      } //CopyWithChildren
+      } // CopyWithChildren
     }
 
     // Function Handling
     if (symbol.kind === vscode.SymbolKind.Function) {
-      if(symbol.children.some(childSymbol => childSymbol.kind === vscode.SymbolKind.Class)) {
+      if (symbol.children.some(childSymbol => childSymbol.kind === vscode.SymbolKind.Class)) {
         return Action.CopyWithChildren
       } else {
         return Action.Copy
@@ -112,7 +112,7 @@ export class SymbolProvider {
 
     // Function Handling
     if (symbol.kind === vscode.SymbolKind.Variable) {
-      if(symbol.children.some(childSymbol => childSymbol.kind === vscode.SymbolKind.Class)) {
+      if (symbol.children.some(childSymbol => childSymbol.kind === vscode.SymbolKind.Class)) {
         return Action.CopyWithChildren
       } else {
         return Action.Copy
@@ -138,7 +138,7 @@ export class SymbolProvider {
   ): vscode.Range {
     let startLine = range.start.line
 
-    if(configStore.get<boolean>('includeDecoratorsInReferences')) {
+    if (configStore.get<boolean>('includeDecoratorsInReferences')) {
       if ([vscode.SymbolKind.Method, vscode.SymbolKind.Property, vscode.SymbolKind.Class].includes(symbolKind)) {
         while (startLine > 0) {
           const lineText = document.lineAt(startLine - 1).text.trim()
@@ -151,7 +151,7 @@ export class SymbolProvider {
       }
     }
 
-    if(!config.enableCommentRemoval) {
+    if (!config.enableCommentRemoval) {
       while (startLine > 0) {
         const lineText = document.lineAt(startLine - 1).text.trim()
         if (lineText.startsWith('//') || lineText.startsWith('*') || lineText.startsWith('/*')) {
@@ -164,7 +164,6 @@ export class SymbolProvider {
 
     return new vscode.Range(new vscode.Position(startLine, 0), range.end)
   }
-
 
 
   static getClassSignature(document: vscode.TextDocument, classSymbol: vscode.DocumentSymbol): string {

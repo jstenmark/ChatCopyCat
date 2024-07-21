@@ -66,8 +66,10 @@ export async function gatherDefinitions(): Promise<string[]> {
       if (symbols) {
         return symbols.map(symbol => {
           const definitionText = doc.getText(symbol.range)
-          const lineNum = symbol.range.start.line + 1
-          return codeBlock(definitionText, filePath, doc.languageId, lineNum)
+          const lineNumStart = symbol.range.start.line + 1
+          const lineNumEnd = symbol.range.end.line + 1
+
+          return codeBlock(definitionText, filePath, doc.languageId, lineNumStart, lineNumEnd)
         }).join('\n')
       }
       return ''
@@ -76,4 +78,3 @@ export async function gatherDefinitions(): Promise<string[]> {
 
   return allDefinitions.filter(def => def)
 }
-

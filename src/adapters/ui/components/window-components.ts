@@ -6,8 +6,6 @@ import {Notify} from '../../../infra/vscode/notification'
 import {StateStore} from '../../../infra/config'
 
 
-
-
 /**
  * Displays an input box using provided options.
  * @param options - The input box configuration options.
@@ -203,4 +201,3 @@ export const initQuickPick = async <T extends vscode.QuickPickItem>(
     return result
   })
 }
-

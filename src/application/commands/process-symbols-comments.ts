@@ -6,7 +6,6 @@ import {SymbolProvider} from '../../infra/vscode/symbol-provider'
 import {IContentConfig} from '../../domain/models/inquiry-template'
 
 
-
 export const processSymbolsWithComments = async (editor: vscode.TextEditor, config:IContentConfig): Promise<ISymbolReference[]> => {
   const locations = await SymbolProvider.getSymbolRefsFromSelection(editor)
   if (locations.length === 0) {

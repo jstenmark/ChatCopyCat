@@ -1,10 +1,9 @@
 import * as path from 'path'
-import ignore from 'ignore'
 import {configStore} from '../config'
 import {getFileList} from './file-handling'
 import {getProjectRootPaths} from '../system/file-utils'
-import {IFileListItem} from '../../domain/models/filetree-types'
-import {IFileTreeNode} from '../../domain/models/filetree-types'
+import {IFileListItem, IFileTreeNode} from '../../domain/models/filetree-types'
+import {parseGitignorePatterns} from '../../shared/utils/ignore'
 
 export function convertToFileTreeNode(rootPath: string, fileList: IFileListItem[]): IFileTreeNode {
   const rootNode: IFileTreeNode = {
@@ -76,13 +75,12 @@ async function fetchWorkspaceFiles(
   allowExtList?: Set<string>,
 ): Promise<{rootPath: string; fileList: IFileListItem[]}[]> {
   const rootPaths: string[] = getProjectRootPaths() ?? []
-  const igInstance = ignore()
   const projectIgnoreList = configStore.get<string[]>('fileTreeIgnoreList')
-  igInstance.add([...projectIgnoreList, ...customIgnoreList])
+  const ignorePatterns = parseGitignorePatterns([...projectIgnoreList, ...customIgnoreList].join('\n'))
 
   return await Promise.all(
     rootPaths.map(async rootPath => {
-      const fileList = await getFileList(rootPath, rootPath, igInstance, allowExtList)
+      const fileList = await getFileList(rootPath, rootPath, ignorePatterns, allowExtList)
       return {rootPath, fileList}
     }),
   )

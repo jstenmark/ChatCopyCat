@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {type ChildProcess, fork, type ForkOptions, spawn, type SpawnOptions} from 'child_process'
 import {tmpdir} from 'os'
 import {log} from '../logging/log-base'
@@ -87,7 +87,7 @@ export interface ICommandExecute {
  * @param args - Arguments for the command.
  * @returns An object containing the child process and a promise with the execution result.
  */
-// eslint-disable-next-line @typescript-eslint/require-await
+
 export async function tryExecuteCommandAsync(
   workingDirectory: string | undefined,
   writeToOutputChannel: boolean,
@@ -284,7 +284,6 @@ export async function awaiter<T>(
 
     let retry = 3
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       try {
         entity = await stateRequest()

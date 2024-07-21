@@ -30,3 +30,70 @@ export type DialogComponent = vscode.QuickPick<vscode.QuickPickItem> | vscode.In
 
 export type Optional<T extends object, K extends keyof T = keyof T> = Omit<T, K> &
   Partial<Pick<T, K>>
+
+export interface ICommand {
+  command: string
+  group: string
+  title: string
+}
+
+export type PropertyType = 'boolean' | 'string' | 'array' | 'number'
+
+// export interface IPackageConfiguration {
+//  configuration: {
+//    properties: IConfigurationProperties
+//  }
+// }
+
+
+// export interface IPackageJson {
+//  contributes: {
+//    configuration: {
+//      properties: IConfigurationProperties
+//    }
+//  }
+// }
+
+export interface IExtension {
+  packageJSON: {
+    contributes: {
+      configuration?: {
+        properties: IConfigurationProperties
+      }
+      commands?: ICommand[]
+    }
+    version: string
+  }
+}
+
+export interface ISettingsItem<T = unknown> {
+  detail?: string
+  label: string
+  settingObject?: IProperty<T>
+  settingKey: string
+}
+
+export type Properties = Record<string, IProperty>
+
+export interface IExtendedQuickPickItem extends vscode.QuickPickItem {
+  setting?: ISettingsItem
+  buttons?: vscode.QuickInputButton[]
+}
+
+export interface IProperty<T = unknown> {
+  default?: T
+  description?: string
+  enum?: string[]
+  items?: IItems<T>
+  label?: string
+  settingDetails?: IProperty
+  settingKey?: string
+  type: PropertyType
+}
+
+interface IItems<T = unknown> {
+  type: PropertyType
+  itemType?: T
+}
+
+export type IConfigurationProperties = Record<string, IProperty>

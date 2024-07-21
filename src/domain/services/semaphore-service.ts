@@ -15,7 +15,7 @@ export class SemaphoreService extends SingletonBase {
     super()
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
+   
   static async initialize(semaphorePort: ISemaphorePort): Promise<void> {
     if (!this.semaphorePort) {
       this.semaphorePort = semaphorePort

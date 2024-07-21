@@ -1,6 +1,7 @@
 import {Disposable, EventEmitter, TextDocument, WorkspaceConfiguration, extensions, workspace, ConfigurationScope} from 'vscode'
 import {Notify} from '../vscode/notification'
-import {IConfigurationProperties, IExtension, IProperty} from './types'
+import {IConfigurationProperties, IProperty} from '../../shared/types/types'
+import {IExtension} from '../../shared/types/types'
 import {log} from '../logging/log-base'
 import {SingletonBase} from '../../shared/utils/singleton'
 import {errorMessage, errorTypeCoerce} from '../../shared/utils/validate'
@@ -71,8 +72,8 @@ export class ConfigStore extends SingletonBase implements Disposable {
     } else {
       this.begunInit = true
     }
-    try {
 
+    try {
       await this.parsePkgJsonConfig()
       await this.updateConfigCache()
       await this.listenForConfigurationChanges()
@@ -113,14 +114,14 @@ export class ConfigStore extends SingletonBase implements Disposable {
    * Retrieves the current WorkspaceConfiguration.
    * @returns The current WorkspaceConfiguration.
    */
-  private getConfiguration(section:string = this.extensionId, scope?: ConfigurationScope | null | undefined): WorkspaceConfiguration {
-    return workspace.getConfiguration(section,scope)
+  private getConfiguration(section: string = this.extensionId, scope?: ConfigurationScope | null | undefined): WorkspaceConfiguration {
+    return workspace.getConfiguration(section, scope)
   }
 
   /**
    * Parses the extension's package.json to extract configuration properties.
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
+   
   private async parsePkgJsonConfig(): Promise<void> {
     const properties = (
       (extensions.getExtension<IExtension>(
@@ -143,7 +144,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   /**
    * Updates the internal configuration cache with current workspace settings.
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
+   
   private async updateConfigCache(): Promise<void> {
     const config: WorkspaceConfiguration = this.getConfiguration()
 
@@ -217,7 +218,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   /**
    * Listens for changes in the configuration and updates the cache accordingly.
    */
-  // eslint-disable-next-line @typescript-eslint/require-await
+   
   private async listenForConfigurationChanges(): Promise<void> {
     workspace.onDidChangeConfiguration(async e => {
       if (e.affectsConfiguration(this.extensionId)) {

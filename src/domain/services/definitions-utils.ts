@@ -169,4 +169,3 @@ export async function getCustomSupportedFileExtensions(): Promise<Set<string>> {
   configStore.get<string[]>('definitionsAllowList').forEach(ext => extensionsSet.add(ext))
   return extensionsSet
 }
-

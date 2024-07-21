@@ -1,5 +1,8 @@
 name: CI/CD
 
+env:
+  NODE_VERSION: '20'
+
 on:
   push:
     branches:

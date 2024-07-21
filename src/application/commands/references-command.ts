@@ -39,7 +39,3 @@ export const getSymbolReferences = async (): Promise<void> => {
 
   }
 }
-
-
-
-

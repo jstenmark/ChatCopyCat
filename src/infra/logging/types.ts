@@ -12,13 +12,12 @@ export enum LogLevelNumeric {
 }
 
 
-
 export interface ILogManager {
   log(message: string): void
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export type LoggerMixinConstructor = new (...args: any[]) => object
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export type LoggingDecoratorType = <T extends (...args: any[]) => Promise<any>>(
   _target: object,
   _propertyKey: string | symbol,

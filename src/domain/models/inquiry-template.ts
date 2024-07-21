@@ -1,8 +1,7 @@
 import * as vscode from 'vscode'
 import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
 import {configStore} from '../../infra/config'
-import {fileTreeEnd, fileTreeHeader} from '../../shared/constants/consts'
-import {selectionHeader} from '../../shared/constants/consts'
+import {fileTreeEnd, fileTreeHeader, selectionHeader} from '../../shared/constants/consts'
 import {IContentSection, ILangOpts} from '../../shared/types/types'
 import {handleFileLanguageId} from '../services/language-processing-service'
 
@@ -19,22 +18,19 @@ export function getMetadataSection(
       ? `${inquiryTypes.join(',')}`
       : undefined
 
-  return `${
-    !headerIsInClipboard
-      ?  `${generateHeader(inquiryTypeSection, langOpts.language, config)}${isMultipleSelections ? `\n - ${multipleSelections}` : ''}`
-      : `\n${isMultipleSelections ? multipleSelections : ''}`
-  }\n`
+  return `${!headerIsInClipboard ? `${generateHeader(inquiryTypeSection, langOpts.language, config)}${isMultipleSelections ? `\n - ${multipleSelections}` : ''}`
+    : `\n${isMultipleSelections ? multipleSelections : ''}`}\n`
 }
 
 export interface IContentConfig {
-  enablePosition: boolean;
-  enablePath: boolean;
-  enableDiagnostics: boolean;
-  enableLanguage: boolean ;
-  enableInquiryMessage: boolean;
-  enableSpacesToTabs: boolean;
-  enableCommentRemoval: boolean;
-  enableTrimming: boolean;
+  enablePosition: boolean
+  enablePath: boolean
+  enableDiagnostics: boolean
+  enableLanguage: boolean
+  enableInquiryMessage: boolean
+  enableSpacesToTabs: boolean
+  enableCommentRemoval: boolean
+  enableTrimming: boolean
 }
 
 export const getContentConfig = (): IContentConfig => ({
@@ -65,7 +61,8 @@ export function getContentSection(
     textSection,
     relativePathOrBasename,
     config.enableLanguage ? langOpts.language : undefined,
-    config.enablePosition && selection?.start.line ? selection?.start.line + 1 : undefined
+    config.enablePosition && selection?.start.line ? selection?.start.line + 1 : undefined,
+    config.enablePosition && selection?.end.line ? selection?.end.line + 1 : undefined
   )
 
 
@@ -79,18 +76,19 @@ export const codeBlock = (
   code: string | string[],
   path: string | undefined,
   lang: string | undefined,
-  lineNum: number | undefined
+  lineNumStart: number | undefined,
+  lineNumEnd: number | undefined
 ): string => {
   const codeText = Array.isArray(code) ? code.join('\n') : code
-  const lineInfo = lineNum ? ` Ln:${lineNum}` : ''
-  return `\n\`\`\`${lang} ${path}${lineInfo}\n${codeText}\n\`\`\``
+  const lineInfo = lineNumStart && lineNumEnd ? ` line="${lineNumStart}-${lineNumEnd}}"` : ''
+  return `\n\`\`\`${lang} { file="${path}"${lineInfo} }\n${codeText}\n\`\`\`\n`
 }
 
-const getCodeRange = (range:vscode.Range, config: IContentConfig): string | undefined =>
+const getCodeRange = (range: vscode.Range, config: IContentConfig): string | undefined =>
   !config.enablePosition
     ? undefined
     : `${range.start.line + 1}:${range.start.character + 1}-` +
-      `${range.end.line + 1}:${range.end.character + 1}`
+    `${range.end.line + 1}:${range.end.character + 1}`
 
 export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefined, config: IContentConfig): string | undefined => {
   if (!config.enableDiagnostics || !diagnostics || diagnostics.length === 0) {
@@ -110,8 +108,6 @@ export const getDiagnosticsSection = (diagnostics: vscode.Diagnostic[] | undefin
   return diagnosticsSection
 }
 
-
-
 /**
  * Generates a template string that lists the root path and files for each project in the input array.
  *
@@ -125,7 +121,7 @@ export function generateFilesTemplate(
   return projectsFiles
     .map(
       project =>
-        `${fileTreeHeader} ${config.enablePath ? project.rootPath : '' }\n` +
+        `${fileTreeHeader} ${config.enablePath ? project.rootPath : ''}\n` +
         `${project.files.join('\n')}\n` +
         `${fileTreeEnd}\n`,
     )
@@ -133,8 +129,8 @@ export function generateFilesTemplate(
     .trim()
 }
 
-const generateHeader = (inquiryType: string | undefined, language: string | undefined,  config: IContentConfig) =>{
-  const inquirySection = config.enableInquiryMessage  && inquiryType ? `: ${inquiryType}` : ''
+const generateHeader = (inquiryType: string | undefined, language: string | undefined, config: IContentConfig) => {
+  const inquirySection = config.enableInquiryMessage && inquiryType ? `: ${inquiryType}` : ''
   const languageSection = config.enableLanguage && language ? ` - ${language}` : ''
 
   return inquiryType && inquiryType !== ''

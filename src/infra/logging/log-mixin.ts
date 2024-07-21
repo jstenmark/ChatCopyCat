@@ -10,7 +10,6 @@ import {defaultJsonTabSize} from '../../shared/constants/consts'
  * @param Base - The base class to extend.
  * @returns A new class that extends the base class with logging functionality.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function LoggableMixin<TBase extends new (...args: any[]) => object>(Base: TBase) {
   return class Loggable extends Base implements ILoggerMethods {
     [method: string]: LoggerMethod | LogHandler

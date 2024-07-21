@@ -113,7 +113,7 @@ export class Notify extends vscode.Disposable {
       this.currentProgressToken.cancel()
       this.currentProgressToken.dispose()
     } else
-      if(dispose) {
+      if (dispose) {
         return
       }
 
@@ -140,7 +140,6 @@ export class Notify extends vscode.Disposable {
         })
       },
     )
-
 
 
     // Reset currentProgressToken after completion
@@ -197,13 +196,13 @@ export class Notify extends vscode.Disposable {
   }
 
   static dispose() {
-    Notify.temporaryStatus('',undefined,true)
+    Notify.temporaryStatus('', undefined, true)
   }
 }
 
 interface IProgressReport {
-  increment: number;
-  message: string;
+  increment: number
+  message: string
 }
 
 export enum NotificationOptions {
@@ -213,6 +212,6 @@ export enum NotificationOptions {
 }
 
 export interface IPathAndUri {
-  uri: vscode.Uri;
-  path: string;
+  uri: vscode.Uri
+  path: string
 }

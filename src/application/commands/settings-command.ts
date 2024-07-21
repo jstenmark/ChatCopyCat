@@ -10,16 +10,13 @@ import {
 import {
   configStore,
   settingsByTypeObject,
-  Properties,
-  IExtendedQuickPickItem,
-  PropertyType,
-  ISettingsItem,
   StateStore,
 } from '../../infra/config'
 import {Notify} from '../../infra/vscode/notification'
 import {extName} from '../../shared/constants/consts'
 import {Validator, arraysAreEqual} from '../../shared/utils/validate'
 import {log} from '../../infra/logging/log-base'
+import {IExtendedQuickPickItem, ISettingsItem, Properties, PropertyType} from '../../shared/types/types'
 
 export const openSettings = async (): Promise<void> => {
   await configStore.onConfigReady()
@@ -54,7 +51,7 @@ export const openSettings = async (): Promise<void> => {
     }
   })
 
-  const result = await initQuickPick<IExtendedQuickPickItem>(quickPick,'lastSelectedSettingsItem')
+  const result = await initQuickPick<IExtendedQuickPickItem>(quickPick, 'lastSelectedSettingsItem')
 
   if (!result || result.length === 0) {
     return undefined
@@ -88,7 +85,7 @@ export const openSettings = async (): Promise<void> => {
           break
       }
     }
-    log.debug('update result='+result)
+    log.debug('update result=' + result)
     if (result) {
       Notify.info(`Setting '${settingKey}' updated`, true, true)
       await openSettings()
@@ -178,7 +175,7 @@ export async function handleArraySetting<T = unknown>(setting: ISettingsItem<T>)
   const arrayValue: T[] = configStore.get<T[]>(setting.settingKey) ?? []
   const initialValue: T[] = [...arrayValue]
   const itemType = setting.settingObject?.items?.type
-  log.debug('SETTINGSOBJECT=',setting.settingObject)
+  log.debug('SETTINGSOBJECT=', setting.settingObject)
   const modifyArray = async () => {
     const arrayItems = arrayValue.map<ISpecialQuickPickItem>(item => ({
       label: String(item),
@@ -240,20 +237,19 @@ export async function handleSettingWithEnum<T = unknown>(
   if (setting.settingObject?.enum) {
     const currentValue = configStore.get<T>(setting.settingKey)
     const defaultValue = configStore.getDefault<T>(setting.settingKey)
-    const itemType = setting.settingObject?.type
 
     const enums = setting.settingObject.enum.map(item => {
       const isDefault = item === defaultValue
       const isSelected = item === currentValue
       return {
         label: `${isSelected ? '$(check)' : '   '} ${isDefault ? '$(pinned)' : '   '} ${item}`,
-        value: item as typeof itemType
+        value: item
       }
     })
 
     const selectedEnum = await showQuickPickAction<IQuickPickItemAction & {value: string}>(enums, {
       title: `Configure ${setting.settingKey}`,
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+       
       placeHolder: `Current: '${currentValue}'. Change '${setting.settingKey}'`,
     })
 

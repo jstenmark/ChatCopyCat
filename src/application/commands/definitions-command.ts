@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import * as vscode from 'vscode'
 import {Notify} from '../../infra/vscode/notification'
 import {clipboardManager} from '../../infra/clipboard'

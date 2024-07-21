@@ -67,4 +67,3 @@ export async function showFolderTreeDialog(fileTree: IFileTreeNode[]): Promise<I
   updateDefinitionsDialogAutoselect(mutableResult, definitionsAutoSelect)
   return processSelectionResults(mutableResult, fileTree)
 }
-

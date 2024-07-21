@@ -57,4 +57,3 @@ export const getLangOpts = (editor: vscode.TextEditor): ILangOpts => {
 
   return {tabSize, language, insertSpaces}
 }
-
