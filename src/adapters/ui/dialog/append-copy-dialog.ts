@@ -1,5 +1,6 @@
 
-import * as vscode from 'vscode'
+import type * as vscode from 'vscode'
+
 import {showQuickPick} from '../components/window-components'
 
 

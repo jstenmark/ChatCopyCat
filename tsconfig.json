@@ -2,37 +2,38 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "node",
-    "module": "CommonJS",
-    "target": "ESNext",
-    "outDir": "out",
-    "lib": [
-      "ES2022",
-      "ESNext.AsyncIterable"
-    ],
-    "sourceMap": true,
-    "rootDir": "src",
     "esModuleInterop": true,
-    "strict": true,
+    "lib": [
+      "ESNext"              ,
+      "ESNext.Decorators"   ,
+      "ESNext.AsyncIterable",
+      "ESNext.Array"        ,
+      "ESNext.Intl"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     /* Additional Checks */
     "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
-    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     "noUnusedParameters": true,
-    "skipLibCheck": false,
+    "outDir": "out",
+    "rootDir": "src",
+    "preserveConstEnums": true,
+    "forceConsistentCasingInFileNames": true,
     "removeComments": true,
-    "preserveConstEnums": true
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "strict": true,
+    "target": "ESNext",
+    "noEmit": false
   },
-  "exclude": [
-    "scripts",
-    "node_modules",
-    ".vscode-test",
-    "out",
-    "docs",
-    ".github",
-    ".git"
-  ],
   "include": [
-    "src",
-    "images",
+    "src/**/*.ts"      ,
+    "eslint.config.mjs"
   ],
+  "exclude": [
+    "src/test"    ,
+    "docs"        ,
+    "node_modules"
+  ]
 }

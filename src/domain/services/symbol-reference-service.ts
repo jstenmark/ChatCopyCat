@@ -1,9 +1,10 @@
+import * as vscode from 'vscode'
+
 import {configStore} from '../../infra/config'
 import {getResourcePath} from '../../infra/vscode/document'
 import {SymbolProvider} from '../../infra/vscode/symbol-provider'
-import {IContentConfig} from '../models/inquiry-template'
-import {ISymbolReference} from '../models/lang-types'
-import * as vscode from 'vscode'
+import {type IContentConfig} from '../models/inquiry-template'
+import {type ISymbolReference} from '../models/lang-types'
 
 
 export class SymbolReferenceService {

@@ -1,9 +1,9 @@
 
+import {type IContentConfig} from '../../../domain/models/inquiry-template'
 import {configStore, SemaphoreService} from '../../../infra/config'
 import {createQuickPick} from '../components/window-components'
-import {quickPickManager, inputBoxManager} from './dialog-components-manager'
 import {createInputBox} from '../components/window-components'
-import {IContentConfig} from '../../../domain/models/inquiry-template'
+import {inputBoxManager,quickPickManager} from './dialog-components-manager'
 
 
 export async function getInquiryType(config: IContentConfig): Promise<string[] | undefined> {

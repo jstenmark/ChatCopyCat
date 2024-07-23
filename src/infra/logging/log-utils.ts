@@ -1,5 +1,5 @@
 import {log} from './log-base'
-import {ILoggerMethods, LoggerMethod, ICallMetadata, ITraceResult, ILogEntry, LogLevel} from './types'
+import {type ICallMetadata, type ILogEntry, type ILoggerMethods, type ITraceResult, type LoggerMethod, LogLevel} from './types'
 
 /**
  * Utility functions for logging, including methods to safely stringify of values, truncating strings, and

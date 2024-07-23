@@ -1,22 +1,24 @@
+import * as path from 'path'
 import {
   Uri,
   window,
 } from 'vscode'
 import * as vscode from 'vscode'
-import * as path from 'path'
 
 import {showFolderTreeDialog} from '../../adapters/ui/dialog/filetree-dialog'
-import {IFileListItem, IFileTreeNode, IPathAndUri} from '../../domain/models/filetree-types'
+import {type IFileListItem, type IFileTreeNode, type IPathAndUri} from '../../domain/models/filetree-types'
+import {codeBlock} from '../../domain/models/inquiry-template'
 import {
   getCustomSupportedFileExtensions,
 } from '../../domain/services/definitions-utils'
-import {clipboardManager} from '../../infra/clipboard'
+import {type ClipboardManager} from '../../infra/clipboard/clipboard-manager'
 import {configStore} from '../../infra/config'
-import {log} from '../../infra/logging/log-base'
 import {getFileTree} from '../../infra/file-tree/tree-transform'
+import {log} from '../../infra/logging/log-base'
 import {Notify} from '../../infra/vscode/notification'
-import {codeBlock} from '../../domain/models/inquiry-template'
-import {statusBarManager} from '../../infra/vscode/statusbar-manager'
+import {type StatusBarManager} from '../../infra/vscode/statusbar-manager'
+import {container} from '../../inversify/inversify.config'
+import {TYPES} from '../../inversify/types'
 
 export async function copyDefinitionsFromFiles(): Promise<void> {
   try {
@@ -26,6 +28,9 @@ export async function copyDefinitionsFromFiles(): Promise<void> {
       await window.showInformationMessage('No definitions found or aborted.')
       return
     }
+    const clipboardManager = container.get<ClipboardManager>(TYPES.ClipboardManager)
+    const statusBarManager = container.get<StatusBarManager>(TYPES.StatusBarManager)
+
     await clipboardManager.copyToClipboard(allDefinitions.join('\n\n'))
     await window.showInformationMessage(
       `Copied definitions from ${allDefinitions.length} files to clipboard.`,

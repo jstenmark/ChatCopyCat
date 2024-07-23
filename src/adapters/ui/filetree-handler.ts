@@ -1,22 +1,22 @@
-import * as vscode from 'vscode'
+import type * as vscode from 'vscode'
+
 import {
-  IFileTreeNode,
-  IFileListItem,
-  IFileTreeDialogItem
-} from '../../domain/models/filetree-types'
+  type IFileListItem,
+  type IFileTreeDialogItem,
+  type IFileTreeNode} from '../../domain/models/filetree-types'
 import {
   convertFileTreeNodeToItem,
-  findNodeByPath,
   extractAllFiles,
+  findNodeByPath,
   handleIgnoreItemButton,
   handleIgnoreResetButton,
   handleSelectionResetButton,
 } from '../../domain/services/definitions-utils'
-import {StateStore, configStore} from '../../infra/config'
+import {LanguageService} from '../../domain/services/language-service'
+import {configStore,StateStore} from '../../infra/config'
 import {getFileTree} from '../../infra/file-tree/tree-transform'
 import {log} from '../../infra/logging/log-base'
-import {ignoreButton, ignoreResetButton, cacheResetButton} from './dialog/filetree-dialog'
-import {LanguageService} from '../../domain/services/language-service'
+import {cacheResetButton,ignoreButton, ignoreResetButton} from './dialog/filetree-dialog'
 
 /**
  * Updates the auto select state based on the user's selections in the Quick Pick.

@@ -1,13 +1,14 @@
 # folders
 src/
-scripts/
 out/test/
-docs/
-assets/
-.github/
+scripts
+docs
+assets
+
+.github
 .vscode
 .vscode-test
-.git/
+.git
 
 # filetypes
 **/*.map
@@ -18,10 +19,12 @@ assets/
 # files
 tsconfig.json
 package.json
-.yarnrc
+eslint.config.mjs
 yarn.lock
-.gitignore
-.eslintrc.json
 yarn-error.log
+.yarnrc
+.gitignore
+esbuild.js
+tsup.config.ts
 
 

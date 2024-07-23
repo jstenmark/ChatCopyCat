@@ -1,8 +1,8 @@
-import {ILoggerMethods, LoggerMethod, LogHandler, ILoggerSettings, LogLevel, LogLevelNumeric} from './types'
+import {defaultJsonTabSize} from '../../shared/constants/consts'
 import {configStore} from '../config'
 import {LogManager} from './log-manager'
 import {truncateStr} from './log-utils'
-import {defaultJsonTabSize} from '../../shared/constants/consts'
+import {type ILoggerMethods, type ILoggerSettings, type LoggerMethod, type LogHandler, LogLevel, LogLevelNumeric} from './types'
 
 /**
  * Creates a loggable mixin class that extends a base class with logging methods (debug, info, warn, error).
@@ -14,7 +14,7 @@ export function LoggableMixin<TBase extends new (...args: any[]) => object>(Base
   return class Loggable extends Base implements ILoggerMethods {
     [method: string]: LoggerMethod | LogHandler
 
-    private createLoggerMethod(level: LogLevel): LoggerMethod {
+    createLoggerMethod(level: LogLevel): LoggerMethod {
       return (message, data, loggerOptions) => void this.processLog(level, message, data, loggerOptions)
     }
 
@@ -23,7 +23,7 @@ export function LoggableMixin<TBase extends new (...args: any[]) => object>(Base
     public warn = this.createLoggerMethod(LogLevel.WARN)
     public error = this.createLoggerMethod(LogLevel.ERROR)
 
-    private processLog(
+    processLog(
       level: LogLevel,
       message: string,
       data?: unknown,

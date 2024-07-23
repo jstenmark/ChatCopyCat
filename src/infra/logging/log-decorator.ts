@@ -1,8 +1,9 @@
  
 import {performance} from 'perf_hooks'
+
 import {log} from './log-base'
-import {ILoggerMethods, ILoggerSettings, LoggerMethod, LogLevel, LoggingDecoratorType} from './types'
-import {getLogLevelTyped, getTargetName, getLoggerMethod, logResult} from './log-utils'
+import {getLoggerMethod, getLogLevelTyped, getTargetName, logResult} from './log-utils'
+import {type ILoggerMethods, type ILoggerSettings, type LoggerMethod, type LoggingDecoratorType,LogLevel} from './types'
 
 /**
  * Decorator for logging method calls at a specified log level with a given message.

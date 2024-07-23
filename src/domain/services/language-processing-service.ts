@@ -1,6 +1,6 @@
 import {defaultTabSize} from '../../shared/constants/consts'
-import {ILangOpts} from '../../shared/types/types'
-import {IContentConfig} from '../models/inquiry-template'
+import {type ILangOpts} from '../../shared/types/types'
+import {type IContentConfig} from '../models/inquiry-template'
 import {cleanCodeTsJs, cleanSpacesTabsNewlines, tabify} from './language-transform-service'
 
 function handleTypeScriptFile(content: string, options: ILanguageHandlerOptions, config: IContentConfig): string {

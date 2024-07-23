@@ -1,8 +1,9 @@
 import {window} from 'vscode'
+
 import {log} from '../../infra/logging/log-base'
 import {SingletonBase} from '../../shared/utils/singleton'
 import {errorMessage} from '../../shared/utils/validate'
-import {ISemaphorePort} from '../ports/semaphore-port'
+import {type ISemaphorePort} from '../ports/semaphore-port'
 
 /**
  * Manages a semaphore state to indicate if a dialog is currently open in the extension.
@@ -15,7 +16,7 @@ export class SemaphoreService extends SingletonBase {
     super()
   }
 
-   
+
   static async initialize(semaphorePort: ISemaphorePort): Promise<void> {
     if (!this.semaphorePort) {
       this.semaphorePort = semaphorePort

@@ -1,9 +1,10 @@
 import * as vscode from 'vscode'
-import {IFileListItem, IFileTreeDialogItem, IFileTreeNode} from '../../../domain/models/filetree-types'
-import {handleButtonAction, updateDefinitionsDialogAutoselect, processSelectionResults} from '../filetree-handler'
+
+import {type IFileListItem, type IFileTreeDialogItem, type IFileTreeNode} from '../../../domain/models/filetree-types'
 import {convertFileTreeNodeToItem} from '../../../domain/services/definitions-utils'
 import {StateStore} from '../../../infra/config'
 import {createQuickPick, initQuickPick} from '../components/window-components'
+import {handleButtonAction, processSelectionResults,updateDefinitionsDialogAutoselect} from '../filetree-handler'
 
 
 export const selectFileTreeDialogItem = (node: IFileTreeNode, label: string) => ({

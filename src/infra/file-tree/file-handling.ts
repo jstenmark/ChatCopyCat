@@ -1,8 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import {IFileListItem} from '../../domain/models/filetree-types'
-import {isDirectoryOrFile} from '../system/file-utils'
+
+import {type IFileListItem} from '../../domain/models/filetree-types'
 import {isIgnored, parseGitignorePatterns} from '../../shared/utils/ignore'
+import {isDirectoryOrFile} from '../system/file-utils'
 
 export async function getFileList(
   directory: string,

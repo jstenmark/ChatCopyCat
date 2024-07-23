@@ -1,4 +1,5 @@
-import * as vscode from 'vscode'
+import type * as vscode from 'vscode'
+
 import {SingletonBase} from '../../shared/utils/singleton'
 
 /**

@@ -1,18 +1,22 @@
+import {inject,injectable} from 'inversify'
 import * as vscode from 'vscode'
+
 import {log} from '../../infra/logging/log-base'
 import {AsyncLogDecorator} from '../../infra/logging/log-decorator'
 import {LogLevel} from '../../infra/logging/types'
-import {StatusBarManager, statusBarManager} from '../vscode/statusbar-manager'
+import {TYPES} from '../../inversify/types'
+import {StatusBarManager} from '../vscode/statusbar-manager'
 /**
  * Manages clipboard operations for the ChatCopyCat extension, including copying, reading,
  * appending, and prepending text to the clipboard. It also interacts with the StatusBarManager
  * to update the copy count displayed in the status bar.
  */
+@injectable()
 export class ClipboardManager implements vscode.Disposable {
   private statusBarManager: StatusBarManager
 
-  constructor(StatusBarManager: StatusBarManager) {
-    this.statusBarManager = StatusBarManager
+  constructor(@inject(TYPES.StatusBarManager) statusBarManager: StatusBarManager) {
+    this.statusBarManager = statusBarManager
   }
 
   dispose() {
@@ -86,6 +90,6 @@ export class ClipboardManager implements vscode.Disposable {
   }
 }
 
-export const clipboardManager = new ClipboardManager(statusBarManager)
+// export const clipboardManager = new ClipboardManager(statusBarManager)
 
 // https://github.com/microsoft/vscode/blob/main/src/vs/platform/clipboard/common/clipboardService.ts

@@ -1,10 +1,11 @@
 import * as vscode from 'vscode'
+
 import {
   createQuickPick,
   initQuickPick,
-  showQuickPickAction,
-  IQuickPickItemAction,
   inputBox,
+  type IQuickPickItemAction,
+  showQuickPickAction,
   showQuickPickMany
 } from '../../adapters/ui/components/window-components'
 import {
@@ -12,11 +13,11 @@ import {
   settingsByTypeObject,
   StateStore,
 } from '../../infra/config'
+import {log} from '../../infra/logging/log-base'
 import {Notify} from '../../infra/vscode/notification'
 import {extName} from '../../shared/constants/consts'
-import {Validator, arraysAreEqual} from '../../shared/utils/validate'
-import {log} from '../../infra/logging/log-base'
-import {IExtendedQuickPickItem, ISettingsItem, Properties, PropertyType} from '../../shared/types/types'
+import {type IExtendedQuickPickItem, type ISettingsItem, type Properties, type PropertyType} from '../../shared/types/types'
+import {arraysAreEqual,Validator} from '../../shared/utils/validate'
 
 export const openSettings = async (): Promise<void> => {
   await configStore.onConfigReady()
@@ -249,7 +250,6 @@ export async function handleSettingWithEnum<T = unknown>(
 
     const selectedEnum = await showQuickPickAction<IQuickPickItemAction & {value: string}>(enums, {
       title: `Configure ${setting.settingKey}`,
-       
       placeHolder: `Current: '${currentValue}'. Change '${setting.settingKey}'`,
     })
 

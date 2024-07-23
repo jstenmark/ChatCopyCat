@@ -1,7 +1,8 @@
+import type * as vscode from 'vscode'
+
 import {bumpVersion} from '../../../infra/dev/development'
 import {Notify} from '../../../infra/vscode/notification'
 import {showQuickPick} from '../components/window-components'
-import * as vscode from 'vscode'
 
 export enum BumpTypes {
   MAJOR = 'major',
