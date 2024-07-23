@@ -1,10 +1,5 @@
-// eslint.config.js
-
 import typescriptEslint from "@typescript-eslint/eslint-plugin"
 import stylisticTs from '@stylistic/eslint-plugin-ts'
-import stylisticJs from '@stylistic/eslint-plugin-js'
-
-import jsLint from "@eslint/js"
 import parserTs from '@typescript-eslint/parser'
 
 
@@ -12,11 +7,10 @@ export default [
   {
     files: ["src/**/*.ts"],
     ignores: [
-      "src/test/**/*",
-      "out/**/*",
-      "**/node_modules/**",
-      "**/scripts/**/*",
-      "**/docs/**/*",
+      "src/test/**",
+      "out",
+      "scripts",
+      "scripts/node_modules",
       "**/*.d.ts",
     ],
     plugins: {
@@ -28,7 +22,7 @@ export default [
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
-        project: "./tsconfig.json", // Ensure this points to your tsconfig.json
+        project: true,
         lib: ["ES2022", "ESNext.AsyncIterable"],
       },
     },
@@ -67,7 +61,9 @@ export default [
         functions: "ignore",
       }],
       "linebreak-style": ["error", "unix"],
-      "spaced-comment": ["error", "always", {"exceptions": ["-", "+"]}]
+      "spaced-comment": ["error", "always", {"exceptions": ["-", "+"]}],
+      "eqeqeq": "warn",
+      "no-throw-literal": "warn",
     },
   },
   //jsLint.configs.recommended,

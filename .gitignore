@@ -1,10 +1,6 @@
-node_modules
 out
-docs
-
+dist
+node_modules
 .vscode-test
-.vscode/*workspace
-.vscode/*-Completion.json
-.vscode/Python*
 *.vsix
 *.log

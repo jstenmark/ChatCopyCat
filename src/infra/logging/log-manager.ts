@@ -27,7 +27,7 @@ export class LogManager extends SingletonBase implements Disposable, ILogManager
   }
 
   private setChannel(channel: OutputChannel): void {
-    if (channel != null && channel !== undefined) {
+    if (channel !== null && channel !== undefined) {
       this.outputChannel = channel
       this.outputChannel.show()
     }
