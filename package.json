@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": "Johannes Stenmark",
@@ -19,8 +19,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "module": "./out/extension.mjs",
-  "main": "./out/extension.mjs",
+  "main": "./out/extension",
   "type": "module",
   "engines": {
     "vscode": "^1.91.1"
