@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.26",
+  "version": "0.0.32",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": "Johannes Stenmark",
@@ -328,7 +328,7 @@
     "check-types": "tsc --noEmit",
     "clean": "rm -rf out && rm -f chatcopycat-*.vsix",
     "tsup": "yarn clean && tsup && npx fix-tsup-cjs --cwd out",
-    "bump": "yarn bumpp --no-commit package.json"
+    "bump": "yarn bumpp"
   },
   "devDependencies": {
     "@anatine/esbuild-decorators": "^0.2.19",
