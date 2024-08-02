@@ -11,5 +11,6 @@
     "out"               : true,
     "**/node_modules/**": true,
     "**/*.code-search"  : true
-  }
+  },
+  "typescript.tsc.autoDetect": "off"
 }

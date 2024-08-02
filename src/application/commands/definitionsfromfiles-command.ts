@@ -10,13 +10,15 @@ import {IFileListItem, IFileTreeNode, IPathAndUri} from '../../domain/models/fil
 import {
   getCustomSupportedFileExtensions,
 } from '../../domain/services/definitions-utils'
-import {clipboardManager} from '../../infra/clipboard'
 import {configStore} from '../../infra/config'
 import {log} from '../../infra/logging/log-base'
 import {getFileTree} from '../../infra/file-tree/tree-transform'
 import {Notify} from '../../infra/vscode/notification'
 import {codeBlock} from '../../domain/models/inquiry-template'
 import {statusBarManager} from '../../infra/vscode/statusbar-manager'
+import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {container} from '../../inversify/inversify.config'
+import {TYPES} from '../../inversify/types'
 
 export async function copyDefinitionsFromFiles(): Promise<void> {
   try {
@@ -26,6 +28,7 @@ export async function copyDefinitionsFromFiles(): Promise<void> {
       await window.showInformationMessage('No definitions found or aborted.')
       return
     }
+    const clipboardManager = container.get<ClipboardManager>(TYPES.ClipboardManager)
     await clipboardManager.copyToClipboard(allDefinitions.join('\n\n'))
     await window.showInformationMessage(
       `Copied definitions from ${allDefinitions.length} files to clipboard.`,

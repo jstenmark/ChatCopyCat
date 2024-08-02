@@ -1,23 +1,25 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true,
     "lib": [
-      "ES2022"              ,
+      "ESNext"              ,
+      "ESNext.Decorators"   ,
       "ESNext.AsyncIterable"
     ],
     "module": "CommonJS",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
     /* Additional Checks */
     "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
     "noUnusedParameters": true,
     "outDir": "out",
     "preserveConstEnums": true,
+    "forceConsistentCasingInFileNames": true,
     "removeComments": true,
     "rootDir": "src",
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "ESNext"
@@ -26,6 +28,8 @@
     "src"
   ],
   "exclude": [
-    "src/test"
+    "src/test"    ,
+    "docs"        ,
+    "node_modules"
   ]
 }

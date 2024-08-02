@@ -9,17 +9,22 @@ import {
 import {executeCommand} from '../../infra/system/exec'
 import {showQuickPickAction} from '../../adapters/ui/components/window-components'
 import {openSettings} from './settings-command'
-import {clipboardManager} from '../../infra/clipboard'
 import {getProjectRootPaths} from '../../infra/system/file-utils'
 import {ConfigStore} from '../../infra/config'
 import {extName} from '../../shared/constants/consts'
-import {getSymbolReferences} from './references-command'
 import {showVersionBumpDialog} from '../../adapters/ui/dialog/bump-version-dialog'
+import {GetSymbolReferencesCommand} from './references-command'
+import {container} from '../../inversify/inversify.config'
+import {TYPES} from '../../inversify/types'
+import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
 
 export const openMenu = async () => {
+  const getSymbolReferences = container.get<GetSymbolReferencesCommand>(TYPES.GetSymbolReferencesCommand)
+  const clipboardManager = container.get<ClipboardManager>(TYPES.ClipboardManager)
+
   const picks = [
     {kind: vscode.QuickPickItemKind.Separator, label: 'Symbols and definitions'},
-    {label: '$(copy) Copy Definitions', action: async () => getSymbolReferences()},
+    {label: '$(copy) Copy Definitions', action: async () => getSymbolReferences.execute()},
     {label: '$(clippy) Copy references', action: async () => copyDefinitions()},
     {
       label: '$(file-submodule) Copy Definitions from files',
@@ -45,14 +50,14 @@ export const openMenu = async () => {
 
   ]
 
-  if(ConfigStore.instance.get<boolean>('catDevMode')) {
+  if (ConfigStore.instance.get<boolean>('catDevMode')) {
     const devItems = [
       {kind: vscode.QuickPickItemKind.Separator, label: 'Development'},
       {
         label: '$(terminal-bash) yarn pkg',
         action: async () => {
           (await executeCommand(getProjectRootPaths()![0], 'yarn pkg')) &&
-          (await vscode.commands.executeCommand('workbench.action.reloadWindow'))
+            (await vscode.commands.executeCommand('workbench.action.reloadWindow'))
         },
       },
       {

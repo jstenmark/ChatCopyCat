@@ -21,7 +21,7 @@
   ],
   "main": "./out/extension.js",
   "engines": {
-    "vscode": "^1.83.1"
+    "vscode": "^1.91.1"
   },
   "repository": "https://github.com/jstenmark/ChatCopyCat.git",
   "homepage": "https://github.com/jstenmark/ChatCopyCat/blob/main/README.md",
@@ -331,7 +331,7 @@
     "@types/glob"                     : "^8.1.0"  ,
     "@types/mocha"                    : "^10.0.3" ,
     "@types/node"                     : "^20.10.3",
-    "@types/vscode"                   : "^1.83.1" ,
+    "@types/vscode"                   : "^1.91.0" ,
     "@typescript-eslint/eslint-plugin": "^7.16.1" ,
     "@typescript-eslint/parser"       : "^7.16.1" ,
     "@vscode/test-cli"                : "^0.0.4"  ,
@@ -346,5 +346,8 @@
     "typescript"                      : "<=5.3.2" ,
     "typescript-eslint"               : "^7.16.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "inversify"       : "^6.0.2",
+    "reflect-metadata": "^0.2.2"
+  }
 }

@@ -1,3 +1,5 @@
+import 'reflect-metadata'
+
 import {ExtensionContext, extensions} from 'vscode'
 import {Notify} from './infra/vscode/notification'
 import {errorMessage} from './shared/utils/validate'
@@ -7,11 +9,14 @@ import {initExtension, registerDisposables} from './application/extension/activa
 import {log} from './infra/logging/log-base'
 import {extId, extPublisher} from './shared/constants/consts'
 import {IExtension} from './shared/types/types'
+import {container} from './inversify/inversify.config'
+import {TYPES} from './inversify/types'
 
 
 export async function activate(context: ExtensionContext) {
   try {
     const subscriptions = await initExtension(context)
+    const getSymbolReferencesCommand = container.get(TYPES.GetSymbolReferencesCommand)
 
     registerCommands(context)
     registerDisposables(context, subscriptions)
@@ -20,6 +25,9 @@ export async function activate(context: ExtensionContext) {
         `${extPublisher}.${extId}`,
       ) as IExtension) || undefined
     )?.packageJSON?.version
+
+    context.subscriptions.push(getSymbolReferencesCommand as any)
+
 
     log.info(`Extension initialized successfully (${extPublisher}.${extId} v${version})`)
   } catch (error) {
