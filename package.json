@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.87",
+  "version": "0.0.88",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": "Johannes Stenmark",
@@ -319,7 +319,7 @@
     "lint:config": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --print-config eslint.config.mjs",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
-    "pkg": "yarn bump && yarn clean && yarn package && code --install-extension ./chatcopycat-*.vsix --force && echo 'done' > /var/tmp/done.txt",
+    "pkg": "yarn bump && yarn clean && yarn package",
     "vsce:package": "vsce package --yarn",
     "vsce:package:pre": "vsce package --yarn --pre-release",
     "vsce:publish": "vsce publish --yarn",
@@ -329,7 +329,9 @@
     "clean": "rm -rf out && rm -f chatcopycat-*.vsix",
     "tsup": "yarn bump && yarn clean && tsup",
     "fix-exports": "npx fix-tsup-cjs --cwd out",
-    "bump": "yarn version --new-version patch"
+    "bump": "yarn version --new-version patch",
+    "linux-inustall": " code --install-extension ./chatcopycat-*.vsix --force",
+    "win-install": "powershell -ExecutionPolicy Bypass -File ./install-extension.ps1"
   },
   "devDependencies": {
     "@anatine/esbuild-decorators": "^0.2.19",
