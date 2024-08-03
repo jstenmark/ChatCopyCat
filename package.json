@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.66",
+  "version": "0.0.67",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": "Johannes Stenmark",
@@ -326,7 +326,7 @@
     "vsce:publish:pre": "vsce publish --yarn --pre-release",
     "pkgg": "rm -rf out && npm run check-types && node esbuild.js",
     "check-types": "tsc --noEmit",
-    "clean": "rm -rf out &&rm -f chatcopycat-*.vsix",
+    "clean": "rm -rf out && rm -f chatcopycat-*.vsix",
     "tsup": "yarn bump && yarn clean && tsup",
     "fix-exports": "npx fix-tsup-cjs --cwd out",
     "bump": "yarn version --new-version patch"
