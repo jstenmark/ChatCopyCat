@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.67",
+  "version": "0.0.68",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": "Johannes Stenmark",
@@ -319,7 +319,7 @@
     "lint:config": "NODE_OPTIONS=--max-old-space-size=4096 eslint --color --print-config eslint.config.mjs",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package --yarn",
-    "pkg": "yarn bump &&yarn clean &&yarn package && code --install-extension ./chatcopycat-*.vsix --force && echo 'done' > /var/tmp/done.txt",
+    "pkg": "yarn bump && yarn clean && yarn package && code --install-extension ./chatcopycat-*.vsix --force && echo 'done' > /var/tmp/done.txt",
     "vsce:package": "vsce package --yarn",
     "vsce:package:pre": "vsce package --yarn --pre-release",
     "vsce:publish": "vsce publish --yarn",
