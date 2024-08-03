@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.88",
+  "version": "0.0.89",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": "Johannes Stenmark",
@@ -328,10 +328,10 @@
     "check-types": "tsc --noEmit",
     "clean": "rm -rf out && rm -f chatcopycat-*.vsix",
     "tsup": "yarn bump && yarn clean && tsup",
-    "fix-exports": "npx fix-tsup-cjs --cwd out",
+    "clean:exports": "npx fix-tsup-cjs --cwd out",
     "bump": "yarn version --new-version patch",
-    "linux-inustall": " code --install-extension ./chatcopycat-*.vsix --force",
-    "win-install": "powershell -ExecutionPolicy Bypass -File ./install-extension.ps1"
+    "install:linux": " code --install-extension ./chatcopycat-*.vsix --force",
+    "install:win": "powershell -ExecutionPolicy Bypass -File ./install-extension.ps1"
   },
   "devDependencies": {
     "@anatine/esbuild-decorators": "^0.2.19",
