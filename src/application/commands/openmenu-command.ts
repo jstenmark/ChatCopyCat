@@ -1,22 +1,23 @@
 import * as vscode from 'vscode'
-import {getFileTree} from './filetree-command'
-import {copyDefinitions} from './definitions-command'
-import {copyDefinitionsFromFiles} from './definitionsfromfiles-command'
-import {
-  handleSelectionResetButton,
-  handleIgnoreResetButton,
-} from '../../domain/services/definitions-utils'
-import {executeCommand} from '../../infra/system/exec'
+
 import {showQuickPickAction} from '../../adapters/ui/components/window-components'
-import {openSettings} from './settings-command'
-import {getProjectRootPaths} from '../../infra/system/file-utils'
-import {ConfigStore} from '../../infra/config'
-import {extName} from '../../shared/constants/consts'
 import {showVersionBumpDialog} from '../../adapters/ui/dialog/bump-version-dialog'
-import {GetSymbolReferencesCommand} from './references-command'
+import {
+  handleIgnoreResetButton,
+  handleSelectionResetButton,
+} from '../../domain/services/definitions-utils'
+import {type ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {ConfigStore} from '../../infra/config'
+import {executeCommand} from '../../infra/system/exec'
+import {getProjectRootPaths} from '../../infra/system/file-utils'
 import {container} from '../../inversify/inversify.config'
 import {TYPES} from '../../inversify/types'
-import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {extName} from '../../shared/constants/consts'
+import {copyDefinitions} from './definitions-command'
+import {copyDefinitionsFromFiles} from './definitionsfromfiles-command'
+import {getFileTree} from './filetree-command'
+import {type GetSymbolReferencesCommand} from './references-command'
+import {openSettings} from './settings-command'
 
 export const openMenu = async () => {
   const getSymbolReferences = container.get<GetSymbolReferencesCommand>(TYPES.GetSymbolReferencesCommand)

@@ -1,5 +1,5 @@
-import {IContentConfig} from '../models/inquiry-template'
-import {ILanguageHandlerOptions} from './language-processing-service'
+import {type IContentConfig} from '../models/inquiry-template'
+import {type ILanguageHandlerOptions} from './language-processing-service'
 
 export function cleanCodeTsJs(_code: string, opts: ILanguageHandlerOptions, config: IContentConfig): string {
 

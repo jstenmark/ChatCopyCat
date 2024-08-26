@@ -1,4 +1,5 @@
 import {inject, injectable} from 'inversify'
+
 import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
 import {TYPES} from '../../inversify/types'
 

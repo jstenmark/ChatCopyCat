@@ -1,6 +1,5 @@
 {
   "files.exclude": {
-    "out": true,
     "**/node_modules/**": true,
     "**/*.js": {
       "when": "$(basename).ts"
@@ -8,9 +7,25 @@
     "**/.git": true
   },
   "search.exclude": {
+    "docs"              : true,
     "out"               : true,
     "**/node_modules/**": true,
     "**/*.code-search"  : true
   },
-  "typescript.tsc.autoDetect": "off"
+  "typescript.tsc.autoDetect": "off",
+  "json.schemas": [
+    {
+      "url": "https://cdn.jsdelivr.net/npm/tsup/schema.json",
+      "fileMatch": [
+        "package.json"    ,
+        "tsup.config.json"
+      ]
+    }
+  ],
+  "chatcopycat.catLogDataTruncateLen": 0,
+  "chatcopycat.catLogMsgTruncateLen": 0,
+  "chatcopycat.catLogLevel": "DEBUG",
+  "eslint.workingDirectories": [
+    "src"
+  ]
 }

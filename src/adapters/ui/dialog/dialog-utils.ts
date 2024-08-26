@@ -1,7 +1,8 @@
-import * as vscode from 'vscode'
-import {inputBoxManager, quickPickManager} from './dialog-components-manager'
+import type * as vscode from 'vscode'
+
 import {log} from '../../../infra/logging/log-base'
-import {DialogComponent} from '../../../shared/types/types'
+import {type DialogComponent} from '../../../shared/types/types'
+import {inputBoxManager, quickPickManager} from './dialog-components-manager'
 
 export const isQuickPick = (
   component: DialogComponent,
@@ -20,8 +21,8 @@ export function disposeAllEventHandlers(disposables: vscode.Disposable[]): void 
 }
 
 export const closeDialog = async (): Promise<void> => {
-  await quickPickManager.close()
-  await inputBoxManager.close()
+  quickPickManager.close()
+  inputBoxManager.close()
 }
 
 export function handleActiveDialogs(): boolean {

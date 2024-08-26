@@ -1,49 +1,72 @@
 {
   "version": "2.0.0",
   "tasks": [
+    //{
+    //  "type": "npm",
+    //  "script": "watch",
+    //  "problemMatcher": "$tsc-watch",
+    //  "isBackground": true,
+    //  "presentation": {
+    //    "reveal": "never"
+    //  },
+    //  "group": {
+    //    "kind": "build",
+    //    "isDefault": false
+    //  }
+    //},
+    //{
+    //  "type": "npm",
+    //  "script": "compile",
+    //  "group": {
+    //    "kind": "build",
+    //    "isDefault": true
+    //  }
+    //},
+    //{
+    //  "type": "npm",
+    //  "script": "lint",
+    //  "problemMatcher": [
+    //    "$tsc"
+    //  ],
+    //  "label": "eslint: lint"
+    //},
+    //{
+    //  "type": "npm",
+    //  "script": "lint:local",
+    //  "problemMatcher": [
+    //    "$eslint-stylish"
+    //  ],
+    //  "label": "eslint: lint whole folder"
+    //},
+    //{
+    //  "type": "npm",
+    //  "script": "pkg",
+    //  "problemMatcher": [],
+    //  "label": "vsce pkg",
+    //  "detail": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > ~/.vscode/watchdir/done.txt"
+    //},
     {
-      "type": "npm",
-      "script": "watch",
-      "problemMatcher": "$tsc-watch",
-      "isBackground": true,
-      "presentation": {
-        "reveal": "never"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      }
-    },
-    {
-      "type": "npm",
-      "script": "compile",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "type": "npm",
-      "script": "lint",
-      "problemMatcher": [
-        "$tsc"
+      "label": "Run PKG Script in WSL",
+      "type": "shell",
+      "command": "wsl",
+      "args": [
+        "zsh -c 'cd /home/johannes/development/ChatCopyCat && yarn pkg'"
       ],
-      "label": "eslint: lint"
-    },
-    {
-      "type": "npm",
-      "script": "lint:local",
-      "problemMatcher": [
-        "$eslint-stylish"
-      ],
-      "label": "eslint: lint whole folder"
-    },
-    {
-      "type": "npm",
-      "script": "pkg",
+      "group": "build",
       "problemMatcher": [],
-      "label": "vsce pkg",
-      "detail": "yarn package && code --install-extension ./chatcopycat-*.vsix && echo 'done' > ~/.vscode/watchdir/done.txt"
+      "detail": "Run Python script using WSL"
+    },
+    {
+      "label": "Run PowerShell Script on Windows",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": [
+        "-File"                                                            ,
+        "C:\\Users\\stenm\\development\\ChatCopyCat\\install-extension.ps1"
+      ],
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "Run PowerShell script on Windows"
     }
   ]
 }

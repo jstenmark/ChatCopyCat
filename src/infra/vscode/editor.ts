@@ -1,7 +1,8 @@
 import * as vscode from 'vscode'
+
 import {log} from '../../infra/logging/log-base'
 import {validFileSchemes} from '../../shared/constants/consts'
-import {ILangOpts} from '../../shared/types/types'
+import {type ILangOpts} from '../../shared/types/types'
 import {configStore} from '../config'
 
 

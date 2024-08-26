@@ -1,8 +1,8 @@
 import {configStore} from '../../infra/config'
 import {languageExtensionMap} from '../../shared/constants/consts'
 import {SingletonBase} from '../../shared/utils/singleton'
-import {IConfigPort} from '../ports/config-port'
-import {ILanguagePort} from '../ports/language-port'
+import {type IConfigPort} from '../ports/config-port'
+import {type ILanguagePort} from '../ports/language-port'
 
 export class LanguageService extends SingletonBase {
   private static languagePort: ILanguagePort | undefined = undefined

@@ -2,17 +2,18 @@ import * as fs from 'fs'
 import {readFile} from 'fs/promises'
 import * as path from 'path'
 import * as vscode from 'vscode'
+
+import {type BumpTypes} from '../../adapters/ui/dialog/bump-version-dialog'
+import {commandHandlers} from '../../application/extension/command-decorator'
 import {configStore} from '../config'
-import {commandHandlers} from '../../application/extension/activation'
 import {log} from '../logging/log-base'
 import {executeCommand} from '../system/exec'
 import {getProjectRootPaths} from '../system/file-utils'
 import {Notify} from '../vscode/notification'
-import {BumpTypes} from '../../adapters/ui/dialog/bump-version-dialog'
 
 export function watchForExtensionChanges(): vscode.Disposable {
   if (configStore.get<boolean>('catEnabledFolderWatcher')) {
-    const watchFolder = path.resolve('~/.vscode/watchdir/done.txt')
+    const watchFolder = path.resolve('\\wsl.localhost\Ubuntu\var\tmp\done')
     log.debug(`Watching ${watchFolder} for changes.`)
 
     const watcher = (curr: fs.Stats, prev: fs.Stats) => {
@@ -32,12 +33,12 @@ export function watchForExtensionChanges(): vscode.Disposable {
   return new vscode.Disposable(() => {/** */})
 }
 
- 
+
 const readPackageJson = async (path: string): Promise<any> => {
   try {
     const content = await readFile(path, {encoding: 'utf8'})
 
-     
+
     return JSON.parse(content)
   } catch (e) {
     log.error('Could parse package.json', e)
@@ -52,7 +53,7 @@ export const bumpVersion = async (versionType: BumpTypes) => {
 
   await executeCommand(pkgRootPath, 'yarn', `version --${versionType}`, '--no-git-tag-version')
 
-   
+
   const pkgJsonVersion = (await readPackageJson(packageJsonPath))?.version
 
   Notify.info(`Version bumped to ${pkgJsonVersion}`, true, true)

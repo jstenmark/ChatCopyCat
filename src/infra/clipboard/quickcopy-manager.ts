@@ -1,11 +1,12 @@
 import {inject, injectable} from 'inversify'
-import {log} from '../logging/log-base'
-import {ConfigStore} from '../config'
-import {debounce} from '../../shared/utils/debounce'
-import {LogDecorator} from '../logging/log-decorator'
-import {LogLevel} from '../logging/types'
+
 import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
 import {TYPES} from '../../inversify/types'
+import {debounce} from '../../shared/utils/debounce'
+import {ConfigStore} from '../config'
+import {log} from '../logging/log-base'
+import {LogDecorator} from '../logging/log-decorator'
+import {LogLevel} from '../logging/types'
 
 @injectable()
 export class QuickCopyManager {

@@ -1,19 +1,20 @@
 
-import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
-import {ConfigStore, SemaphoreService} from '../../infra/config'
-import {generateReferenceSections, generateSelectionSections} from '../../adapters/ui/editor-utils'
-import {getInquiryType} from '../../adapters/ui/dialog/inquiry-dialog'
-import {getLangOpts} from '../../infra/vscode/editor'
+import {type TextEditor} from 'vscode'
+
 import {handleActiveDialogs} from '../../adapters/ui/dialog/dialog-utils'
-import {ILangOpts} from '../../shared/types/types'
-import {processSymbolsWithComments} from './process-symbols-comments'
-import {TextEditor} from 'vscode'
+import {getInquiryType} from '../../adapters/ui/dialog/inquiry-dialog'
+import {generateReferenceSections, generateSelectionSections} from '../../adapters/ui/editor-utils'
 import {getContentConfig} from '../../domain/models/inquiry-template'
-import {ClipboardHeadersChecker} from './clipboard-headers'
+import {type ClipboardUtils} from '../../infra/clipboard/clipboard-utils'
+import {type QuickCopyManager} from '../../infra/clipboard/quickcopy-manager'
+import {ConfigStore, SemaphoreService} from '../../infra/config'
+import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
+import {getLangOpts} from '../../infra/vscode/editor'
 import {container} from '../../inversify/inversify.config'
 import {TYPES} from '../../inversify/types'
-import {ClipboardUtils} from '../../infra/clipboard/clipboard-utils'
-import {QuickCopyManager} from '../../infra/clipboard/quickcopy-manager'
+import {type ILangOpts} from '../../shared/types/types'
+import {type ClipboardHeadersChecker} from './clipboard-headers'
+import {processSymbolsWithComments} from './process-symbols-comments'
 
 export const copyCode = async (): Promise<void> => {
   await ConfigStore.instance.onConfigReady()

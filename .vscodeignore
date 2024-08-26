@@ -2,7 +2,6 @@
 src/
 out/test/
 scripts
-node_modules
 docs
 assets
 
@@ -25,5 +24,7 @@ yarn.lock
 yarn-error.log
 .yarnrc
 .gitignore
+esbuild.js
+tsup.config.ts
 
 

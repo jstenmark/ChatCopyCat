@@ -1,5 +1,5 @@
 import {generateFilesTemplate, getContentConfig} from '../../domain/models/inquiry-template'
-import {ClipboardUtils} from '../../infra/clipboard/clipboard-utils'
+import {type ClipboardUtils} from '../../infra/clipboard/clipboard-utils'
 import {ConfigStore} from '../../infra/config'
 import {getFlatFileList} from '../../infra/file-tree/tree-transform'
 import {container} from '../../inversify/inversify.config'

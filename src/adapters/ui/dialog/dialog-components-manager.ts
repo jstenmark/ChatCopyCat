@@ -1,7 +1,8 @@
 import * as vscode from 'vscode'
+
 import {log} from '../../../infra/logging/log-base'
-import {DialogComponent} from '../../../shared/types/types'
-import {isQuickPick, isInputBox, disposeAllEventHandlers} from './dialog-utils'
+import {type DialogComponent} from '../../../shared/types/types'
+import {disposeAllEventHandlers,isInputBox, isQuickPick} from './dialog-utils'
 
 /**
  * Manages UI dialog components for a Visual Studio Code extension.
@@ -131,7 +132,7 @@ export class DialogComponentManager implements vscode.Disposable {
 
       this.disposable = vscode.Disposable.from(component, ...disposables)
     }).finally(() => {
-      this.cleanUp()
+      void this.cleanUp()
     })
   }
 

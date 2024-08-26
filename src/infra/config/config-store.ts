@@ -1,12 +1,13 @@
-import {Disposable, EventEmitter, TextDocument, WorkspaceConfiguration, extensions, workspace, ConfigurationScope} from 'vscode'
-import {Notify} from '../vscode/notification'
-import {IConfigurationProperties, IProperty} from '../../shared/types/types'
-import {IExtension} from '../../shared/types/types'
-import {log} from '../logging/log-base'
+import {type ConfigurationScope,type Disposable, EventEmitter, extensions, type TextDocument, workspace, type WorkspaceConfiguration} from 'vscode'
+
+import {defaultTabSize, extId, extPublisher} from '../../shared/constants/consts'
+import {type IConfigurationProperties, type IProperty} from '../../shared/types/types'
+import {type IExtension} from '../../shared/types/types'
+import {type ILangOpts} from '../../shared/types/types'
 import {SingletonBase} from '../../shared/utils/singleton'
 import {errorMessage, errorTypeCoerce} from '../../shared/utils/validate'
-import {ILangOpts} from '../../shared/types/types'
-import {defaultTabSize, extId, extPublisher} from '../../shared/constants/consts'
+import {log} from '../logging/log-base'
+import {Notify} from '../vscode/notification'
 
 /**
  * Manages the configuration settings of the extension.
@@ -121,7 +122,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   /**
    * Parses the extension's package.json to extract configuration properties.
    */
-   
+
   private async parsePkgJsonConfig(): Promise<void> {
     const properties = (
       (extensions.getExtension<IExtension>(
@@ -144,7 +145,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   /**
    * Updates the internal configuration cache with current workspace settings.
    */
-   
+
   private async updateConfigCache(): Promise<void> {
     const config: WorkspaceConfiguration = this.getConfiguration()
 
@@ -218,7 +219,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   /**
    * Listens for changes in the configuration and updates the cache accordingly.
    */
-   
+
   private async listenForConfigurationChanges(): Promise<void> {
     workspace.onDidChangeConfiguration(async e => {
       if (e.affectsConfiguration(this.extensionId)) {

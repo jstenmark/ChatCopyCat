@@ -1,5 +1,5 @@
-import {ISettingsItem} from '../../shared/types/types'
-import {PropertyType} from '../../shared/types/types'
+import {type ISettingsItem} from '../../shared/types/types'
+import {type PropertyType} from '../../shared/types/types'
 
 export const settingsByTypeObject = (): Record<PropertyType, ISettingsItem[]> =>
   ({

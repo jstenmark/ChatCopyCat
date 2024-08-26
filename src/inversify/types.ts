@@ -1,4 +1,4 @@
-import 'reflect-metadata' // Import reflect-metadata at the top
+import 'reflect-metadata'
 
 export const TYPES = {
   ClipboardManager: Symbol.for('ClipboardManager'),

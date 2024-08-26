@@ -1,12 +1,13 @@
 // src/application/commands/clipboard-utils.ts
 import {inject, injectable} from 'inversify'
-import {IContentConfig, getMetadataSection} from '../../domain/models/inquiry-template'
-import {selectionHeader, fileTreeHeader, fileTreeEnd} from '../../shared/constants/consts'
-import {IHeadersPresent, IHeaderIndex, ILangOpts} from '../../shared/types/types'
+
+import {ClipboardHeadersChecker} from '../../application/commands/clipboard-headers'
+import {getMetadataSection,IContentConfig} from '../../domain/models/inquiry-template'
+import {TYPES} from '../../inversify/types'
+import {fileTreeEnd,fileTreeHeader, selectionHeader} from '../../shared/constants/consts'
+import {IHeaderIndex, IHeadersPresent, ILangOpts} from '../../shared/types/types'
 import {log} from '../logging/log-base'
 import {ClipboardManager} from './clipboard-manager'
-import {TYPES} from '../../inversify/types'
-import {ClipboardHeadersChecker} from '../../application/commands/clipboard-headers'
 
 @injectable()
 export class ClipboardUtils {

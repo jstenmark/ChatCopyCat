@@ -1,4 +1,5 @@
 import {type TextEditor, type Uri, workspace} from 'vscode'
+
 import {getRelativePathOrBasename} from '../system/file-utils'
 
 /**

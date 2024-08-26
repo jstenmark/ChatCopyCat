@@ -1,10 +1,11 @@
+import {inject,injectable} from 'inversify'
 import * as vscode from 'vscode'
+
 import {log} from '../../infra/logging/log-base'
 import {AsyncLogDecorator} from '../../infra/logging/log-decorator'
 import {LogLevel} from '../../infra/logging/types'
-import {StatusBarManager} from '../vscode/statusbar-manager'
-import {injectable, inject} from 'inversify'
 import {TYPES} from '../../inversify/types'
+import {StatusBarManager} from '../vscode/statusbar-manager'
 /**
  * Manages clipboard operations for the ChatCopyCat extension, including copying, reading,
  * appending, and prepending text to the clipboard. It also interacts with the StatusBarManager

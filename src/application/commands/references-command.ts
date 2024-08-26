@@ -1,14 +1,15 @@
-import {command, Command} from './command-decorator'
-import {injectable, inject} from 'inversify'
-import {Notify} from '../../infra/vscode/notification'
-import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
-import {generateReferenceSections} from '../../adapters/ui/editor-utils'
-import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
-import {processSymbolsWithComments} from './process-symbols-comments'
-import {StatusBarManager} from '../../infra/vscode/statusbar-manager'
-import {getContentConfig} from '../../domain/models/inquiry-template'
+import {inject, injectable} from 'inversify'
+
 import {showAppendOrCopyDialog} from '../../adapters/ui/dialog/append-copy-dialog'
+import {generateReferenceSections} from '../../adapters/ui/editor-utils'
+import {getContentConfig} from '../../domain/models/inquiry-template'
+import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
+import {Notify} from '../../infra/vscode/notification'
+import {StatusBarManager} from '../../infra/vscode/statusbar-manager'
 import {TYPES} from '../../inversify/types'
+import {Command} from '../extension/command-decorator'
+import {processSymbolsWithComments} from './process-symbols-comments'
 
 @injectable()
 export class GetSymbolReferencesCommand extends Command {
@@ -16,10 +17,10 @@ export class GetSymbolReferencesCommand extends Command {
     @inject(TYPES.ClipboardManager) private clipboardManager: ClipboardManager,
     @inject(TYPES.StatusBarManager) private statusBarManager: StatusBarManager
   ) {
-    super('extension.getSymbolReferences')
+    super('chatcopycat.getSymbolReferences')
   }
 
-  @command('extension.getSymbolReferences')
+  // @command('extension.getSymbolReferences')
   async execute(): Promise<void> {
     const editor = await activeEditorOrFocusLast()
     if (!editor) {

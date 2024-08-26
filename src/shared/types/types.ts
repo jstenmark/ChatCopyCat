@@ -1,4 +1,4 @@
-import * as vscode from 'vscode'
+import type * as vscode from 'vscode'
 
 export interface ILangOpts {
   insertSpaces: boolean
@@ -31,11 +31,6 @@ export type DialogComponent = vscode.QuickPick<vscode.QuickPickItem> | vscode.In
 export type Optional<T extends object, K extends keyof T = keyof T> = Omit<T, K> &
   Partial<Pick<T, K>>
 
-export interface ICommand {
-  command: string
-  group: string
-  title: string
-}
 
 export type PropertyType = 'boolean' | 'string' | 'array' | 'number'
 
@@ -97,3 +92,14 @@ interface IItems<T = unknown> {
 }
 
 export type IConfigurationProperties = Record<string, IProperty>
+
+export interface ICommand {
+  command: string
+  title: string
+  category?: string
+}
+
+export interface ICommandHandler {
+  execute(...args: any[]): Promise<any>
+  executeCommand(...args: any[]): void
+}

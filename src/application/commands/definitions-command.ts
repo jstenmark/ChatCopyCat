@@ -1,7 +1,8 @@
 import * as vscode from 'vscode'
+
+import {type ClipboardManager} from '../../infra/clipboard/clipboard-manager'
 import {Notify} from '../../infra/vscode/notification'
-import {statusBarManager} from '../../infra/vscode/statusbar-manager'
-import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {type StatusBarManager} from '../../infra/vscode/statusbar-manager'
 import {container} from '../../inversify/inversify.config'
 import {TYPES} from '../../inversify/types'
 
@@ -19,6 +20,7 @@ export async function copyDefinitions(): Promise<void> {
   )
 
   const clipboardManager = container.get<ClipboardManager>(TYPES.ClipboardManager)
+  const statusBarManager = container.get<StatusBarManager>(TYPES.StatusBarManager)
   await clipboardManager.copyToClipboard(symbols.join('\n\n'))
   statusBarManager.updateCopyCount(symbols.length)
 }

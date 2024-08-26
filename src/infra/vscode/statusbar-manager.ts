@@ -1,4 +1,6 @@
+import {injectable} from 'inversify'
 import * as vscode from 'vscode'
+
 import {extId, extName} from '../../shared/constants/consts'
 
 /**
@@ -7,6 +9,7 @@ import {extId, extName} from '../../shared/constants/consts'
  * including displaying the count of copies made and updating the background color
  * based on the copy count.
  */
+@injectable()
 export class StatusBarManager implements vscode.Disposable {
   private statusBarItem: vscode.StatusBarItem
   private copyCount = 0
@@ -70,7 +73,3 @@ export class StatusBarManager implements vscode.Disposable {
   }
 }
 
-/**
- * Singleton instance of the StatusBarManager, ensuring only one status bar item is created.
- */
-export const statusBarManager = new StatusBarManager()

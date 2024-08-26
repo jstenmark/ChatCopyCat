@@ -1,9 +1,10 @@
 import * as vscode from 'vscode'
-import {ISymbolReference} from '../../domain/models/lang-types'
+
+import {type IContentConfig} from '../../domain/models/inquiry-template'
+import {type ISymbolReference} from '../../domain/models/lang-types'
 import {SymbolReferenceService} from '../../domain/services/symbol-reference-service'
 import {Notify} from '../../infra/vscode/notification'
 import {SymbolProvider} from '../../infra/vscode/symbol-provider'
-import {IContentConfig} from '../../domain/models/inquiry-template'
 
 
 export const processSymbolsWithComments = async (editor: vscode.TextEditor, config:IContentConfig): Promise<ISymbolReference[]> => {

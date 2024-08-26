@@ -1,8 +1,9 @@
 import * as vscode from 'vscode'
+
 import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
 import {configStore} from '../../infra/config'
 import {fileTreeEnd, fileTreeHeader, selectionHeader} from '../../shared/constants/consts'
-import {IContentSection, ILangOpts} from '../../shared/types/types'
+import {type IContentSection, type ILangOpts} from '../../shared/types/types'
 import {handleFileLanguageId} from '../services/language-processing-service'
 
 export function getMetadataSection(
