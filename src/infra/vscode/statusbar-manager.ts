@@ -1,7 +1,9 @@
+
 import {injectable} from 'inversify'
 import * as vscode from 'vscode'
 
 import {extId, extName} from '../../shared/constants/consts'
+import {log} from '../logging/log-base'
 
 /**
  * Manages the status bar item for the ChatCopyCat extension in Visual Studio Code.
@@ -26,6 +28,7 @@ export class StatusBarManager implements vscode.Disposable {
    * Initializes the status bar item with default settings and adds it to the VS Code status bar.
    */
   constructor() {
+    log.debug('Initializing status bar manager')
     this.statusBarItem = vscode.window.createStatusBarItem(
       'primary',
       vscode.StatusBarAlignment.Right,

@@ -4,7 +4,7 @@ import * as path from 'path'
 import * as vscode from 'vscode'
 
 import {type BumpTypes} from '../../adapters/ui/dialog/bump-version-dialog'
-import {commandHandlers} from '../../application/extension/command-decorator'
+import {commandHandlers} from '../../application/extension/command-utils'
 import {configStore} from '../config'
 import {log} from '../logging/log-base'
 import {executeCommand} from '../system/exec'

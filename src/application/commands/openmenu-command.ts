@@ -6,22 +6,21 @@ import {
   handleIgnoreResetButton,
   handleSelectionResetButton,
 } from '../../domain/services/definitions-utils'
-import {type ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {ClipboardManager,type ClipboardManager as TClipboardManager} from '../../infra/clipboard/clipboard-manager'
 import {ConfigStore} from '../../infra/config'
 import {executeCommand} from '../../infra/system/exec'
 import {getProjectRootPaths} from '../../infra/system/file-utils'
 import {container} from '../../inversify/inversify.config'
-import {TYPES} from '../../inversify/types'
 import {extName} from '../../shared/constants/consts'
 import {copyDefinitions} from './definitions-command'
 import {copyDefinitionsFromFiles} from './definitionsfromfiles-command'
 import {getFileTree} from './filetree-command'
-import {type GetSymbolReferencesCommand} from './references-command'
+import {GetSymbolReferencesCommand,type GetSymbolReferencesCommand as TGetSymbolReferencesCommand} from './references-command'
 import {openSettings} from './settings-command'
 
 export const openMenu = async () => {
-  const getSymbolReferences = container.get<GetSymbolReferencesCommand>(TYPES.GetSymbolReferencesCommand)
-  const clipboardManager = container.get<ClipboardManager>(TYPES.ClipboardManager)
+  const getSymbolReferences = container.get<TGetSymbolReferencesCommand>(GetSymbolReferencesCommand)
+  const clipboardManager = container.get<TClipboardManager>(ClipboardManager)
 
   const picks = [
     {kind: vscode.QuickPickItemKind.Separator, label: 'Symbols and definitions'},

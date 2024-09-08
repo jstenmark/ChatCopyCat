@@ -81,7 +81,7 @@ export const codeBlock = (
   lineNumEnd: number | undefined
 ): string => {
   const codeText = Array.isArray(code) ? code.join('\n') : code
-  const lineInfo = lineNumStart && lineNumEnd ? ` line="${lineNumStart}-${lineNumEnd}}"` : ''
+  const lineInfo = lineNumStart && lineNumEnd ? ` line="${lineNumStart}-${lineNumEnd}"` : ''
   return `\n\`\`\`${lang} { file="${path}"${lineInfo} }\n${codeText}\n\`\`\`\n`
 }
 

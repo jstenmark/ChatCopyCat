@@ -4,10 +4,10 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "lib": [
-      "ESNext"              ,
-      "ESNext.Decorators"   ,
+      "ESNext",
+      "ESNext.Decorators",
       "ESNext.AsyncIterable",
-      "ESNext.Array"        ,
+      "ESNext.Array",
       "ESNext.Intl"
     ],
     "module": "CommonJS",
@@ -28,12 +28,12 @@
     "noEmit": false
   },
   "include": [
-    "src/**/*.ts"      ,
+    "src/**/*.ts",
     "eslint.config.mjs"
   ],
   "exclude": [
-    "src/test"    ,
-    "docs"        ,
+    "src/test",
+    "docs",
     "node_modules"
   ]
 }
