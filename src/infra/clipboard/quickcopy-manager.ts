@@ -17,6 +17,7 @@ export class QuickCopyManager {
   constructor(
     @inject(TYPES.ClipboardManager) private clipboardManager: ClipboardManager,
   ) {
+    log.debug('Initializing QuickCopyManager')
     this.resetCount = debounce(this.resetCount.bind(this), this.resetInterval)
   }
 

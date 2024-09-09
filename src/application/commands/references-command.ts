@@ -4,11 +4,12 @@ import {showAppendOrCopyDialog} from '../../adapters/ui/dialog/append-copy-dialo
 import {generateReferenceSections} from '../../adapters/ui/editor-utils'
 import {getContentConfig} from '../../domain/models/inquiry-template'
 import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {log} from '../../infra/logging/log-base'
 import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
 import {Notify} from '../../infra/vscode/notification'
 import {StatusBarManager} from '../../infra/vscode/statusbar-manager'
 import {TYPES} from '../../inversify/types'
-import {Command} from '../extension/command-decorator'
+import {Command} from '../extension/command'
 import {processSymbolsWithComments} from './process-symbols-comments'
 
 @injectable()
@@ -17,6 +18,7 @@ export class GetSymbolReferencesCommand extends Command {
     @inject(TYPES.ClipboardManager) private clipboardManager: ClipboardManager,
     @inject(TYPES.StatusBarManager) private statusBarManager: StatusBarManager
   ) {
+    log.debug('Initializing GetSymbolReferencesCommand')
     super('chatcopycat.getSymbolReferences')
   }
 

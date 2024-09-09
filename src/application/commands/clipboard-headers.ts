@@ -1,6 +1,7 @@
 import {inject, injectable} from 'inversify'
 
 import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
+import {log} from '../../infra/logging/log-base'
 import {TYPES} from '../../inversify/types'
 
 export interface IHeadersPresent {
@@ -10,13 +11,15 @@ export interface IHeadersPresent {
   clipboardContent: string
 }
 
-const selectionHeader = 'Selection Header' // replace with actual value
-const fileTreeHeader = 'File Tree Header' // replace with actual value
-const fileTreeEnd = 'File Tree End' // replace with actual value
+const selectionHeader = 'Selection Header'
+const fileTreeHeader = 'File Tree Header'
+const fileTreeEnd = 'File Tree End'
 
 @injectable()
 export class ClipboardHeadersChecker {
-  constructor(@inject(TYPES.ClipboardManager) private clipboardManager: ClipboardManager) { }
+  constructor(@inject(TYPES.ClipboardManager) private clipboardManager: ClipboardManager) {
+    log.debug('Initializing ClipboardHeadersChecker')
+  }
 
   public async headersInClipboard(content?: string): Promise<IHeadersPresent> {
     if (!content || content.length === 0) {
