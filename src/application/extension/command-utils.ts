@@ -13,8 +13,26 @@ import {copyDefinitions} from '../commands/definitions-command'
 import {copyDefinitionsFromFiles} from '../commands/definitionsfromfiles-command'
 import {getFileTree} from '../commands/filetree-command'
 import {openMenu} from '../commands/openmenu-command'
-import {type GetSymbolReferencesCommand} from '../commands/references-command'
 import {openSettings} from '../commands/settings-command'
+
+export interface ICommand {
+  execute(...args: any[]): Promise<any>
+}
+
+interface ICommandRegistryEntry {
+  id: string
+  instance: ICommand
+}
+
+export interface ICommandDefinition {
+  command: string
+  group: string
+  title: string
+}
+
+const newCommands = [
+  'chatcopycat.getSymbolReferences',
+]
 
 export const commandHandlers: Record<string, () => Promise<void>> = {
   copyCode,
@@ -37,10 +55,36 @@ function registerCommand(context: ExtensionContext, cmd: ICommandDefinition): vo
     context.subscriptions.push(command)
   } else {
     Notify.error(`No handler found for command ${cmd.command}`, true, true)
+    log.error(action + ' = ' + cmd.command, cmd, {truncate: 0})
   }
 }
 
- async function exec(handler: () => Promise<void>): Promise<void> {
+export function registerCommandsOld(context: ExtensionContext): void {
+  const commandsList = (context.extension as any).packageJSON
+    .contributes
+    .commands?.filter((command: ICommandDefinition) => {
+      if (newCommands.includes(command.command)) {
+        log.debug(`Ignoring new command registering: ${command.command}`)
+        return false
+      }
+      return true
+    })
+
+  for (const cmd of commandsList) {
+    log.debug('registerCommand: ' + cmd.command)
+    registerCommand(context, cmd)
+  }
+}
+
+const commandRegistry: ICommandRegistryEntry[] = []
+export function registerCommands(context: ExtensionContext): void {
+  for (const {id, instance} of commandRegistry) {
+    const disposable = commands.registerCommand(id, (...args: any[]) => instance.execute(...args))
+    context.subscriptions.push(disposable)
+  }
+}
+
+async function exec(handler: () => Promise<void>): Promise<void> {
   try {
     return await handler()
   } catch (error) {
@@ -49,29 +93,3 @@ function registerCommand(context: ExtensionContext, cmd: ICommandDefinition): vo
   }
 }
 
-export interface ICommandDefinition {
-  command: string
-  group: string
-  title: string
-}
-
-const newCommands = [
-  'chatcopycat.getSymbolReferences',
-]
-export function registerCommandsOld(context: ExtensionContext): void {
-  const commandsList = (context.extension as any).packageJSON
-    .contributes
-    .commands?.filter((command: ICommandDefinition) => {
-        if (newCommands.includes(command.command)) {
-          log.debug(`Ignoring new command registering: ${command.command}`)
-          return false
-        }
-        return true
-    })
-
-  // default registration
-  for (const cmd of commandsList) {
-    log.info('default registerCommand', {command: cmd.command}, {truncate: 0})
-    registerCommand(context, cmd)
-  }
-}

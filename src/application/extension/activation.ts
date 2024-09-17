@@ -9,8 +9,7 @@ import {watchForExtensionChanges} from '../../infra/dev/development'
 import {LogManager} from '../../infra/logging/log-manager'
 import {Notify} from '../../infra/vscode/notification'
 import {SemaphoreAdapter} from '../../infra/vscode/semaphore-adapter'
-import {registerCommands} from './command'
-import {registerCommandsOld} from './command-utils'
+import {registerCommands, registerCommandsOld} from './command-utils'
 
 export const initExtension = async (context: ExtensionContext): Promise<Disposable[] | void> => {
   LogManager.instance
@@ -25,8 +24,8 @@ export const initExtension = async (context: ExtensionContext): Promise<Disposab
   await LanguageService.initialize(languageAdapter, configAdapter)
   StateStore.instance
 
-  registerCommands(context) // Register traditional command handlers
-  registerCommandsOld(context)
+  registerCommands(context) // Old command type registration
+  registerCommandsOld(context) // DI type command registration
 
   // Disposeables
   context.subscriptions.push(

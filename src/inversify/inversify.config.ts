@@ -11,7 +11,8 @@ import {StatusBarManager} from '../infra/vscode/statusbar-manager'
 import {TYPES} from './types'
 
 const container = new Container({
-  skipBaseClassChecks: true, autoBindInjectable: true,
+  skipBaseClassChecks: true,
+  autoBindInjectable: true,
 })
 
 container.bind<ClipboardManager>(TYPES.ClipboardManager).to(ClipboardManager).inSingletonScope()

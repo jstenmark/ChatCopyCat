@@ -18,11 +18,9 @@ export class GetSymbolReferencesCommand extends Command {
     @inject(TYPES.ClipboardManager) private clipboardManager: ClipboardManager,
     @inject(TYPES.StatusBarManager) private statusBarManager: StatusBarManager
   ) {
-    log.debug('Initializing GetSymbolReferencesCommand')
     super('chatcopycat.getSymbolReferences')
   }
 
-  // @command('extension.getSymbolReferences')
   async execute(): Promise<void> {
     const editor = await activeEditorOrFocusLast()
     if (!editor) {

@@ -1,4 +1,4 @@
-import {inject,injectable} from 'inversify'
+import {inject, injectable} from 'inversify'
 import * as vscode from 'vscode'
 
 import {log} from '../../infra/logging/log-base'
