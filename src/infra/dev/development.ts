@@ -5,7 +5,7 @@ import * as vscode from 'vscode'
 
 import {type BumpTypes} from '../../adapters/ui/dialog/bump-version-dialog'
 import {commandHandlers} from '../../application/extension/command-utils'
-import {configStore} from '../config'
+import {configStore} from '../config/config-store'
 import {log} from '../logging/log-base'
 import {executeCommand} from '../system/exec'
 import {getProjectRootPaths} from '../system/file-utils'

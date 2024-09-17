@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 
 import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
-import {configStore} from '../../infra/config'
+import {configStore} from '../../infra/config/config-store'
 import {fileTreeEnd, fileTreeHeader, selectionHeader} from '../../shared/constants/consts'
 import {type IContentSection, type ILangOpts} from '../../shared/types/types'
 import {handleFileLanguageId} from '../services/language-processing-service'

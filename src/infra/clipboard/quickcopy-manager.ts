@@ -3,7 +3,7 @@ import {inject, injectable} from 'inversify'
 import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
 import {TYPES} from '../../inversify/types'
 import {debounce} from '../../shared/utils/debounce'
-import {ConfigStore} from '../config'
+import {ConfigStore} from '../config/config-store'
 import {log} from '../logging/log-base'
 import {LogDecorator} from '../logging/log-decorator'
 import {LogLevel} from '../logging/types'
@@ -17,7 +17,6 @@ export class QuickCopyManager {
   constructor(
     @inject(TYPES.ClipboardManager) private clipboardManager: ClipboardManager,
   ) {
-    log.debug('Initializing QuickCopyManager')
     this.resetCount = debounce(this.resetCount.bind(this), this.resetInterval)
   }
 

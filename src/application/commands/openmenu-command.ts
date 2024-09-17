@@ -7,7 +7,7 @@ import {
   handleSelectionResetButton,
 } from '../../domain/services/definitions-utils'
 import {type ClipboardManager,type ClipboardManager as TClipboardManager} from '../../infra/clipboard/clipboard-manager'
-import {ConfigStore} from '../../infra/config'
+import {ConfigStore} from '../../infra/config/config-store'
 import {executeCommand} from '../../infra/system/exec'
 import {getProjectRootPaths} from '../../infra/system/file-utils'
 import {container} from '../../inversify/inversify.config'

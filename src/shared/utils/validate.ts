@@ -1,15 +1,7 @@
- 
+
 import * as vscode from 'vscode'
 
-const ERROR_MESSAGES = {
-  INVALID_CONFIRMATION: 'Invalid confirmation value. Please enter "yes" or "no".',
-  ONLY_LOWER_CASE_ALLOWED: 'Only lowercase letters are allowed.',
-  INVALID_URL: 'Invalid URL format.',
-  VALUE_CANNOT_BE_EMPTY: 'Value cannot be empty.',
-  INVALID_ARRAY_ITEM: 'The item youre trying to add does not meet the required type criteria for this array.',
-  INVALID_ARRAY: 'The provided value is not a valid array. Please ensure its an array type.',
-  INVALID_NUMBER: 'The entered value must be a number. Please check and enter a valid numeric value.',
-}
+import {ERROR_MESSAGES} from '../constants/consts'
 
 /**
  * Coerces an unknown error into an Error object with a custom error message.

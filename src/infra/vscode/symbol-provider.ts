@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 
 import {type IContentConfig} from '../../domain/models/inquiry-template'
-import {configStore} from '../config'
+import {configStore} from '../config/config-store'
 import {log} from '../logging/log-base'
 
 

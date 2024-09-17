@@ -1,6 +1,7 @@
 
 import {type IContentConfig} from '../../../domain/models/inquiry-template'
-import {configStore, SemaphoreService} from '../../../infra/config'
+import {SemaphoreService} from '../../../domain/services/semaphore-service'
+import {configStore} from '../../../infra/config/config-store'
 import {createQuickPick} from '../components/window-components'
 import {createInputBox} from '../components/window-components'
 import {inputBoxManager,quickPickManager} from './dialog-components-manager'

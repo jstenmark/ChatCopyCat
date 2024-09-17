@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import {type IFileListItem} from '../../domain/models/filetree-types'
+import {type IFileListItem} from '../../domain/models/types'
 import {isIgnored, parseGitignorePatterns} from '../../shared/utils/ignore'
 import {isDirectoryOrFile} from '../system/file-utils'
 

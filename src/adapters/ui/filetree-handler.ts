@@ -3,7 +3,7 @@ import type * as vscode from 'vscode'
 import {
   type IFileListItem,
   type IFileTreeDialogItem,
-  type IFileTreeNode} from '../../domain/models/filetree-types'
+  type IFileTreeNode} from '../../domain/models/types'
 import {
   convertFileTreeNodeToItem,
   extractAllFiles,
@@ -13,9 +13,10 @@ import {
   handleSelectionResetButton,
 } from '../../domain/services/definitions-utils'
 import {LanguageService} from '../../domain/services/language-service'
-import {configStore,StateStore} from '../../infra/config'
+import {configStore} from '../../infra/config/config-store'
 import {getFileTree} from '../../infra/file-tree/tree-transform'
 import {log} from '../../infra/logging/log-base'
+import {StateStore} from '../../infra/state/state-store'
 import {cacheResetButton,ignoreButton, ignoreResetButton} from './dialog/filetree-dialog'
 
 /**

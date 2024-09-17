@@ -8,12 +8,9 @@ import {
   showQuickPickAction,
   showQuickPickMany
 } from '../../adapters/ui/components/window-components'
-import {
-  configStore,
-  settingsByTypeObject,
-  StateStore,
-} from '../../infra/config'
+import {configStore} from '../../infra/config/config-store'
 import {log} from '../../infra/logging/log-base'
+import {StateStore} from '../../infra/state/state-store'
 import {Notify} from '../../infra/vscode/notification'
 import {extName} from '../../shared/constants/consts'
 import {type IExtendedQuickPickItem, type ISettingsItem, type Properties, type PropertyType} from '../../shared/types/types'
@@ -294,3 +291,11 @@ export interface ISpecialQuickPickItem extends vscode.QuickPickItem {
   picked?: boolean
   addNewItemFlag?: boolean
 }
+
+export const settingsByTypeObject = (): Record<PropertyType, ISettingsItem[]> =>
+  ({
+    boolean: [],
+    string: [],
+    array: [],
+    number: [],
+  }) as Record<PropertyType, ISettingsItem[]>

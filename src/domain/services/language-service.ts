@@ -1,4 +1,4 @@
-import {configStore} from '../../infra/config'
+import {configStore} from '../../infra/config/config-store'
 import {languageExtensionMap} from '../../shared/constants/consts'
 import {SingletonBase} from '../../shared/utils/singleton'
 import {type IConfigPort} from '../ports/config-port'
@@ -13,7 +13,7 @@ export class LanguageService extends SingletonBase {
     super()
   }
 
-   
+
   static async initialize(
     languagePort: ILanguagePort,
     configPort: IConfigPort
@@ -48,7 +48,6 @@ export class LanguageService extends SingletonBase {
         extensions.forEach(ext => extensionsSet.add(ext))
       }
     }
-    // this.configPort.get<string[]>('definitionsAllowList').forEach(ext => extensionsSet.add(ext))
     configStore.get<string[]>('definitionsAllowList').forEach(ext => extensionsSet.add(ext))
     return extensionsSet
   }

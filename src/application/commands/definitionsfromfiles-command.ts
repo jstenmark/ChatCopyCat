@@ -1,18 +1,21 @@
+
 import * as path from 'path'
 import {
+  commands,
+  type DocumentSymbol,
   Uri,
   window,
+  workspace,
 } from 'vscode'
-import * as vscode from 'vscode'
 
 import {showFolderTreeDialog} from '../../adapters/ui/dialog/filetree-dialog'
-import {type IFileListItem, type IFileTreeNode, type IPathAndUri} from '../../domain/models/filetree-types'
 import {codeBlock} from '../../domain/models/inquiry-template'
+import {type IFileListItem, type IFileTreeNode, type IPathAndUri} from '../../domain/models/types'
 import {
   getCustomSupportedFileExtensions,
 } from '../../domain/services/definitions-utils'
 import {type ClipboardManager} from '../../infra/clipboard/clipboard-manager'
-import {configStore} from '../../infra/config'
+import {configStore} from '../../infra/config/config-store'
 import {getFileTree} from '../../infra/file-tree/tree-transform'
 import {log} from '../../infra/logging/log-base'
 import {Notify} from '../../infra/vscode/notification'
@@ -63,8 +66,8 @@ export async function gatherDefinitions(): Promise<string[]> {
     'Fetching Definitions',
     fileUris,
     async (uri, filePath, _reportProgress, _token) => {
-      const doc = await vscode.workspace.openTextDocument(uri)
-      const symbols = await vscode.commands.executeCommand<vscode.DocumentSymbol[]>(
+      const doc = await workspace.openTextDocument(uri)
+      const symbols = await commands.executeCommand<DocumentSymbol[]>(
         'vscode.executeDocumentSymbolProvider',
         uri,
       )

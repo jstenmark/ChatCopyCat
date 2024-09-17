@@ -3,7 +3,7 @@ import * as vscode from 'vscode'
 import {log} from '../../infra/logging/log-base'
 import {validFileSchemes} from '../../shared/constants/consts'
 import {type ILangOpts} from '../../shared/types/types'
-import {configStore} from '../config'
+import {configStore} from '../config/config-store'
 
 
 export let lastTrackedTextEditor: vscode.TextEditor | undefined

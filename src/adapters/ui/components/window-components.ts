@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as vscode from 'vscode'
 
-import {StateStore} from '../../../infra/config'
+import {StateStore} from '../../../infra/state/state-store'
 import {getProjectRootPaths} from '../../../infra/system/file-utils'
 import {Notify} from '../../../infra/vscode/notification'
 import {Validator} from '../../../shared/utils/validate'

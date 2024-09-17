@@ -1,4 +1,3 @@
-// src/application/commands/clipboard-utils.ts
 import {inject, injectable} from 'inversify'
 
 import {ClipboardHeadersChecker} from '../../application/commands/clipboard-headers'

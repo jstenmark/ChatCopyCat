@@ -7,6 +7,16 @@ export const fileTreeEnd = '[File Tree End]'
 
 export const validFileSchemes = new Set(['file', 'untitled'])
 
+export const ERROR_MESSAGES = {
+  INVALID_CONFIRMATION: 'Invalid confirmation value. Please enter "yes" or "no".',
+  ONLY_LOWER_CASE_ALLOWED: 'Only lowercase letters are allowed.',
+  INVALID_URL: 'Invalid URL format.',
+  VALUE_CANNOT_BE_EMPTY: 'Value cannot be empty.',
+  INVALID_ARRAY_ITEM: 'The item youre trying to add does not meet the required type criteria for this array.',
+  INVALID_ARRAY: 'The provided value is not a valid array. Please ensure its an array type.',
+  INVALID_NUMBER: 'The entered value must be a number. Please check and enter a valid numeric value.',
+}
+
 export const languageExtensionMap: Record<string, string[]> = {
   plaintext: ['.txt'],
   log: ['.log'],

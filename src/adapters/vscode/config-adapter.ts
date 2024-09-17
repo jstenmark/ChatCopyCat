@@ -1,5 +1,5 @@
 import {type IConfigPort} from '../../domain/ports/config-port'
-import {configStore} from '../../infra/config'
+import {configStore} from '../../infra/config/config-store'
 
 export class ConfigAdapter implements IConfigPort {
   get<T>(key: string): T {
@@ -10,7 +10,7 @@ export class ConfigAdapter implements IConfigPort {
     return configStore.update<T>(key, value)
   }
 
-   
+
   async onConfigReady(): Promise<void> {
     return
   }

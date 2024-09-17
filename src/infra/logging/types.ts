@@ -11,7 +11,6 @@ export enum LogLevelNumeric {
   ERROR = 4
 }
 
-
 export interface ILogManager {
   log(message: string): void
 }

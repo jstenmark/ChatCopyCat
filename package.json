@@ -307,9 +307,8 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "yarn compile2",
-    "compile": "echo compiling... && yarn tsup",
-    "compile2": "tsc --experimentalDecorators -p ./",
+    "vscode:prepublish": "yarn compile",
+    "compile": "tsc --experimentalDecorators -p ./",
     "watch": "tsc --experimentalDecorators --watch",
     "pretest": "yarn compile && yarn lint",
     "lint": "eslint",
@@ -327,13 +326,11 @@
     "vsce:package:pre": "vsce package --yarn --pre-release",
     "vsce:publish": "vsce publish --yarn",
     "vsce:publish:pre": "vsce publish --yarn --pre-release",
-    "pkgg": "rm -rf out && npm run check-types && node esbuild.js",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf out && rm -f chatcopycat-*.vsix",
     "tsup": "yarn bump && yarn clean && tsup",
     "bump": "yarn version --new-version patch",
-    "install:linux": " code --install-extension ./chatcopycat-*.vsix --force",
-    "install:win": "powershell -ExecutionPolicy Bypass -File ./install-extension.ps1"
+    "install:linux": " code --install-extension ./chatcopycat-*.vsix --force"
   },
   "devDependencies": {
     "@anatine/esbuild-decorators": "^0.2.19",

@@ -1,5 +1,3 @@
- 
-
 /**
  * An abstract base class for implementing the Singleton pattern.
  * This class ensures that only one instance of a derived class is created and provides access to it.

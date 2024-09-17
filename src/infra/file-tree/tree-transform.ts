@@ -1,8 +1,8 @@
 import * as path from 'path'
 
-import {type IFileListItem, type IFileTreeNode} from '../../domain/models/filetree-types'
+import {type IFileListItem, type IFileTreeNode} from '../../domain/models/types'
 import {parseGitignorePatterns} from '../../shared/utils/ignore'
-import {configStore} from '../config'
+import {configStore} from '../config/config-store'
 import {getProjectRootPaths} from '../system/file-utils'
 import {getFileList} from './file-handling'
 

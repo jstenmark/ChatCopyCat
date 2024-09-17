@@ -3,7 +3,6 @@ import type * as vscode from 'vscode'
 
 import {showQuickPick} from '../components/window-components'
 
-
 export interface IAppendOrCopyOption extends vscode.QuickPickItem {
   action: 'append' | 'copy'
 }

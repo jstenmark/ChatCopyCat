@@ -1,5 +1,5 @@
 import {defaultJsonTabSize} from '../../shared/constants/consts'
-import {configStore} from '../config'
+import {configStore} from '../config/config-store'
 import {LogManager} from './log-manager'
 import {truncateStr} from './log-utils'
 import {type ILoggerMethods, type ILoggerSettings, type LoggerMethod, type LogHandler, LogLevel, LogLevelNumeric} from './types'

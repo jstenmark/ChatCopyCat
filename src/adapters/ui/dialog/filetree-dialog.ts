@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 
-import {type IFileListItem, type IFileTreeDialogItem, type IFileTreeNode} from '../../../domain/models/filetree-types'
+import {type IFileListItem, type IFileTreeDialogItem, type IFileTreeNode} from '../../../domain/models/types'
 import {convertFileTreeNodeToItem} from '../../../domain/services/definitions-utils'
-import {StateStore} from '../../../infra/config'
+import {StateStore} from '../../../infra/state/state-store'
 import {createQuickPick, initQuickPick} from '../components/window-components'
 import {handleButtonAction, processSelectionResults,updateDefinitionsDialogAutoselect} from '../filetree-handler'
 

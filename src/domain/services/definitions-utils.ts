@@ -3,10 +3,11 @@ import * as vscode from 'vscode'
 
 import {selectFileTreeDialogItem} from '../../adapters/ui/dialog/filetree-dialog'
 import {refreshDialog} from '../../adapters/ui/filetree-handler'
-import {configStore, StateStore} from '../../infra/config'
+import {configStore} from '../../infra/config/config-store'
+import {StateStore} from '../../infra/state/state-store'
 import {Notify} from '../../infra/vscode/notification'
 import {languageExtensionMap} from '../../shared/constants/consts'
-import {type IFileListItem,type IFileTreeDialogItem, type IFileTreeNode} from '../models/filetree-types'
+import {type IFileListItem,type IFileTreeDialogItem, type IFileTreeNode} from '../models/types'
 
 /**
  * Converts a file tree node to a dialog item for display in a Quick Pick interface.
