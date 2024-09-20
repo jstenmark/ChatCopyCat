@@ -24,7 +24,4 @@ yarn.lock
 yarn-error.log
 .yarnrc
 .gitignore
-esbuild.js
 tsup.config.ts
-
-

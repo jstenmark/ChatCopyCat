@@ -1,17 +1,13 @@
 import 'reflect-metadata'
 
 import {type ExtensionContext, extensions} from 'vscode'
-import {window} from 'vscode'
 
-import {GetSymbolReferencesCommand,type GetSymbolReferencesCommand as TGetSymbolReferencesCommand} from './application/commands/references-command'
 import {initExtension} from './application/extension/activation'
 import {log} from './infra/logging/log-base'
 import {Notify} from './infra/vscode/notification'
 import {extId, extPublisher} from './shared/constants/consts'
 import {type IExtension} from './shared/types/types'
 import {errorMessage} from './shared/utils/validate'
-export const logger = window.createOutputChannel('ccc')
-
 
 export async function activate(context: ExtensionContext) {
   try {
