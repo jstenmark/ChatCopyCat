@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🐞 Report a Bug
+    url: https://github.com/jstenmark/ChatCopyCat/issues/new?template=bug_report.md
+    about: Report any functional issues or bugs in ChatCopyCat.
+
+  - name: 🚀 Request a Feature
+    url: https://github.com/jstenmark/ChatCopyCat/issues/new?template=feature_request.md
+    about: Suggest a feature or an improvement to ChatCopyCat.

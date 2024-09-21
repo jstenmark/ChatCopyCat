@@ -318,17 +318,13 @@ Right now, ChatCopyCat is all about choice—grab what you need, tag it if you f
 
 - **[Future Brainwaves](ROADMAP.md)**: We’re all about evolving without complicating.
 
-
 For now, whether it's a snippet or the whole shebang, we're keeping it casual and integrated.
 
 ## Open Source Love
 ChatCopyCat is yours, free and easy, under the [MIT License](LICENSE.md). Share, tweak, be yourself, do your thing.
 
-
 ## Alley-Oop!
-Join the ChatCopyCat community on [GitHub](https://github.com/jstenmark/ChatCopyCat). Share your experience, suggest features, or contribute to the project. Bugs, brainwaves, PRs—all welcome. Your insights make us better!
-
-- Need support or want ot get in contact? Check out the git repo or the vscode market page
+Join the ChatCopyCat community on [GitHub](https://github.com/jstenmark/ChatCopyCat/discussions). Share your experience, suggest features, or contribute to the project. Bugs, brainwaves, PRs—all welcome. Your insights make us better!
 
 Keep it laid-back, coders. 🐾
 
