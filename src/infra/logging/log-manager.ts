@@ -1,4 +1,4 @@
-import {type Disposable,type OutputChannel, window} from 'vscode'
+import {type Disposable, type OutputChannel, window} from 'vscode'
 
 import {SingletonBase} from '../../shared/utils/singleton'
 import {type ILogManager} from './types'
@@ -30,7 +30,7 @@ export class LogManager extends SingletonBase implements Disposable, ILogManager
   private setChannel(channel: OutputChannel): void {
     if (channel !== null && channel !== undefined) {
       this.outputChannel = channel
-      this.outputChannel.show()
+      // this.outputChannel.show()
     }
   }
 

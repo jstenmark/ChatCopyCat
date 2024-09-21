@@ -25,6 +25,4 @@ export async function activate(context: ExtensionContext) {
   }
 }
 
-export function deactivate() {
-  // Empty
-}
+export function deactivate() { }
