@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.146",
+  "version": "0.0.152",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": {
@@ -378,5 +378,11 @@
   "vsce": {
     "dependencies": true,
     "yarn": true
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*": "yarn lint:fix"
   }
 }
