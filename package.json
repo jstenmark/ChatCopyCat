@@ -1,10 +1,12 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.141",
+  "version": "0.0.142",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
-  "author": "Johannes Stenmark",
+  "author": {
+    "name": "Johannes Stenmark <johannes@stenmark.in> (https://github.com/jstenmark)"
+  },
   "categories": [
     "Snippets",
     "Programming Languages",
@@ -21,10 +23,14 @@
   ],
   "main": "./out/extension.js",
   "engines": {
+    "node": ">=20",
     "vscode": "^1.91.1"
   },
-  "repository": "https://github.com/jstenmark/ChatCopyCat.git",
-  "homepage": "https://github.com/jstenmark/ChatCopyCat/blob/main/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jstenmark/ChatCopyCat.git"
+  },
+  "homepage": "https://github.com/jstenmark/ChatCopyCat#readme",
   "bugs": {
     "url": "https://github.com/jstenmark/ChatCopyCat/issues",
     "email": "johannes@stenmark.in"
@@ -307,25 +313,25 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "yarn compile",
+    "_opts": "cross-env NODE_OPTIONS=--max-old-space-size=4096",
     "compile": "tsc --experimentalDecorators -p ./",
     "watch": "tsc --experimentalDecorators --watch",
-    "pretest": "yarn compile && yarn lint",
+    "pretest": "yarn vscode:prepublish && yarn lint",
     "lint": "eslint",
-    "lint:env": "cross-env NODE_OPTIONS=--max-old-space-size=4096",
-    "lint:pretty": "yarn lint:env && eslint --color",
-    "lint:fix": "yarn lint:env && eslint --format=pretty --stats --cache --cache-location ~/.cache/eslint --fix",
-    "lint:debug": "yarn lint:env && eslint --color --debug --fix-dry-run",
-    "lint:inspect": "yarn lint:base --inspect-config",
+    "lint:pretty": "yarn _opts && eslint --color",
+    "lint:fix": "yarn _opts && eslint --format=pretty --stats --cache --cache-location ~/.cache/eslint --fix",
+    "lint:debug": "yarn _opts && eslint --color --debug --fix-dry-run",
+    "lint:inspect": "yarn lint:pretty --inspect-config",
     "test": "node ./out/test/runTest.js",
-    "package": "vsce package --yarn",
+    "package": "vsce package",
     "pkg": "yarn bump && yarn clean && yarn package",
-    "vsce:package": "vsce package --yarn",
-    "vsce:package:pre": "vsce package --yarn --pre-release",
-    "vsce:publish": "vsce publish --yarn",
-    "vsce:publish:pre": "vsce publish --yarn --pre-release",
+    "vsce:package": "vsce package",
+    "vsce:package:pre": "vsce package --pre-release",
+    "vsce:publish": "vsce publish",
+    "vsce:publish:pre": "vsce publish --pre-release",
+    "vscode:prepublish": "tsc --experimentalDecorators -p ./",
     "check-types": "tsc --noEmit",
-    "clean": "rm -rf out && rm -f chatcopycat-*.vsix",
+    "clean": "rm -rf out && rm -f chatcopycat-*.vsix && rm -rf /mnt/c/Users/stenm/.vscode/extensions/jstenmark.*",
     "tsup": "yarn bump && yarn clean && tsup",
     "bump": "yarn version --new-version patch",
     "install:linux": " code --install-extension ./chatcopycat-*.vsix --force"
@@ -337,7 +343,6 @@
     "@eslint/config-inspector": "^0.5.2",
     "@eslint/js": "^9.7.0",
     "@stylistic/eslint-plugin-ts": "^2.3.0",
-    "@swc/core": "^1.7.5",
     "@types/eslint": "^8.44.8",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.3",
@@ -345,7 +350,7 @@
     "@types/vscode": "^1.91.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
-    "@vscode/vsce": "^2.31.0",
+    "@vscode/vsce": "^3.1.0",
     "cross-env": "^7.0.3",
     "dedent": "^1.5.3",
     "electron": "^27.1.3",
@@ -361,10 +366,16 @@
     "ts-node": "^10.9.1",
     "tsup": "^8.2.4",
     "typescript": "<=5.3.2",
-    "typescript-eslint": "^8.0.0"
+    "typescript-eslint": "^8.0.0",
+    "yarn": "^1.22.22"
   },
   "dependencies": {
     "inversify": "^6.0.2",
     "reflect-metadata": "^0.2.2"
+  },
+  "extensionDependencies": [],
+  "vsce": {
+    "dependencies": true,
+    "yarn": true
   }
 }
