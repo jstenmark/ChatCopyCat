@@ -1,27 +1,27 @@
 # folders
 src/
 out/test/
-scripts
-docs
-assets
-
-.github
-.vscode
-.vscode-test
-.git
+scripts/
+docs/
+assets/
+.git/
+.github/
+.vscode/
+.vscode-test/
 
 # filetypes
 **/*.map
-**/*.ts
-**/*.vsix
-**/*.log
+#**/*.ts
+#**/*.vsix
+#**/*.log
 
 # files
 tsconfig.json
 package.json
 eslint.config.mjs
+tsup.config.ts
+.gitignore
+.yarnrc
 yarn.lock
 yarn-error.log
-.yarnrc
-.gitignore
-tsup.config.ts
+ROADMAP.md

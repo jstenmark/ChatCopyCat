@@ -75,10 +75,3 @@ python imagetransform.py
 ### Key Features
 - **Image Resizing**: Resizes the image to the specified dimensions using high-quality resampling.
 - **Circular Transparency**: Creates a circular transparent background for the image.
-
----
-
-## wip_createmulticoloredsvg
-
-Script that takes the three most prominent colors and creates and vector image out of that. Work in progress...
-

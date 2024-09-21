@@ -22,7 +22,7 @@
     "forceConsistentCasingInFileNames": true,
     "removeComments": true,
     "skipLibCheck": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "strict": true,
     "target": "ESNext",
     "noEmit": false

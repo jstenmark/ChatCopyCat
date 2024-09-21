@@ -1,31 +1,27 @@
 {
   "files.exclude": {
-    "**/node_modules/**": true,
-    "**/*.js": {
-      "when": "$(basename).ts"
-    },
-    "**/.git": true
+    "node_modules": true,
+    "scripts/node_modules": true,
+    ".vscode-test": true,
   },
   "search.exclude": {
-    "docs"              : true,
-    "out"               : true,
-    "**/node_modules/**": true,
-    "**/*.code-search"  : true
+    "node_modules": true,
+    "scripts/node_modules": true,
+    "docs": true,
+    "out": true,
+    ".vscode-test": true,
   },
   "typescript.tsc.autoDetect": "off",
+  "eslint.workingDirectories": [
+    "src"
+  ],
   "json.schemas": [
     {
       "url": "https://cdn.jsdelivr.net/npm/tsup/schema.json",
       "fileMatch": [
-        "package.json"    ,
+        "package.json",
         "tsup.config.json"
       ]
     }
-  ],
-  "chatcopycat.catLogDataTruncateLen": 0,
-  "chatcopycat.catLogMsgTruncateLen": 0,
-  "chatcopycat.catLogLevel": "DEBUG",
-  "eslint.workingDirectories": [
-    "src"
   ]
 }

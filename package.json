@@ -1,7 +1,7 @@
 {
   "name": "chatcopycat",
   "displayName": "ChatCopyCat",
-  "version": "0.0.144",
+  "version": "0.0.145",
   "publisher": "JStenmark",
   "description": "AI assistant development workflow utility",
   "author": {
@@ -332,7 +332,7 @@
     "vscode:prepublish": "tsc --experimentalDecorators -p ./",
     "check-types": "tsc --noEmit",
     "clean": "rm -rf out && rm -f chatcopycat-*.vsix && rm -rf /mnt/c/Users/stenm/.vscode/extensions/jstenmark.*",
-    "tsup": "yarn bump && yarn clean && tsup",
+    "tsup": "yarn bump && yarn clean && tsup --external vscode",
     "bump": "yarn version --new-version patch",
     "install:linux": " code --install-extension ./chatcopycat-*.vsix --force"
   },
