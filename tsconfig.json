@@ -29,7 +29,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "eslint.config.mjs"
+    "eslint.config.mjs",
   ],
   "exclude": [
     "src/test",

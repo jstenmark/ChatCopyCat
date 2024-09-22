@@ -21,10 +21,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./dist/extension.js",
-  "files": [
-    "dist"
-  ],
+  "main": "./out/extension.js",
   "engines": {
     "node": ">=20",
     "vscode": "^1.91.1"
@@ -327,7 +324,7 @@
     "lint:inspect": "yarn lint:pretty --inspect-config",
     "test": "node ./out/test/runTest.js",
     "package": "vsce package",
-    "pkg": "yarn bump && yarn clean && yarn package",
+    "pkg": "yarn clean && yarn package",
     "vsce:package": "vsce package",
     "vsce:package:pre": "vsce package --pre-release",
     "vsce:publish": "vsce publish",
@@ -337,7 +334,8 @@
     "clean": "rm -rf out && rm -f chatcopycat-*.vsix && rm -rf /mnt/c/Users/stenm/.vscode/extensions/jstenmark.*",
     "tsup": "yarn bump && yarn clean && tsup --external vscode",
     "bump": "yarn version --new-version patch",
-    "install:linux": " code --install-extension ./chatcopycat-*.vsix --force"
+    "install:linux": " code --install-extension ./chatcopycat-*.vsix --force",
+    "lint:rules": "cross-env ESLINT_USE_FLAT_CONFIG=true npx eslint-config-prettier src/infra/exec.ts"
   },
   "devDependencies": {
     "@anatine/esbuild-decorators": "^0.2.19",
@@ -352,6 +350,7 @@
     "@types/mocha": "^10.0.3",
     "@types/node": "^20.10.3",
     "@types/vscode": "^1.91.0",
+    "@typescript-eslint/parser": "^8.6.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
     "@vscode/vsce": "^3.1.0",
@@ -359,15 +358,16 @@
     "dedent": "^1.5.3",
     "electron": "^27.1.3",
     "esbuild": "^0.23.0",
-    "eslint": "^9.7.0",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-find-rules": "^4.1.0",
     "eslint-formatter-pretty": "5",
+    "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "fix-tsup-cjs": "^1.2.0",
     "glob": "^10.3.10",
     "lint-staged": "^15.2.10",
     "mocha": "^10.2.0",
-    "prettier": "3.1.0",
     "simple-git-hooks": "^2.11.1",
     "ts-node": "^10.9.1",
     "tsup": "^8.2.4",
@@ -388,6 +388,6 @@
     "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "*": "yarn lint:fix"
+    "*": "yarn lint"
   }
 }
