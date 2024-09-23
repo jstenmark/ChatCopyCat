@@ -90,7 +90,7 @@ export class Validator<T = unknown> {
     return null
   }
 
-  public isConfirmationValue(validOptions: string[] = ['yes', 'no']): Validator<T> {
+  public isConfirmationValue(validOptions: string[] = ['yes', 'no']): this {
     if (typeof this.value === 'string') {
       return this.validate(value =>
         validOptions.includes((value as unknown as string).toLowerCase()) ? null : ERROR_MESSAGES.INVALID_CONFIRMATION,
@@ -99,7 +99,7 @@ export class Validator<T = unknown> {
     return this
   }
 
-  public isLowerCase(regex = /^[a-z]+$/): Validator<T> {
+  public isLowerCase(regex = /^[a-z]+$/): this {
     if (typeof this.value === 'string') {
       return this.validate(value =>
         regex.test(value as unknown as string) ? null : ERROR_MESSAGES.ONLY_LOWER_CASE_ALLOWED,
@@ -108,21 +108,21 @@ export class Validator<T = unknown> {
     return this
   }
 
-  public isUrl(regex = /^(https?:\/\/)?[\w.-]+(\.[\w.-]+).*$/): Validator<T> {
+  public isUrl(regex = /^(https?:\/\/)?[\w.-]+(\.[\w.-]+).*$/): this {
     if (typeof this.value === 'string') {
       return this.validate(value => (regex.test(value as unknown as string) ? null : ERROR_MESSAGES.INVALID_URL))
     }
     return this
   }
 
-  public hasNoForbiddenChar(forbiddenChars: RegExp, errorMessage: string): Validator<T> {
+  public hasNoForbiddenChar(forbiddenChars: RegExp, errorMessage: string): this {
     if (typeof this.value === 'string') {
       return this.validate(value => (forbiddenChars.test(value as unknown as string) ? errorMessage : null))
     }
     return this
   }
 
-  public isNotEmpty(): Validator<T> {
+  public isNotEmpty(): this {
     return this.validate(value => {
       if (typeof value === 'string') {
         return value.trim().length > 0 ? null : ERROR_MESSAGES.VALUE_CANNOT_BE_EMPTY
@@ -134,31 +134,31 @@ export class Validator<T = unknown> {
     })
   }
 
-  public warnIfEmpty(errorMessage: string): Validator<T> {
+  public warnIfEmpty(errorMessage: string): this {
     if (typeof this.value === 'string' && !this.value.trim()) {
       this.warnings.add(errorMessage)
     }
     return this
   }
 
-  public warnIfNotPatternMatch(regex: RegExp, warningMessage: string): Validator<T> {
+  public warnIfNotPatternMatch(regex: RegExp, warningMessage: string): this {
     if (typeof this.value === 'string' && !regex.test(this.value as unknown as string)) {
       this.warnings.add(warningMessage)
     }
     return this
   }
 
-  public isNumber(range?: {min?: number, max?: number}): Validator<T> {
+  public isNumber(range?: {min?: number, max?: number}): this {
     if (typeof this.value === 'number' || typeof this.value === 'string') {
       const numberValue = typeof this.value === 'number' ? this.value : parseFloat(this.value as unknown as string)
       if (isNaN(numberValue)) {
         this.errors.add(ERROR_MESSAGES.INVALID_NUMBER)
       } else if (range) {
         if (range.min !== undefined && numberValue < range.min) {
-          this.errors.add(`Number must be greater than ${range.min}`)
+          this.errors.add(`Number must be greater than ${range.min.toString()}`)
         }
         if (range.max !== undefined && numberValue > range.max) {
-          this.errors.add(`Number must be less than ${range.max}`)
+          this.errors.add(`Number must be less than ${range.max.toString()}`)
         }
       }
       return this
@@ -167,7 +167,7 @@ export class Validator<T = unknown> {
   }
 
 
-  public isArrayOfType(typeCheck: (item: unknown) => boolean): Validator<T> {
+  public isArrayOfType(typeCheck: (item: unknown) => boolean): this {
     if (!Array.isArray(this.value)) {
       this.errors.add(ERROR_MESSAGES.INVALID_ARRAY)
     } else {
@@ -186,7 +186,7 @@ export class Validator<T = unknown> {
    * @param fn - The validation function.
    * @returns The Validator instance for chaining.
    */
-  private validate(fn: (value: T) => string | null): Validator<T> {
+  private validate(fn: (value: T) => string | null): this {
     const error = fn(this.value)
     if (error) {
       this.errors.add(error)

@@ -2,6 +2,7 @@
  * An abstract base class for implementing the Singleton pattern.
  * This class ensures that only one instance of a derived class is created and provides access to it.
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class SingletonBase {
   private static instances = new Map<new (...args: any[]) => SingletonBase, SingletonBase>()
 
@@ -24,6 +25,7 @@ export abstract class SingletonBase {
    * @returns An instance of the Singleton class.
    * @throws {Error} If the instance creation fails.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   protected static getInstance<T extends SingletonBase>(this: new (...args: any[]) => T, ...args: any[]): SingletonBase {
     if (!SingletonBase.instances.has(this)) {
       SingletonBase.instances.set(this, new this(...args))
@@ -32,6 +34,6 @@ export abstract class SingletonBase {
     if (!instance) {
       throw new Error('Singleton getInstance failed')
     }
-    return instance
+    return instance as T
   }
 }

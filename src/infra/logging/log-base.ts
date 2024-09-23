@@ -4,9 +4,10 @@ import {LoggableMixin} from './log-mixin'
  * Base class for logging functionality. This class is intended to be extended with mixins to provide
  * logging capabilities.
  */
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class LogBase {
-
-  constructor(..._args: any[]) { /** */}
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+  constructor(..._args: any[]) { }
 }
 
 /**

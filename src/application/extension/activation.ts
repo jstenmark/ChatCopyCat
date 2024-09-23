@@ -15,8 +15,8 @@ import {container} from '../../inversify/inversify.config'
 import {GetSymbolReferencesCommand,GetSymbolReferencesCommand as TGetSymbolReferencesCommand} from '../commands/references-command'
 import {registerCommands, registerCommandsOld} from './command-utils'
 
-export const initExtension = async (context: ExtensionContext): Promise<Disposable[] | void> => {
-  LogManager.instance
+export const initExtension = async (context: ExtensionContext): Promise<void> => {
+  void LogManager.instance
   await ConfigStore.initialize()
 
 
@@ -29,7 +29,7 @@ export const initExtension = async (context: ExtensionContext): Promise<Disposab
 
   await SemaphoreService.initialize(semaphoreAdapter)
   await LanguageService.initialize(languageAdapter, configAdapter)
-  StateStore.instance
+  void StateStore.instance
 
   registerCommands(context) // Old command type registration
   registerCommandsOld(context) // DI type command registration

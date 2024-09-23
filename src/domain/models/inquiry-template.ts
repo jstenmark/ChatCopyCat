@@ -1,3 +1,5 @@
+/* eslint  @typescript-eslint/restrict-template-expressions: 0 */
+
 import * as vscode from 'vscode'
 
 import {getAllDiagnostics} from '../../adapters/ui/editor-utils'
@@ -13,13 +15,16 @@ export function getMetadataSection(
   isMultipleSelections: boolean,
   config: IContentConfig
 ): string {
-  const multipleSelections = isMultipleSelections ? ' // Multiple Selections' : undefined
+  const multipleSelections = isMultipleSelections ? ' // Multiple Selections' : ''
   const inquiryTypeSection =
     config.enableInquiryMessage && inquiryTypes && inquiryTypes.length > 0
-      ? `${inquiryTypes.join(',')}`
+      ? inquiryTypes.join(',')
       : undefined
 
-  return `${!headerIsInClipboard ? `${generateHeader(inquiryTypeSection, langOpts.language, config)}${isMultipleSelections ? `\n - ${multipleSelections}` : ''}`
+  return `${!headerIsInClipboard
+    ? `${generateHeader(inquiryTypeSection, langOpts.language, config)}${isMultipleSelections
+    ? `\n - ${multipleSelections}`
+    : ''}`
     : `\n${isMultipleSelections ? multipleSelections : ''}`}\n`
 }
 
@@ -81,8 +86,11 @@ export const codeBlock = (
   lineNumEnd: number | undefined
 ): string => {
   const codeText = Array.isArray(code) ? code.join('\n') : code
-  const lineInfo = lineNumStart && lineNumEnd ? ` line="${lineNumStart}-${lineNumEnd}"` : ''
-  return `\n\`\`\`${lang} { file="${path}"${lineInfo} }\n${codeText}\n\`\`\`\n`
+  const lineInfo = lineNumStart && lineNumEnd
+    ? ` line="${lineNumStart.toString()}-${lineNumEnd.toString()}"`
+    : ''
+  const file = path ? ` file="${path}"` : ''
+  return `\n\`\`\`${lang ?? ''} {${file}${lineInfo} }\n${codeText}\n\`\`\`\n`
 }
 
 const getCodeRange = (range: vscode.Range, config: IContentConfig): string | undefined =>

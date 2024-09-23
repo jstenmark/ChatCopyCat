@@ -56,9 +56,11 @@ export const openMenu = async () => {
       {kind: vscode.QuickPickItemKind.Separator, label: 'Development'},
       {
         label: '$(terminal-bash) yarn pkg',
-        action: async () => {
-          (await executeCommand(getProjectRootPaths()![0], 'yarn pkg')) &&
-            (await vscode.commands.executeCommand('workbench.action.reloadWindow'))
+        action: async (): Promise<void> => {
+          const result = await executeCommand(getProjectRootPaths()![0], 'yarn pkg');
+          if (result) {
+            await vscode.commands.executeCommand('workbench.action.reloadWindow');
+          }
         },
       },
       {

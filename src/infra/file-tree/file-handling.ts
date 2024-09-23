@@ -19,7 +19,7 @@ export async function getFileList(
     if (isIgnored(fullRelativePath, ignorePatterns)) {
       continue
     }
-    await isDirectoryOrFile<void>(
+    await isDirectoryOrFile(
       fullPath,
       () => handleDirectory(fileList, fullPath, fullRelativePath, originalRoot, ignorePatterns, allowExtList),
       () => handleFile(fileList, fullPath, fullRelativePath, originalRoot, ignorePatterns, allowExtList),

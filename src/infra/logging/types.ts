@@ -21,7 +21,7 @@ export type LoggingDecoratorType = <T extends (...args: any[]) => Promise<any>>(
   _target: object,
   _propertyKey: string | symbol,
   descriptor: TypedPropertyDescriptor<T>,
-) => TypedPropertyDescriptor<T> | void
+) => TypedPropertyDescriptor<T> | undefined
 
 
 export interface ILoggerMethods {

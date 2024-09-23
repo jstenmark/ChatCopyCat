@@ -5,6 +5,7 @@ import {configStore} from '../config/config-store'
 import {log} from '../logging/log-base'
 
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class SymbolProvider {
   static async getSymbolRefsFromSelection(
     editor: vscode.TextEditor,
@@ -189,6 +190,7 @@ export class SymbolProvider {
   }
 
   static createSymbolIdentifier(uri: vscode.Uri, symbol: vscode.DocumentSymbol): string {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `${uri.toString()}-${symbol.kind}-${symbol.name}-${symbol.range.start.line}:${symbol.range.start.character}-${symbol.range.end.line}:${symbol.range.end.character}`
   }
 }

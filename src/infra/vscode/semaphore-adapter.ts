@@ -9,7 +9,7 @@ export class SemaphoreAdapter implements ISemaphorePort, vscode.Disposable {
 
   public async setDialogState(open: boolean): Promise<boolean> {
     try {
-      log.debug(`Setting dialog state. Key: ${this.dialog_context_key}, Open: ${open}`)
+      log.debug(`Setting dialog state. Key: ${this.dialog_context_key}, Open: ${open.toString()}`)
       await vscode.commands.executeCommand('setContext', this.dialog_context_key, open)
       return true
     } catch (error) {
@@ -22,7 +22,7 @@ export class SemaphoreAdapter implements ISemaphorePort, vscode.Disposable {
    * Disposes the resources used by the SemaphoreService and resets the dialog state.
    */
   public dispose(): void {
-    Promise.resolve(this.setDialogState(false)).catch(error => {
+    Promise.resolve(this.setDialogState(false)).catch((error: unknown) => {
       throw error
     })
   }

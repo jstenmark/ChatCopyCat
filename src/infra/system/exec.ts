@@ -97,7 +97,7 @@ export async function tryExecuteCommandAsync(
 ): Promise<ICommandExecute> {
   const childProcess = spawnProcess(workingDirectory, commands, args)
   const result = handleChildProcessEvents(childProcess, writeToOutputChannel)
-  return {childProcess, result}
+  return await new Promise(() => ({childProcess, result}))
 }
 
 /**
@@ -136,7 +136,7 @@ export async function executeCommand(
     'exec',
     {
       workingDirectory,
-      cmd: `${[commands, ...args].join(' ')}`,
+      cmd: [commands, ...args].join(' '),
     },
     {truncate: 0},
   )
@@ -203,7 +203,7 @@ export async function executeCommandInFork(
     executeCommandMessage.forkingModule,
     {
       workingDirectory,
-      cmd: `${[modulePath, ...args].join(' ')}`,
+      cmd: [modulePath, ...args].join(' '),
     },
     {truncate: 0},
   )

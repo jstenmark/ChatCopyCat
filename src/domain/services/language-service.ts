@@ -14,6 +14,7 @@ export class LanguageService extends SingletonBase {
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   static async initialize(
     languagePort: ILanguagePort,
     configPort: IConfigPort
@@ -21,7 +22,6 @@ export class LanguageService extends SingletonBase {
     if (!this.languagePort || !this.configPort) {
       this.languagePort = languagePort
       this.configPort = configPort
-      this.instance
     } else {
       throw new Error('LanguageService has already been initialized')
     }

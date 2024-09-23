@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 import {type IConfigPort} from '../../domain/ports/config-port'
 import {configStore} from '../../infra/config/config-store'
 
@@ -12,6 +13,6 @@ export class ConfigAdapter implements IConfigPort {
 
 
   async onConfigReady(): Promise<void> {
-    return
+    return await configStore.onConfigReady()
   }
 }

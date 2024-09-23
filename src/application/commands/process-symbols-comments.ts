@@ -14,7 +14,7 @@ export const processSymbolsWithComments = async (editor: vscode.TextEditor, conf
     return []
   }
 
-  const confirmProcessing = await Notify.confirm(`Gather references from selected symbol? total refs: ${locations.length}`, 'Yes', 'Cancel')
+  const confirmProcessing = await Notify.confirm(`Gather references from selected symbol? total refs: ${locations.length.toString()}`, 'Yes', 'Cancel')
   if (!confirmProcessing) {
     return []
   }

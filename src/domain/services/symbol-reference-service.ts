@@ -7,6 +7,7 @@ import {type IContentConfig} from '../models/inquiry-template'
 import {type ISymbolReference} from '../models/types'
 
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class SymbolReferenceService {
   static async processSymbolsWithComments(
     locations: vscode.Location[],

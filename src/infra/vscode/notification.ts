@@ -12,11 +12,14 @@ export class Notify extends vscode.Disposable {
    */
   static info(message: string, nonBlocking = false, log = false): void {
     if (log) {
-      Notify.log.info(message)
+      Notify.log.info(message);
     }
-    nonBlocking
-      ? void vscode.window.showInformationMessage(message, {modal: false})
-      : void vscode.window.showInformationMessage(message)
+
+    if (nonBlocking) {
+      void vscode.window.showInformationMessage(message, { modal: false });
+    } else {
+      void vscode.window.showInformationMessage(message);
+    }
   }
 
   /**
@@ -27,9 +30,12 @@ export class Notify extends vscode.Disposable {
     if (log) {
       Notify.log.warn(message)
     }
-    nonBlocking
-      ? void vscode.window.showWarningMessage(message, {modal: false})
-      : void vscode.window.showWarningMessage(message)
+
+    if (nonBlocking) {
+      void vscode.window.showWarningMessage(message, { modal: false });
+    } else {
+      void vscode.window.showWarningMessage(message);
+    }
   }
 
   /**
@@ -40,9 +46,12 @@ export class Notify extends vscode.Disposable {
     if (log) {
       Notify.log.error(message)
     }
-    nonBlocking
-      ? void vscode.window.showErrorMessage(message, {modal: false})
-      : void vscode.window.showErrorMessage(message)
+
+    if (nonBlocking) {
+      void vscode.window.showErrorMessage(message, { modal: false });
+    } else {
+      void vscode.window.showErrorMessage(message);
+    }
   }
 
   /**
@@ -180,7 +189,8 @@ export class Notify extends vscode.Disposable {
         for (let i = 0; i < fileUris.length; i++) {
           const {uri, path} = fileUris[i]
           const increment = (i / fileUris.length) * 100
-          progress.report({increment, message: `Processing file ${i + 1} of ${fileUris.length}`})
+          const fileIndex = (i + 1).toString()
+          progress.report({increment, message: `Processing file ${fileIndex} of ${fileUris.length.toString()}`})
 
           const result = await processFile(uri, path, (report) => progress.report(report), token)
           if (result) {

@@ -83,7 +83,7 @@ export const openSettings = async (): Promise<void> => {
           break
       }
     }
-    log.debug('update result=' + result)
+    log.debug('update result=' + (result ? 'true' : 'false'))
     if (result) {
       Notify.info(`Setting '${settingKey}' updated`, true, true)
       await openSettings()
@@ -124,6 +124,7 @@ export function sortAndCreateQuickPickItems(
   for (const item of settingsItems) {
     if (item.settingObject?.type !== previousType) {
       sortedPicks.push({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         label: `${item.settingObject?.type} settings`,
         kind: vscode.QuickPickItemKind.Separator,
       })
@@ -247,6 +248,7 @@ export async function handleSettingWithEnum<T = unknown>(
 
     const selectedEnum = await showQuickPickAction<IQuickPickItemAction & {value: string}>(enums, {
       title: `Configure ${setting.settingKey}`,
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       placeHolder: `Current: '${currentValue}'. Change '${setting.settingKey}'`,
     })
 

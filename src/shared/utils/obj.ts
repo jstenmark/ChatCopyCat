@@ -1,4 +1,4 @@
-export const truthy = <T>(value: T | null | false | undefined | '' | void): value is T => !!value
+export const truthy = <T>(value: T | null | false | undefined | ''): value is T => !!value
 
 export const removeNulls = <V>(obj: Record<string, V | null>) =>
   filterValues(obj, (v): v is V => v !== null)
@@ -6,9 +6,8 @@ export const removeNulls = <V>(obj: Record<string, V | null>) =>
 export const removeUndefined = <V>(obj: Record<string, V | undefined>) =>
   filterValues(obj, (v): v is V => v !== undefined)
 
-export const isInstanceOf = <T extends Function>(cls: T) =>
-
-  (obj => obj instanceof cls) as T extends new(...args: any[]) => infer R ? (obj: unknown) => obj is R : never
+export const isInstanceOfNew = <T>(cls: new (...args: any[]) => T) =>
+	(obj: unknown): obj is T => obj instanceof cls;
 
 export function filterValues<V, F extends V>(
   obj: Readonly<Record<string, V>>,

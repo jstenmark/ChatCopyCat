@@ -15,7 +15,7 @@ export function LoggableMixin<TBase extends new (...args: any[]) => object>(Base
     [method: string]: LoggerMethod | LogHandler
 
     createLoggerMethod(level: LogLevel): LoggerMethod {
-      return (message, data, loggerOptions) => void this.processLog(level, message, data, loggerOptions)
+      return (message, data, loggerOptions) => this.processLog(level, message, data, loggerOptions)
     }
 
     public debug = this.createLoggerMethod(LogLevel.DEBUG)
@@ -62,7 +62,7 @@ const now = ((n: Date = new Date()) =>
   `${n.getHours().toString().padStart(2, '0')}:` +
   `${n.getMinutes().toString().padStart(2, '0')}:` +
   `${n.getSeconds().toString().padStart(2, '0')}:` +
-  `${n.getMilliseconds().toString().padStart(3, '0')}`
+  n.getMilliseconds().toString().padStart(3, '0')
 )
 
 export const LogLevelToNumberMap: Record<LogLevel, LogLevelNumeric> = {

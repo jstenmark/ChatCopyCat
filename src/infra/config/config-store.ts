@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-unnecessary-type-parameters: 0 */
 import {type ConfigurationScope,type Disposable, EventEmitter, extensions, type TextDocument, workspace, type WorkspaceConfiguration} from 'vscode'
 
 import {defaultTabSize, extId, extPublisher} from '../../shared/constants/consts'
@@ -8,7 +9,6 @@ import {SingletonBase} from '../../shared/utils/singleton'
 import {errorMessage, errorTypeCoerce} from '../../shared/utils/validate'
 import {log} from '../logging/log-base'
 import {Notify} from '../vscode/notification'
-
 /**
  * Manages the configuration settings of the extension.
  * It parses the package.json configuration, listens for changes, and updates the configuration cache.
@@ -115,7 +115,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
    * Retrieves the current WorkspaceConfiguration.
    * @returns The current WorkspaceConfiguration.
    */
-  private getConfiguration(section: string = this.extensionId, scope?: ConfigurationScope | null | undefined): WorkspaceConfiguration {
+  private getConfiguration(section: string = this.extensionId, scope?: ConfigurationScope | null  ): WorkspaceConfiguration {
     return workspace.getConfiguration(section, scope)
   }
 
@@ -123,6 +123,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
    * Parses the extension's package.json to extract configuration properties.
    */
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   private async parsePkgJsonConfig(): Promise<void> {
     const properties = (
       (extensions.getExtension<IExtension>(
@@ -145,16 +146,16 @@ export class ConfigStore extends SingletonBase implements Disposable {
   /**
    * Updates the internal configuration cache with current workspace settings.
    */
-
+  // eslint-disable-next-line @typescript-eslint/require-await
   private async updateConfigCache(): Promise<void> {
     const config: WorkspaceConfiguration = this.getConfiguration()
 
-    this.configCache = Object.keys(this.defaultConfig).reduce(
+    this.configCache = Object.keys(this.defaultConfig).reduce<Record<string, IProperty['default']>>(
       (cache, key) => {
         cache[key] = config.get(key, this.defaultConfig[key])
         return cache
       },
-      {} as Record<string, IProperty['default']>,
+      {},
     )
   }
 
@@ -219,7 +220,7 @@ export class ConfigStore extends SingletonBase implements Disposable {
   /**
    * Listens for changes in the configuration and updates the cache accordingly.
    */
-
+  // eslint-disable-next-line @typescript-eslint/require-await
   private async listenForConfigurationChanges(): Promise<void> {
     workspace.onDidChangeConfiguration(async e => {
       if (e.affectsConfiguration(this.extensionId)) {

@@ -51,7 +51,7 @@ export class ClipboardManager implements vscode.Disposable {
     if (clipboardContent?.length === 0) {
       clipboardContent = await ClipboardManager.pasteText()
     }
-    await ClipboardManager.copyText(textToPrepend + clipboardContent)
+    await ClipboardManager.copyText(textToPrepend + (clipboardContent ?? ''))
     if (increaseCount) {
       this.statusBarManager.increaseCopyCount(increaseCount)
     }
@@ -66,7 +66,7 @@ export class ClipboardManager implements vscode.Disposable {
     if (clipboardContent?.length === 0) {
       clipboardContent = await ClipboardManager.pasteText()
     }
-    await ClipboardManager.copyText(clipboardContent + textToAppend)
+    await ClipboardManager.copyText((clipboardContent ?? '') + textToAppend)
     if (increaseCount) {
       this.statusBarManager.increaseCopyCount(increaseCount)
     }

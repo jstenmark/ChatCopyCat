@@ -30,7 +30,7 @@ export class StateStore extends SingletonBase implements vscode.Disposable {
    * @param key - The key to associate the state value with.
    * @param value - The value to be stored.
    */
-  // Save a value in the state
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   public static setState<T>(key: string, value: T): void {
     this.state.set(key, value)
   }
@@ -40,6 +40,7 @@ export class StateStore extends SingletonBase implements vscode.Disposable {
    * @param key - The key of the state to retrieve.
    * @returns The state value if found, or undefined if the key does not exist.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   public static getState<T>(key: string): T | undefined {
     return this.state.get(key) as T | undefined
   }

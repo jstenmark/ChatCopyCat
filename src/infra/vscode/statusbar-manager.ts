@@ -64,7 +64,7 @@ export class StatusBarManager implements vscode.Disposable {
    * Changes the displayed text and background color.
    */
   private updateState() {
-    this.statusBarItem.text = `$(comment-discussion) CopyCats: ${this.copyCount}`
+    this.statusBarItem.text = `$(comment-discussion) CopyCats: ${this.copyCount.toString()}`
 
     if (this.copyCount > 0) {
       this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground')

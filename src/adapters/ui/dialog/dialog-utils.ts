@@ -16,10 +16,11 @@ export const isInputBox = (component: DialogComponent): component is vscode.Inpu
  * @param disposables An array of disposables to be disposed.
  */
 export function disposeAllEventHandlers(disposables: vscode.Disposable[]): void {
-  disposables.forEach(d => d.dispose() as void)
+  disposables.forEach(d => d.dispose())
   disposables.length = 0
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export const closeDialog = async (): Promise<void> => {
   quickPickManager.close()
   inputBoxManager.close()

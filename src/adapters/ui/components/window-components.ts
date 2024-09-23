@@ -109,7 +109,7 @@ export async function showQuickPickMany<T extends vscode.QuickPickItem>(
 
 export async function showQuickPick<T extends vscode.QuickPickItem>(
   items: T[],
-  options?: vscode.QuickPickOptions | undefined
+  options?: vscode.QuickPickOptions
 ): Promise<T | undefined> {
   const defaultOptions: vscode.QuickPickOptions = {
     // matchOnDescription: true,

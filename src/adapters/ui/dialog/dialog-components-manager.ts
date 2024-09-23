@@ -45,7 +45,7 @@ export class DialogComponentManager implements vscode.Disposable {
               resolve(result)
               return result
             })
-            .catch(e => {
+            .catch((e: unknown) => {
               log.error('Error during enqueueComponent:', e)
               resolve(undefined)
               return undefined as string | undefined

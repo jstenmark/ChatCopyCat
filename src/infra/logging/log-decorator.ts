@@ -1,4 +1,4 @@
- 
+
 import {performance} from 'perf_hooks'
 
 import {log} from './log-base'
@@ -21,7 +21,7 @@ export function LogDecorator(
     _target: object,
     _propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<T>,
-  ): TypedPropertyDescriptor<T> | void {
+  ): TypedPropertyDescriptor<T> | undefined {
     if (typeof descriptor.value === 'function') {
       const originalMethod = descriptor.value as (...args: any[]) => any
       descriptor.value = function (this: typeof _target & ILoggerMethods, ...args: any[]): any {
@@ -36,6 +36,7 @@ export function LogDecorator(
       } as unknown as T
       return descriptor
     }
+    return undefined
   }
 }
 
@@ -55,7 +56,7 @@ export function AsyncLogDecorator(
     _target: object, // any
     _propertyKey: string | symbol,
     descriptor: TypedPropertyDescriptor<T>,
-  ): TypedPropertyDescriptor<T> | void {
+  ): TypedPropertyDescriptor<T> | undefined  {
     const originalMethod = descriptor.value
     if (typeof originalMethod !== 'undefined') {
       descriptor.value = async function (
@@ -71,7 +72,7 @@ export function AsyncLogDecorator(
             {elapsed: end - start, returnValue: result},
             {targetType: getTargetName(_target), name: String(_propertyKey), args: args},
           )
-          return Promise.resolve(result)
+          return await Promise.resolve(result)
         } catch (error) {
           const end = performance.now()
           logResult(
@@ -95,5 +96,6 @@ export function AsyncLogDecorator(
       } as T
       return descriptor
     }
+    return undefined
   }
 }

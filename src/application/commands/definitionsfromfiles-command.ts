@@ -36,13 +36,13 @@ export async function copyDefinitionsFromFiles(): Promise<void> {
 
     await clipboardManager.copyToClipboard(allDefinitions.join('\n\n'))
     await window.showInformationMessage(
-      `Copied definitions from ${allDefinitions.length} files to clipboard.`,
+      `Copied definitions from ${allDefinitions.length.toString()} files to clipboard.`,
     )
     statusBarManager.updateCopyCount(allDefinitions.length)
   } catch (error) {
     log.error('Error copying definitions from files:', error)
     Promise.resolve(window.showErrorMessage('Error occurred while copying definitions.')).catch(
-      e => !!e,
+      (e: unknown) => !!e,
     )
   }
 }

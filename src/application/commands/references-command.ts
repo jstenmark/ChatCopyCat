@@ -4,7 +4,6 @@ import {showAppendOrCopyDialog} from '../../adapters/ui/dialog/append-copy-dialo
 import {generateReferenceSections} from '../../adapters/ui/editor-utils'
 import {getContentConfig} from '../../domain/models/inquiry-template'
 import {ClipboardManager} from '../../infra/clipboard/clipboard-manager'
-import {log} from '../../infra/logging/log-base'
 import {activeEditorOrFocusLast} from '../../infra/vscode/editor'
 import {Notify} from '../../infra/vscode/notification'
 import {StatusBarManager} from '../../infra/vscode/statusbar-manager'
@@ -40,10 +39,10 @@ export class GetSymbolReferencesCommand extends Command {
         await this.clipboardManager.readFromClipboard(),
         referenceSections.length,
       )
-      Notify.info(`Appended ${referenceSections.length} references to clipboard`)
+      Notify.info(`Appended ${referenceSections.length.toString()} references to clipboard`)
     } else if (action === 'copy') {
       await this.clipboardManager.copyToClipboard(referenceText)
-      Notify.info(`Copied ${referenceSections.length} references to clipboard`)
+      Notify.info(`Copied ${referenceSections.length.toString()} references to clipboard`)
       this.statusBarManager.updateCopyCount(referenceSections.length)
     }
   }

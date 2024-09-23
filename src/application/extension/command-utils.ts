@@ -1,6 +1,6 @@
 
 
-import {commands, type Disposable, type ExtensionContext, window} from 'vscode'
+import {commands, type ExtensionContext} from 'vscode'
 
 import {closeDialog} from '../../adapters/ui/dialog/dialog-utils'
 import {type ClipboardManager as TClipboardManager} from '../../infra/clipboard/clipboard-manager'
@@ -71,7 +71,7 @@ export function registerCommandsOld(context: ExtensionContext): void {
     })
 
   for (const cmd of commandsList) {
-    log.debug('registerCommand: ' + cmd.command)
+    log.debug('registerCommand: ' + (cmd.command as string))
     registerCommand(context, cmd)
   }
 }

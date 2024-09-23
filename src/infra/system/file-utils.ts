@@ -14,7 +14,7 @@ export async function isDirectoryOrFile<T>(
   filePath: string,
   onDirectory: () => Promise<T>,
   onFile: () => Promise<T>,
-): Promise<T | void> {
+): Promise<T> {
   try {
     const stat = await fs.promises.stat(filePath)
     if (stat.isDirectory()) {
@@ -25,6 +25,7 @@ export async function isDirectoryOrFile<T>(
   } catch (err) {
     log.error('Error checking path type', err)
   }
+	return Promise.resolve() as Promise<T>;
 }
 
 /**

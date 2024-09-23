@@ -21,7 +21,8 @@ export function watchForExtensionChanges(): vscode.Disposable {
         log.info(`Detected change in ${watchFolder}, reloading window.`)
         commandHandlers.reloadWindow().then(
           () => log.info('Window reloaded successfully.'),
-          (err: Error) => log.error('Failed to reload window: ' + err.message),
+          // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable
+          (err: Error) => log.error('Failed to reload window: ' + err?.message ?? 'Unknown error')
         )
       }
     }
@@ -50,11 +51,9 @@ export const bumpVersion = async (versionType: BumpTypes) => {
   const pkgRootPath = getProjectRootPaths()![0]
   const packageJsonPath: string = path.join(pkgRootPath, 'package.json')
 
-
   await executeCommand(pkgRootPath, 'yarn', `version --${versionType}`, '--no-git-tag-version')
 
-
-  const pkgJsonVersion = (await readPackageJson(packageJsonPath))?.version
+  const pkgJsonVersion: string = (await readPackageJson(packageJsonPath)).version.toString()
 
   Notify.info(`Version bumped to ${pkgJsonVersion}`, true, true)
 }
