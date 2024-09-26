@@ -8,6 +8,7 @@ assets/
 .github/
 .vscode/
 .vscode-test/
+.yarn/
 
 # filetypes
 **/*.map
@@ -19,7 +20,6 @@ assets/
 tsconfig.json
 package.json
 eslint.config.mjs
-tsup.config.ts
 .gitignore
 .yarnrc
 yarn.lock

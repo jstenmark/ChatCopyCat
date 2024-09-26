@@ -42,7 +42,6 @@ export const commandHandlers: Record<string, () => Promise<void>> = {
   copyDefinitions,
   copyDefinitionsFromFiles,
   openMenu,
-  reloadWindow: async () => await commands.executeCommand('workbench.action.reloadWindow'),
   openSettings,
   // getSymbolReferences: async () => await container.get<GetSymbolReferencesCommand>(TYPES.GetSymbolReferencesCommand).execute(),
 }

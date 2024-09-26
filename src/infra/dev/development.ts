@@ -19,11 +19,7 @@ export function watchForExtensionChanges(): vscode.Disposable {
     const watcher = (curr: fs.Stats, prev: fs.Stats) => {
       if (curr.mtimeMs !== prev.mtimeMs) {
         log.info(`Detected change in ${watchFolder}, reloading window.`)
-        commandHandlers.reloadWindow().then(
-          () => log.info('Window reloaded successfully.'),
-          // eslint-disable-next-line @typescript-eslint/use-unknown-in-catch-callback-variable
-          (err: Error) => log.error('Failed to reload window: ' + err?.message ?? 'Unknown error')
-        )
+        vscode.commands.executeCommand('workbench.action.reloadWindow')
       }
     }
 

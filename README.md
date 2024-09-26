@@ -155,11 +155,6 @@ List of commands defined in the extension, you will find them in the command pal
    - **Note**: Currently only supported for the inquiry dialog
    - **Usage**: Use with the copy keybinding
 
-10. **(Development Command) Reload Window**
-    - **Command**: `chatcopycat.reloadWindow`
-    - **Description**: A development-centric command that enables quick reloading of the VS Code window, facilitating rapid testing and iteration during the extension development.
-    - **Usage**: Chained through an watchFile-eventListener that listens for a file-write after the extension is installed, see the package.json-script `yarn pkg`.
-
 ---
 ## Language support
 - **Languages fully supported**: Typescript, Javascript

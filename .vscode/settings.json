@@ -11,17 +11,7 @@
     "out": true,
     ".vscode-test": true,
   },
-  "typescript.tsc.autoDetect": "off",
   "eslint.workingDirectories": [
     "src"
-  ],
-  "json.schemas": [
-    {
-      "url": "https://cdn.jsdelivr.net/npm/tsup/schema.json",
-      "fileMatch": [
-        "package.json",
-        "tsup.config.json"
-      ]
-    },
   ]
 }
