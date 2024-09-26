@@ -21,7 +21,7 @@ tsconfig.json
 package.json
 eslint.config.mjs
 .gitignore
-.yarnrc
+.yarnrc.yml
 yarn.lock
 yarn-error.log
 ROADMAP.md
